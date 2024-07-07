@@ -11,9 +11,6 @@ on:
     paths:
       - games/**
 
-permissions:
-  contents: write
-
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
@@ -21,6 +18,8 @@ jobs:
   push:
     name: "games:${{ matrix.game }}"
     runs-on: ubuntu-22.04
+    permissions:
+      packages: write
     strategy:
       fail-fast: false
       matrix:
