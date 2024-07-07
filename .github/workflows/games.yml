@@ -45,4 +45,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-             ghcr.io/GameServersHub-LLC/games:${{ matrix.game }}
+             ghcr.io/gamegervershub-llc/games:${{ matrix.game }}
