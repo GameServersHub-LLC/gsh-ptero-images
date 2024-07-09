@@ -9,7 +9,7 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 NC='\033[0m'
-
+sleep 3
 # Switch to the container's working directory
 cd /home/container || exit 1
 
@@ -25,12 +25,12 @@ INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 # system informations
-echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-echo -e "${RED}Path of Titans Image by GSH${NC}"
-echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-echo -e "${YELLOW}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
-echo -e "${YELLOW}Current timezone: ${RED} $(cat /etc/timezone)${NC}"
-echo -e "${BLUE}---------------------------------------------------------------------${NC}"
+echo -e "${GREEN}---------------------------------------------------------------------${NC}"
+echo -e "${MAGENTA}Path of Titans Image by GSH${NC}"
+echo -e "${GREEN}---------------------------------------------------------------------${NC}"
+echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
+echo -e "${GREEN}Current timezone: ${RED} $(cat /etc/timezone)${NC}"
+echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 
 chmod +x /PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 
