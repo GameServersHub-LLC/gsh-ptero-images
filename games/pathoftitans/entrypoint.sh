@@ -9,7 +9,7 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 NC='\033[0m'
-sleep 3
+
 # Switch to the container's working directory
 cd /home/container || exit 1
 
@@ -31,7 +31,7 @@ echo -e "${GREEN}---------------------------------------------------------------
 echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
 echo -e "${GREEN}Current timezone: ${RED} $(cat /etc/timezone)${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-
+sleep 2
 chmod +x /PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 
 ## check for serverupdates
