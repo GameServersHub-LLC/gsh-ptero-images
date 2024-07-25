@@ -32,7 +32,7 @@ echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
 echo -e "${GREEN}Current timezone: ${RED} $(cat /etc/timezone)${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 sleep 2
-chmod +x /PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
+chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 
 ## check for serverupdates
 if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
@@ -42,7 +42,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
     ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
-    chmod +x /PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
+    chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
  else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
