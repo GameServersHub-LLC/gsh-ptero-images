@@ -41,7 +41,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${YELLOW}checkig for Server update. please wait...${NC}"
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
-    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
+    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS --hotfix 0
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
  else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
