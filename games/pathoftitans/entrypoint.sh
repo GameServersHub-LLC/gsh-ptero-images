@@ -16,8 +16,8 @@ cd /home/container || exit 1
 # Wait for the container to fully initialize
 sleep 1
 
-# Default the TZ environment variable to UTC.
-TZ=${TZ:-UTC}
+# Force the TZ environment variable to Eastern Standard Time
+TZ=America/New_York
 export TZ
 
 # Set environment variable that holds the Internal Docker IP
@@ -29,7 +29,7 @@ echo -e "${GREEN}---------------------------------------------------------------
 echo -e "${MAGENTA}Path of Titans Image by GSH${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
-echo -e "${GREEN}Current timezone: ${RED} $(cat /etc/timezone)${NC}"
+echo -e "${GREEN}Current timezone: ${RED} $(date +"%Z %z")${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 sleep 2
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
