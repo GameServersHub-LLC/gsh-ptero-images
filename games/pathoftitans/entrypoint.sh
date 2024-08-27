@@ -25,16 +25,15 @@ INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 # system informations
+
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-echo -e "${MAGENTA}_____/\\\\\\\\\\\\_____/\\\\\\\\\\\____/\\\________/\\\_${NC}"
-echo -e "${MAGENTA}____/\\\//////////____/\\\/////////\\\_\/\\\_______\/\\\_${NC}"
-echo -e "${MAGENTA}____/\\\______________\//\\\______\///__\/\\\_______\/\\\_${NC}"
-echo -e "${MAGENTA}____\/\\\____/\\\\\\\___\////\\\_________\/\\\\\\\\\\\\\\\_${NC}"
-echo -e "${MAGENTA}_____\/\\\___\/////\\\______\////\\\______\/\\\/////////\\\_${NC}"
-echo -e "${MAGENTA}______\/\\\_______\/\\\_________\////\\\___\/\\\_______\/\\\_${NC}"
-echo -e "${MAGENTA}_______\/\\\_______\/\\\__/\\\______\//\\\__\/\\\_______\/\\\_${NC}"
-echo -e "${MAGENTA}________\//\\\\\\\\\\\\/__\///\\\\\\\\\\\/___\/\\\_______\/\\\_${NC}"
-echo -e "${MAGENTA}_________\////////////______\///////////_____\///________\///__${NC}"
+echo -e "${MAGENTA}   .oooooo.     .oooooo..o ooooo   ooooo${NC}" 
+echo -e "${MAGENTA}  d8P'  `Y8b   d8P'    `Y8 `888'   `888'${NC}" 
+echo -e "${MAGENTA} 888           Y88bo.       888     888 ${NC}" 
+echo -e "${MAGENTA} 888            `"Y8888o.   888ooooo888 ${NC}" 
+echo -e "${MAGENTA} 888     ooooo      `"Y88b  888     888 ${NC}" 
+echo -e "${MAGENTA} `88.    .88'  oo     .d8P  888     888 ${NC}" 
+echo -e "${MAGENTA}  `Y8bood8P'   8""88888P'  o888o   o888o${NC}" 
 echo -e "${MAGENTA}Path of Titans Image by GSH${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
