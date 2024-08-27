@@ -56,7 +56,7 @@ echo -e "${GREEN}---------------------------------------------------------------
 echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
 echo -e "${GREEN}Current timezone: ${RED} $(date +"%Z %z")${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-sleep 2
+sleep 5
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 
 ## check for serverupdates
