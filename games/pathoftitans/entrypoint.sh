@@ -54,7 +54,7 @@ echo -e "${RED}                              ┛ ┛ ${NC}"
 echo -e "${RED}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
-echo -e "${GREEN}Current timezone: ${WHITE} $(date +"%Z %z") UTC${NC}"
+echo -e "${GREEN}Current timezone: ${WHITE} $(date +"%Z %z")${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 Sleep 3
