@@ -17,7 +17,7 @@ cd /home/container || exit 1
 sleep 1
 
 # Default the TZ environment variable to UTC.
-TZ=${TZ:-UTC}
+TZ=${TZ:-America/New_York}
 export TZ
 
 # Set environment variable that holds the Internal Docker IP
