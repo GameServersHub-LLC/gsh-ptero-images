@@ -47,6 +47,7 @@ echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHH
 echo -e "${MAGENTA}                                                                 ${NC}"
 echo -e "${BLUE}-----------------------------------------------------------------${NC}"
 echo -e "${RED}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
+echo -e "${RED}                                  ${NC}"
 echo -e "${RED} ┏┓   ┓     ┏  ┏┳┓•        ┏┓     ${NC}"
 echo -e "${RED} ┃┃┏┓╋┣┓  ┏┓╋   ┃ ┓╋┏┓┏┓┏  ┣ ┏┓┏┓ ${NC}"
 echo -e "${RED} ┣┛┗┻┗┛┗  ┗┛┛   ┻ ┗┗┗┻┛┗┛  ┗┛┗┫┗┫ ${NC}"
