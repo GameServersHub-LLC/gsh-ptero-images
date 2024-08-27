@@ -26,7 +26,7 @@ export INTERNAL_IP
 
 # system informations
 
-echo -e "${GREEN}---------------------------------------------------------------------${NC}"                                                              
+echo -e "${BLUE}-------------------------------------------------------------------${NC}"                                                              
 echo -e "${YELLOW} Made By                                                            ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH   ${NC}"
 echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H   ${NC}"
@@ -45,13 +45,13 @@ echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H   ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH   ${NC}"
 echo -e "${MAGENTA}                                                                   ${NC}"
-echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-echo -e "${RED}---------------------------------${NC}"
+echo -e "${BLUE}-------------------------------------------------------------------${NC}"
+echo -e "${RED}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e "${RED} ┏┓   ┓     ┏  ┏┳┓•        ┏┓    ${NC}"
 echo -e "${RED} ┃┃┏┓╋┣┓  ┏┓╋   ┃ ┓╋┏┓┏┓┏  ┣ ┏┓┏┓${NC}"
 echo -e "${RED} ┣┛┗┻┗┛┗  ┗┛┛   ┻ ┗┗┗┻┛┗┛  ┗┛┗┫┗┫${NC}"
 echo -e "${RED}                              ┛ ┛${NC}"
-echo -e "${RED}---------------------------------${NC}"
+echo -e "${RED}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${NC}"
 echo -e "${GREEN}Current timezone: ${RED} $(date +"%Z %z")${NC}"
