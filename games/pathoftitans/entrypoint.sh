@@ -45,7 +45,7 @@ echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H   ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH   ${NC}"
 echo -e "${MAGENTA}                                                                   ${NC}"
-echo -e "${GREEN}-------------------------------------------------------------------${NC}"
+echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 echo -e "${RED}---------------------------------${NC}"
 echo -e "${RED} ┏┓   ┓     ┏  ┏┳┓•        ┏┓    ${NC}"
 echo -e "${RED} ┃┃┏┓╋┣┓  ┏┓╋   ┃ ┓╋┏┓┏┓┏  ┣ ┏┓┏┓${NC}"
