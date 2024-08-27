@@ -27,7 +27,7 @@ export INTERNAL_IP
 # system informations
 
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"                                                              
-echo -e "${YELLOW}Made By                                                            ${NC}"
+echo -e "${YELLOW} Made By                                                            ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH   ${NC}"
 echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H   ${NC}"
 echo -e "${MAGENTA}    GG:::::::::::::::GS:::::SSSSSS::::::SH:::::::H     H:::::::H   ${NC}"
