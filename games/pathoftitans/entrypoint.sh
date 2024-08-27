@@ -24,9 +24,7 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# system informations
-
-echo -e "${BLUE}-----------------------------------------------------------------${NC}"                                                              
+# system informations                                                           
 echo -e "${YELLOW} Made By                                                          ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
@@ -45,7 +43,6 @@ echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${MAGENTA}                                                                 ${NC}"
-echo -e "${BLUE}-----------------------------------------------------------------${NC}"
 echo -e "${RED}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${NC}"
 echo -e "${RED}                                  ${NC}"
 echo -e "${RED} ┏┓   ┓     ┏  ┏┳┓•        ┏┓     ${NC}"
@@ -74,6 +71,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
+    sleep 3
 fi
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
