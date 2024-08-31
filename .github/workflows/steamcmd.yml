@@ -24,8 +24,6 @@ jobs:
         distro:
           - debian
           - ubuntu
-          - parker
-          - notini
     
     steps:
       - uses: actions/checkout@v4

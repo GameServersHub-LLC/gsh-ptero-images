@@ -28,10 +28,6 @@ jobs:
       matrix:
         game:
           - pathoftitans
-          - debian
-          - ubuntu
-          - parker
-          - notini
     
     steps:
       - name: Checkout repository
