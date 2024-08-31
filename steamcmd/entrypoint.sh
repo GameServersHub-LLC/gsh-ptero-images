@@ -20,13 +20,13 @@ export INTERNAL_IP
 
 # Information output
 echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-echo -e "${RED}SteamCMD Image by gOOvER${NC}"
+echo -e "${RED}Test GSH${NC}"
 echo -e "${BLUE}---------------------------------------------------------------------${NC}"
 echo -e "${YELLOW}Running on Debian: ${RED} $(cat /etc/debian_version)${NC}"
 echo -e "${YELLOW}Current timezone: ${RED} $(cat /etc/timezone)${NC}"
 echo -e "${YELLOW}DotNet Version: ${RED} $(dotnet --version) ${NC}"
 echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-
+sleep 3
 # Switch to the container's working directory
 cd /home/container || exit 1
 
