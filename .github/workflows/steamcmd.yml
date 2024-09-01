@@ -29,7 +29,7 @@ jobs:
         game:
           - debian
           - ubuntu
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,4 +52,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-             ghcr.io/steamcmdervershub-llc/steamcmd:${{ matrix.game }}
+            ghcr.io/gameservershub-llc/steamcmd:${{ matrix.game }}
