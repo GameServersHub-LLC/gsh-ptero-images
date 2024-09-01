@@ -1,4 +1,4 @@
-name: build steamcmd
+name: build games
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -9,24 +9,29 @@ on:
     branches:
       - main
     paths:
-      - steamcmd/**
+      - games/**
 
 env:
-  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   push:
-    name: "steamcmd:${{ matrix.distro }}"
+    name: "games:${{ matrix.game }}"
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      packages: write
+    
     strategy:
       fail-fast: false
       matrix:
-        distro:
-          - debian
-          - ubuntu
+        game:
+          - pathoftitans
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -38,13 +43,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - uses: docker/build-push-action@v6
         with:
-          context: ./steamcmd
-          provenance: false
-          file: ./steamcmd/${{ matrix.distro }}/Dockerfile
+          context: ./games/${{ matrix.game }}
+          file: ./games/${{ matrix.game }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-             ghcr.io/steamcmdervershub-llc/steamcmd:${{ matrix.distro }}
+             ghcr.io/gameservershub-llc/games:${{ matrix.game }}
