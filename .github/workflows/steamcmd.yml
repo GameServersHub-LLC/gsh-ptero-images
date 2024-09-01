@@ -16,17 +16,23 @@ env:
 
 jobs:
   push:
-    name: "steamcmd:${{ matrix.distro }}"
+    name: "steamcmd:${{ matrix.game }}"
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
     strategy:
       fail-fast: false
       matrix:
-        distro:
+        game:
           - debian
           - ubuntu
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -38,13 +44,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - uses: docker/build-push-action@v6
         with:
-          context: ./steamcmd
-          provenance: false
-          file: ./steamcmd/${{ matrix.distro }}/Dockerfile
+          context: ./steamcmd/${{ matrix.game }}
+          file: ./steamcmd/${{ matrix.game }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-             ghcr.io/gameservershub-llc/steamcmd:${{ matrix.distro }}
+             ghcr.io/steamcmdervershub-llc/steamcmd:${{ matrix.game }}
