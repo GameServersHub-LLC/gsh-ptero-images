@@ -17,7 +17,7 @@ env:
 jobs:
   push:
     name: "steamcmd:${{ matrix.game }}"
-    runs-on: ubuntu-latest
+    runs-on: gshrunner
 
     permissions:
       contents: write
