@@ -51,10 +51,7 @@ echo -e "${WHITE} |   |${BLUE} ·▀▀▀▀  ▀▀▀  ▀  ▀  ▀▀▀▀
 echo -e "${WHITE} |   |${BLUE} ${YELLOW} by that411guy ${WHITE}                                                                                                ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                                                                              (_____)${NC}"
-
-echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${GREEN} Current timezone: ${WHITE} $(cat /etc/timezone)${NC}"
-echo -e "${GREEN}---------------------------------------------------------------------${NC}"
+echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${GREEN} Current timezone: ${WHITE} $TZ${NC}"
 chmod +x /home/container/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
 sleep 3
 
