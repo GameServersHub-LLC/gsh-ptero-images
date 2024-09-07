@@ -28,6 +28,7 @@ jobs:
       matrix:
         game:
           - pathoftitans
+          - beastofbermuda
     
     steps:
       - name: Checkout repository
