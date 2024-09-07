@@ -53,7 +53,7 @@ echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo -e "${WHITE}(_____)                                                                                                              (_____)${NC}"
 
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${GREEN} Current timezone: ${WHITE} $(date +"%Z %z")${NC}"
+echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${GREEN} Current timezone: ${WHITE} $(timedatectl show --value --property=Timezone)${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 chmod +x /home/container/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
 sleep 3
