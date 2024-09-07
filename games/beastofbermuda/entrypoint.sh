@@ -51,7 +51,7 @@ echo -e "${WHITE} |   |${BLUE} ·▀▀▀▀  ▀▀▀  ▀  ▀  ▀▀▀▀
 echo -e "${WHITE} |   |${BLUE} ${YELLOW} by that411guy ${WHITE}                                                                                                ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                                                                              (_____)${NC}"
-echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time:${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
+echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 chmod +x /home/container/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
 sleep 3
 
