@@ -39,7 +39,7 @@ echo -e "${MAGENTA}   G:::::GGGGGGGG::::GSSSSSSS     S:::::SHH::::::H     H:::::
 echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
-echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh ! ${NC}"
+echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
 echo -e "${WHITE} _____                                                                                                                _____ ${NC}"
 echo -e "${WHITE}( ___ )                                                                                                              ( ___ )${NC}"
 echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
