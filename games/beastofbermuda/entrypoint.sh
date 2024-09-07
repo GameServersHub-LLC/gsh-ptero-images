@@ -39,7 +39,7 @@ echo -e "${MAGENTA}   G:::::GGGGGGGG::::GSSSSSSS     S:::::SHH::::::H     H:::::
 echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
-echo -e "${MAGENTA}                                                                 ${NC}"
+echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh ! ${NC}"
 echo -e "${WHITE} _____                                                                                                                _____ ${NC}"
 echo -e "${WHITE}( ___ )                                                                                                              ( ___ )${NC}"
 echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
@@ -53,7 +53,7 @@ echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo -e "${WHITE}(_____)                                                                                                              (_____)${NC}"
 
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
-echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${GREEN} Current timezone: ${WHITE} $(timedatectl show --value --property=Timezone)${NC}"
+echo -e "${CYAN}Running on Ubuntu ${RED} $(cat /etc/debian_version)${GREEN} Current timezone: ${WHITE} $(cat /etc/timezone)${NC}"
 echo -e "${GREEN}---------------------------------------------------------------------${NC}"
 chmod +x /home/container/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
 sleep 3
