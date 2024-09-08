@@ -113,5 +113,5 @@ MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
-./BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer -NoVerifyGC -log
+./BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer -log
 eval ${MODIFIED_STARTUP}
