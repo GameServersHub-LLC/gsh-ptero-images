@@ -79,4 +79,4 @@ MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
-eval ${MODIFIED_STARTUP}
+eval ./PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping -nullRHI -ServerName="${SERVER_NAME}" -Port=$SERVER_PORT -BranchKey=$BETA_BRANCH -MaxPlayers=${SLOTS} $(if [ -n "$SERVER_PASSWORD" ]; then echo "-ServerPassword=\"${SERVER_PASSWORD}\""; fi) -AuthToken=$AG_AUTH_TOKEN -ServerGUID=$SERVER_GUID -Database=$DATABASE -log
