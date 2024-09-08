@@ -29,6 +29,7 @@ jobs:
         game:
           - pathoftitans
           - theisle
+          - beastofbermuda
     
     steps:
       - name: Checkout repository

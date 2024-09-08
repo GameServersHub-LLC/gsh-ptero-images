@@ -40,19 +40,19 @@ echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
-echo -e "${WHITE} _____                                                             _____ ${NC}"
-echo -e "${WHITE}( ___ )                                                           ( ___ )${NC}"
-echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
-echo -e "${WHITE} |   |${GREEN} ▄▄▄▄▄ ▄ .▄▄▄▄ .    ▪  .▄▄ · ▄▄▌  ▄▄▄ .    ▄▄▄ . ▄▄ •  ▄▄ •  ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${GREEN} •██  ██▪▐█▀▄.▀·    ██ ▐█ ▀. ██•  ▀▄.▀·    ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪ ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${GREEN}  ▐█.▪██▀▐█▐▀▀▪▄    ▐█·▄▀▀▀█▄██▪  ▐▀▀▪▄    ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄ ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${GREEN}  ▐█▌·██▌▐▀▐█▄▄▌    ▐█▌▐█▄▪▐█▐█▌▐▌▐█▄▄▌    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█ ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${GREEN}  ▀▀▀ ▀▀▀ · ▀▀▀     ▀▀▀ ▀▀▀▀ .▀▀▀  ▀▀▀      ▀▀▀ ·▀▀▀▀ ·▀▀▀▀  ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                                              ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
-echo -e "${WHITE}(_____)                                                           (_____)${NC}"
+echo -e "${WHITE} _____                                                                                                                _____ ${NC}"
+echo -e "${WHITE}( ___ )                                                                                                              ( ___ )${NC}"
+echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
+echo -e "${WHITE} |   |${BLUE} ▄▄▄▄· ▄▄▄ . ▄▄▄· .▄▄ · ▄▄▄▄▄          ·▄▄▄    ▄▄▄▄· ▄▄▄ .▄▄▄  • ▌ ▄ ·. ▄• ▄▌·▄▄▄▄   ▄▄▄·     ▄▄▄ . ▄▄ •  ▄▄ •  ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${BLUE} ▐█ ▀█▪▀▄.▀·▐█ ▀█ ▐█ ▀. •██      ▪     ▐▄▄·    ▐█ ▀█▪▀▄.▀·▀▄ █··██ ▐███▪█▪██▌██▪ ██ ▐█ ▀█     ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪ ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${BLUE} ▐█▀▀█▄▐▀▀▪▄▄█▀▀█ ▄▀▀▀█▄ ▐█.▪     ▄█▀▄ ██▪     ▐█▀▀█▄▐▀▀▪▄▐▀▀▄ ▐█ ▌▐▌▐█·█▌▐█▌▐█· ▐█▌▄█▀▀█     ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄ ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${BLUE} ██▄▪▐█▐█▄▄▌▐█ ▪▐▌▐█▄▪▐█ ▐█▌·    ▐█▌.▐▌██▌.    ██▄▪▐█▐█▄▄▌▐█•█▌██ ██▌▐█▌▐█▄█▌██. ██ ▐█ ▪▐▌    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█ ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${BLUE} ·▀▀▀▀  ▀▀▀  ▀  ▀  ▀▀▀▀  ▀▀▀      ▀█▄▀▪▀▀▀     ·▀▀▀▀  ▀▀▀ .▀  ▀▀▀  █▪▀▀▀ ▀▀▀ ▀▀▀▀▀•  ▀  ▀      ▀▀▀ ·▀▀▀▀ ·▀▀▀▀  ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${BLUE} ${YELLOW} by that411guy ${WHITE}                                                                                                ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
+echo -e "${WHITE}(_____)                                                                                                              (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-chmod +x /home/container/TheIsle/Binaries/Linux/TheIsleServer-Linux-Shipping
+chmod +x /home/container/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
 sleep 3
 
 # Switch to the container's working directory
@@ -65,7 +65,6 @@ cd /home/container || exit 1
 echo -e "${BLUE}---------------------------------------------------------------------${NC}"
 echo -e "${GREEN}Starting Server.... Please wait...${NC}"
 echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-sleep 1
 
 ## just in case someone removed the defaults.
 if [ "${STEAM_USER}" == "" ]; then
@@ -93,9 +92,8 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
 	    fi
     else
         echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-        echo -e "${YELLOW}Checking For Updated${NC}"
+        echo -e "${YELLOW}No appid set. Starting Server${NC}"
         echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-        sleep 3
     fi
 
 else
@@ -115,5 +113,5 @@ MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
--Port=$SERVER_PORT -ini:Engine:[EpicOnlineServices]:DedicatedServerClientId=xyza7891gk5PRo3J7G9puCJGFJjmEguW -ini:Engine:[EpicOnlineServices]:DedicatedServerClientSecret=pKWl6t5i9NJK8gTpVlAxzENZ65P8hYzodV8Dqe5Rlc8 -log
+./BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer -GameMode {{GAMEMODE}} -MapName {{MAP}} -SessionName {{SESSION_NAME}} -NumPlayers {{MAX_PLAYERS}} $(if [ -n "$SRV_PW" ]; then echo "-ServerPassword=\"${SRV_PW}\""; fi) ?Port={{SERVER_PORT}} ?QueryPort={{QUERY_PORT}} -log
 eval ${MODIFIED_STARTUP}
