@@ -55,6 +55,8 @@ echo -e "${WHITE} |   |${RED} ${YELLOW} by that411guy ${WHITE}                  
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                                                         (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
+UE_TRUE_SCRIPT_NAME=$(echo \"$0\" | xargs readlink -f)
+UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 sleep 3
 
@@ -80,3 +82,4 @@ echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
 ./PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping -ServerName="${SERVER_NAME}" -Port=$SERVER_PORT -BranchKey=$BETA_BRANCH $(if [ -n "$SERVER_PASSWORD" ]; then echo "-ServerPassword=\"${SERVER_PASSWORD}\""; fi) -AuthToken=$AG_AUTH_TOKEN -ServerGUID=$SERVER_GUID -Database=$DATABASE -nullRHI -log
+eval ${MODIFIED_STARTUP}
