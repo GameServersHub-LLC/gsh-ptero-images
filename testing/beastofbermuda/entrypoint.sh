@@ -113,5 +113,5 @@ MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
-./BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer -GameMode {{GAMEMODE}} -MapName {{MAP}} -SessionName {{SESSION_NAME}} -NumPlayers {{MAX_PLAYERS}} $(if [ -n "$SRV_PW" ]; then echo "-ServerPassword=\"${SRV_PW}\""; fi) ?Port={{SERVER_PORT}} ?QueryPort={{QUERY_PORT}} -log
+./BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer -NoVerifyGC -log
 eval ${MODIFIED_STARTUP}
