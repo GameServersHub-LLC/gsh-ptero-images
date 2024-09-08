@@ -28,6 +28,7 @@ jobs:
       matrix:
         game:
           - pathoftitans
+          - theisle
     
     steps:
       - name: Checkout repository
