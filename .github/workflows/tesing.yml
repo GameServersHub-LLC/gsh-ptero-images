@@ -28,7 +28,6 @@ jobs:
       matrix:
         game:
           - pathoftitans
-          - beastofbermuda
     
     steps:
       - name: Checkout repository
@@ -47,9 +46,9 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: ./games/${{ matrix.game }}
-          file: ./games/${{ matrix.game }}/Dockerfile
+          context: ./testing/${{ matrix.game }}
+          file: ./testing/${{ matrix.game }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-             ghcr.io/gameservershub-llc/games:${{ matrix.game }}
+             ghcr.io/gameservershub-llc/testing:${{ matrix.game }}
