@@ -80,7 +80,6 @@ fi
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-
 # Run the Server
 awk -v slots="$SLOTS" '/\[\/Script\/PathOfTitans\.IGameSession\]/{print; flag=1; next} flag && /MaxPlayers/{print "MaxPlayers=" slots; flag=0; next} flag && /^$/{print "MaxPlayers=" slots; print; flag=0; next} {print}' ./PathOfTitans/Saved/Config/LinuxServer/Game.ini > ./PathOfTitans/Saved/Config/LinuxServer/temp.ini && mv ./PathOfTitans/Saved/Config/LinuxServer/temp.ini ./PathOfTitans/Saved/Config/LinuxServer/Game.ini && ./PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping -ServerName="${SERVER_NAME}" -Port=$SERVER_PORT -BranchKey=$BETA_BRANCH $(if [ -n "$SERVER_PASSWORD" ]; then echo "-ServerPassword=\"${SERVER_PASSWORD}\""; fi) -AuthToken=$AG_AUTH_TOKEN -ServerGUID=$SERVER_GUID -Database=$DATABASE -nullRHI -log
 eval ${MODIFIED_STARTUP}
