@@ -1,4 +1,4 @@
-name: build games
+name: build testing
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -9,14 +9,14 @@ on:
     branches:
       - main
     paths:
-      - games/**
+      - testing/**
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   push:
-    name: "games:${{ matrix.game }}"
+    name: "testing:${{ matrix.game }}"
     runs-on: ubuntu-latest
     
     permissions:
