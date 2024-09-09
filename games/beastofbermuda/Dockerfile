@@ -1,9 +1,8 @@
-FROM        --platform=$BUILDPLATFORM ubuntu:latest
+FROM        --platform=$BUILDPLATFORM ubuntu:22.04
 
-LABEL       author="Torsten Widmann" maintainer="info@goover.de"
-LABEL       org.opencontainers.image.source="https://github.com/gOOvER/own-pterodactyl-images"
-LABEL       org.opencontainers.image.licenses=AGPL
-LABEL       org.opencontainers.image.description Dockerimage for Pelican Hosting Panel and Pterodactyl
+LABEL           author="Mike Harrison" maintainer="m.harrison@gameservershub.com"
+LABEL           org.opencontainers.image.source=""
+LABEL           org.opencontainers.image.licenses=MIT
 ARG         DEBIAN_FRONTEND=noninteractive
 
 RUN         dpkg --add-architecture i386
