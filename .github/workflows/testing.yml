@@ -45,8 +45,8 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - minetest
-          - mta
+          - pathoftitans
+          - satisfactory
     steps:
       - uses: actions/checkout@v4
       - name: Set up QEMU
