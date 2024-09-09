@@ -1,17 +1,89 @@
-
-FROM        --platform=$TARGETOS/$TARGETARCH debian:bookworm-slim
+FROM        --platform=$BUILDPLATFORM ubuntu:latest
 
 LABEL           author="Mike Harrison" maintainer="m.harrison@gameservershub.com"
 LABEL           org.opencontainers.image.source=""
 LABEL           org.opencontainers.image.licenses=MIT
+ARG         DEBIAN_FRONTEND=noninteractive
 
-ENV         DEBIAN_FRONTEND=noninteractive
+RUN         dpkg --add-architecture i386
+RUN         apt update \ 
+            && apt -y upgrade
 
-RUN         dpkg --add-architecture i386 \
-            && apt update \
-            && apt upgrade -y \
-            && apt install -y tar curl gcc g++ lib32gcc-s1 libgcc-11-dev libgcc-12-dev libcurl4-gnutls-dev:i386 libssl-dev:i386 libcurl4:i386 lib32tinfo6 libtinfo6:i386 lib32z1 lib32stdc++6 libncurses5:i386 libcurl3-gnutls:i386 libsdl2-2.0-0:i386 iproute2 gdb libsdl1.2debian libfontconfig1 telnet net-tools netcat-traditional tzdata numactl wget tini \
-            && useradd -m -d /home/container container
+RUN         apt install -y \
+                    ca-certificates \
+                    curl \
+                    dbus \
+                    dirmngr \
+                    aspnetcore-runtime-8.0 \
+                    dotnet-sdk-8.0 \
+                    g++ \
+                    gcc \
+                    gdb \
+                    gettext \
+                    git \
+                    gnupg \
+                    iproute2 \
+                    iproute2 \
+                    jq \
+                    locales \
+                    mesa-utils \
+                    net-tools \
+                    netcat-openbsd \
+                    numactl \
+                    psmisc \
+                    python3 \
+                    python3-dev \
+                    python3-pip \
+                    sed \
+                    speex:i386 \
+                    tar \
+                    telnet \
+                    tini \
+                    tzdata \
+                    wget \
+                    lib32gcc-s1-amd64-cross \
+                    libgcc-s1-amd64-cross \
+                    lib32stdc++6 \
+                    lib32tinfo6 \
+                    lib32z1 \
+                    libatk1.0-0 \
+                    libatomic1 \
+                    libc++-dev \
+                    libc++1 \
+                    libc6 \
+                    libc6:i386 \
+                    libcurl3-gnutls \
+                    libcurl3-gnutls:i386 \
+                    libcurl4 \
+                    libcurl4-gnutls-dev:i386 \
+                    libcurl4:i386 \
+                    libfontconfig \
+					libnss-wrapper \
+                    libgcc1 \
+                    libgdiplus \
+                    libgtk2.0-0:i386 \
+                    libicu74 \
+                    libnss3 \
+                    libpangocairo-1.0-0 \
+                    libpulse-dev \
+                    libpulse0 \
+                    libsdl1.2debian \
+                    libsdl1.2debian:i386 \
+                    libsdl2-2.0-0 \
+                    libsdl2-2.0-0:i386 \
+                    libssl3 \
+                    libssl3:i386 \
+                    libstdc++6 \
+                    libstdc++6:i386 \
+                    libtcmalloc-minimal4 \
+                    libtinfo6:i386 \
+                    libxcomposite1 \
+                    libxcursor1 \
+                    libxdamage1 \
+                    libxi6 \
+                    libxrandr2 \
+                    libxss1 \
+                    libxtst6
 
 ## install rcon
 RUN         cd /tmp/ \
@@ -19,20 +91,30 @@ RUN         cd /tmp/ \
             && tar xvf rcon.tar.gz \
             && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
 
-        # Temp fix for things that still need libssl1.1
-RUN     if [ "$(uname -m)" = "x86_64" ]; then \
-            wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-            dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
-            rm libssl1.1_1.1.0g-2ubuntu4_amd64.deb; \
-        fi
-        
+# Set the locale
+RUN         sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+            locale-gen
+ENV         LANG en_US.UTF-8  
+ENV         LANGUAGE en_US:en  
+ENV         LC_ALL en_US.UTF-8
+
+## Prepare NSS Wrapper for the entrypoint as a workaround for games requiring a valid UID
+ENV         NSS_WRAPPER_PASSWD=/tmp/passwd NSS_WRAPPER_GROUP=/tmp/group
+RUN         touch ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} \
+            && chgrp 0 ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP} \
+            && chmod g+rw ${NSS_WRAPPER_PASSWD} ${NSS_WRAPPER_GROUP}
+ADD         passwd.template /passwd.template
+
+## Setup user and working directory
+RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
 
+# Sets the default stop signal as wings can (currently) only send a kill or generic stop
 STOPSIGNAL SIGINT
 
-COPY        --chown=container:container ./entrypoint.sh /entrypoint.sh
+COPY        --chown=container:container ../entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
-ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
+ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 CMD         ["/entrypoint.sh"]
