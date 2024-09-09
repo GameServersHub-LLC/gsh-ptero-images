@@ -14,8 +14,8 @@ NC='\033[0m'
 # Wait for the container to fully initialize
 sleep 1
 
-# Default the TZ environment variable to UTC.
-TZ=${TZ:-UTC}
+# Force the TZ environment variable to Eastern Standard Time
+TZ=America/New_York
 export TZ
 
 # Set environment variable that holds the Internal Docker IP
