@@ -30,6 +30,7 @@ jobs:
           - pathoftitans
           - beastofbermuda
           - theisle
+          - satisfactory
     
     steps:
       - name: Checkout repository
