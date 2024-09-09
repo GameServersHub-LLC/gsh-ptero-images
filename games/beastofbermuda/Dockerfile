@@ -1,4 +1,4 @@
-FROM        --platform=$BUILDPLATFORM ubuntu:22.04
+FROM        --platform=$BUILDPLATFORM ubuntu:latest
 
 LABEL           author="Mike Harrison" maintainer="m.harrison@gameservershub.com"
 LABEL           org.opencontainers.image.source=""
