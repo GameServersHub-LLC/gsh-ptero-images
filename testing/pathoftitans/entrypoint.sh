@@ -11,7 +11,7 @@ WHITE='\033[0;37m'
 NC='\033[0m'
 
 # Switch to the container's working directory
-cd /home/container || exit 1
+cd /home/container
 
 # Wait for the container to fully initialize
 sleep 1
@@ -20,7 +20,7 @@ sleep 1
 TZ=America/New_York
 export TZ
 
-# Set environment variable that holds the Internal Docker IP
+# Make internal Docker IP address available to processes.
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
