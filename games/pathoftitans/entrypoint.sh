@@ -11,7 +11,7 @@ WHITE='\033[0;37m'
 NC='\033[0m'
 
 # Switch to the container's working directory
-cd /home/container || exit 1
+cd /home/container
 
 # Wait for the container to fully initialize
 sleep 1
@@ -20,7 +20,7 @@ sleep 1
 TZ=America/New_York
 export TZ
 
-# Set environment variable that holds the Internal Docker IP
+# Make internal Docker IP address available to processes.
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
@@ -66,7 +66,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Checking for Server Updates. please wait...${NC}"
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-    sleep 3
+    sleep 1
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
     ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
@@ -81,5 +81,4 @@ MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
-awk -v slots="$SLOTS" '/\[\/Script\/PathOfTitans\.IGameSession\]/{print; flag=1; next} flag && /MaxPlayers/{print "MaxPlayers=" slots; flag=0; next} flag && /^$/{print "MaxPlayers=" slots; print; flag=0; next} {print}' ./PathOfTitans/Saved/Config/LinuxServer/Game.ini > ./PathOfTitans/Saved/Config/LinuxServer/temp.ini && mv ./PathOfTitans/Saved/Config/LinuxServer/temp.ini ./PathOfTitans/Saved/Config/LinuxServer/Game.ini && ./PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping -ServerName="${SERVER_NAME}" -Port=$SERVER_PORT -BranchKey=$BETA_BRANCH $(if [ -n "$SERVER_PASSWORD" ]; then echo "-ServerPassword=\"${SERVER_PASSWORD}\""; fi) -AuthToken=$AG_AUTH_TOKEN -ServerGUID=$SERVER_GUID -Database=$DATABASE -nullRHI -log
 eval ${MODIFIED_STARTUP}
