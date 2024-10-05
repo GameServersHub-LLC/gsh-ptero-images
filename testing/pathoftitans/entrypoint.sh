@@ -81,13 +81,6 @@ fi
 ESCAPED_RCON_PORT=$(printf '%q' "$RCON_PORT")
 ESCAPED_RCON_PASSWORD=$(printf '%q' "$RCON_PASSWORD")
 
-# Create rcon.yaml without quotes around the values
-cat <<EOF > /home/container/rcon.yaml
-host: localhost
-port: $ESCAPED_RCON_PORT
-password: $ESCAPED_RCON_PASSWORD
-EOF
-
 # RCON loop with command-line arguments for address and password
 (while read cmd; do
     rcon -s -a "localhost:$ESCAPED_RCON_PORT" -p "$ESCAPED_RCON_PASSWORD" "$cmd"
