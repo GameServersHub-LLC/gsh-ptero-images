@@ -29,6 +29,7 @@ jobs:
         game:
           - pathoftitans
           - satisfactory
+          - theisle
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
