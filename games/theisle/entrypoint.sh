@@ -82,43 +82,27 @@ else
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
 fi
 
-# Auto-update logic
-if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then 
+## if auto_update is not set or to 1 update
+if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then 
     # Update Source Server
-    if [ -n "${STEAM_APPID}" ]; then
-        if [ "${STEAM_USER}" == "anonymous" ]; then
-            ./steamcmd/steamcmd.sh +force_install_dir /home/container \
-            +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" \
-            $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) \
-            $( [[ "${STEAM_SDK}" == "1" ]] && printf %s '+app_update 1007' ) \
-            +app_update "${STEAM_APPID}" \
-            $( [[ -z "${STEAM_BETAID}" ]] || printf %s "-beta ${STEAM_BETAID}" ) \
-            $( [[ -z "${STEAM_BETAPASS}" ]] || printf %s "-betapassword ${STEAM_BETAPASS}" ) \
-            ${INSTALL_FLAGS} \
-            $( [[ "${VALIDATE}" == "1" ]] && printf %s 'validate' ) +quit
-        else
-            numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir /home/container \
-            +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" \
-            $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) \
-            $( [[ "${STEAM_SDK}" == "1" ]] && printf %s '+app_update 1007' ) \
-            +app_update "${STEAM_APPID}" \
-            $( [[ -z "${STEAM_BETAID}" ]] || printf %s "-beta ${STEAM_BETAID}" ) \
-            $( [[ -z "${STEAM_BETAPASS}" ]] || printf %s "-betapassword ${STEAM_BETAPASS}" ) \
-            ${INSTALL_FLAGS} \
-            $( [[ "${VALIDATE}" == "1" ]] && printf %s 'validate' ) +quit
-        fi
+    if [ ! -z ${STEAM_APPID} ]; then
+	    if [ "${STEAM_USER}" == "anonymous" ]; then
+            ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) $( [[ "${STEAM_SDK}" == "1" ]] && printf %s '+app_update 1007' ) +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s "-beta ${STEAM_BETAID}" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s "-betapassword ${STEAM_BETAPASS}" ) ${INSTALL_FLAGS} $( [[ "${VALIDATE}" == "1" ]] && printf %s 'validate' ) +quit
+	    else
+            numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) $( [[ "${STEAM_SDK}" == "1" ]] && printf %s '+app_update 1007' ) +app_update ${STEAM_APPID} $( [[ -z ${STEAM_BETAID} ]] || printf %s "-beta ${STEAM_BETAID}" ) $( [[ -z ${STEAM_BETAPASS} ]] || printf %s "-betapassword ${STEAM_BETAPASS}" ) ${INSTALL_FLAGS} $( [[ "${VALIDATE}" == "1" ]] && printf %s 'validate' ) +quit
+	    fi
     else
         echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-        echo -e "${YELLOW}No Steam App ID set. Skipping update.${NC}"
+        echo -e "${YELLOW}Checking For Updated${NC}"
         echo -e "${BLUE}---------------------------------------------------------------------${NC}"
         sleep 3
     fi
+
 else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Not updating game server as auto-update was set to 0. Starting Server.${NC}"
+    echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
 fi
-
 
 # Setup NSS Wrapper for use ($NSS_WRAPPER_PASSWD and $NSS_WRAPPER_GROUP have been set by the Dockerfile)
 export USER_ID=$(id -u)
