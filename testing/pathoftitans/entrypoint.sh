@@ -86,19 +86,11 @@ ESCAPED_RCON_PASSWORD=$(printf '%q' "$RCON_PASSWORD")
     rcon -s -a "localhost:$ESCAPED_RCON_PORT" -p "$ESCAPED_RCON_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
-# Path of Titans server startup command
-./PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping \
-    -ServerName="${SERVER_NAME}" \
-    -Port=$SERVER_PORT \
-    -BranchKey=$BETA_BRANCH \
-    $(if [ -n "$SERVER_PASSWORD" ]; then echo "-ServerPassword=\"${SERVER_PASSWORD}\""; fi) \
-    -AuthToken=$AG_AUTH_TOKEN \
-    -ServerGUID=$SERVER_GUID \
-    -Database=$DATABASE \
-    -nullRHI \
-    -rcon \
-    -log
-
+# MaxPlayers modification and server startup
+awk -v slots="{{SLOTS}}" '/\[\/Script\/PathOfTitans\.IGameSession\]/{print; flag=1; next} 
+flag && /MaxPlayers/{print "MaxPlayers=" slots; flag=0; next} 
+flag && /^$/{print "MaxPlayers=" slots; print; flag=0; next} 
+{print}' ./PathOfTitans/Saved/Config/LinuxServer/Game.ini > ./PathOfTitans/Saved/Config/LinuxServer/temp.ini && mv ./PathOfTitans/Saved/Config/LinuxServer/temp.ini ./PathOfTitans/Saved/Config/LinuxServer/Game.ini && ./PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
