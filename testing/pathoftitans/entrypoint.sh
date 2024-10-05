@@ -76,6 +76,16 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
     sleep 3
 fi
+
+##Setup RCON
+ESCAPED_RCON_PORT=$(printf '%q' "$RCON_PORT")
+ESCAPED_RCON_PASSWORD=$(printf '%q' "$RCON_PASSWORD")
+
+# RCON loop with command-line arguments for address and password
+(while read cmd; do
+    rcon -s -a "localhost:$ESCAPED_RCON_PORT" -p "$ESCAPED_RCON_PASSWORD" "$cmd"
+done) < /dev/stdin &
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
