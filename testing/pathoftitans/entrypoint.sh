@@ -66,15 +66,15 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Checking for Server Updates. please wait...${NC}"
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-    sleep 1
+    sleep 2
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
     ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
  else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
+    echo -e "${YELLOW}Not updating game server as auto update was set to false. Starting Server${NC}"
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    sleep 1
+    sleep 2
 fi
 
 # Escape special characters in environment variables (if needed)
