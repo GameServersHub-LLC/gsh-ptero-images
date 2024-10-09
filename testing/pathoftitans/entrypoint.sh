@@ -77,13 +77,9 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     sleep 2
 fi
 
-# Escape special characters in environment variables (if needed)
-ESCAPED_RCON_PORT=$(printf '%q' "$RCON_PORT")
-ESCAPED_RCON_PASSWORD=$(printf '%q' "$RCON_PASSWORD")
-
 # RCON loop with command-line arguments for address and password
 (while read cmd; do
-    rcon -s -a "localhost:$ESCAPED_RCON_PORT" -p "$ESCAPED_RCON_PASSWORD" "$cmd"
+    rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
 # Replace Startup Variables
