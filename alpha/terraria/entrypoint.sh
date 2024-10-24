@@ -54,7 +54,7 @@ echo -e "${white} |   | •██  ▀▄.▀·▀▄ █·▀▄ █·▐█ �
 echo -e "${white} |   |  ▐█.▪▐▀▀▪▄▐▀▀▄ ▐▀▀▄ ▄█▀▀█ ▐▀▀▄ ▐█·▄█▀▀█  |   | ${NC}"
 echo -e "${white} |   |  ▐█▌·▐█▄▄▌▐█•█▌▐█•█▌▐█ ▪▐▌▐█•█▌▐█▌▐█ ▪▐▌ |   | ${NC}"
 echo -e "${white} |   |  ▀▀▀  ▀▀▀ .▀  ▀.▀  ▀ ▀  ▀ .▀  ▀▀▀▀ ▀  ▀  |   | ${NC}"
-echo -e "${white} |   | ${YELLOW} by MxL Ninjaz ${WHITE}                        |   | ${NC}"
+echo -e "${white} |   | ${YELLOW} by MxL Ninjaz ${WHITE}                          |   | ${NC}"
 echo -e "${white} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${white}(_____)                                        (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
