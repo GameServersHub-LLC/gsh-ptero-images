@@ -18,11 +18,11 @@ jobs:
   push:
     name: "alpha:${{ matrix.game }}"
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
       packages: write
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -32,6 +32,7 @@ jobs:
           - theisle
           - asa
           - draconia
+          - terraria
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,4 +55,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-             ghcr.io/gameservershub-llc/alpha:${{ matrix.game }}
+            ghcr.io/gameservershub-llc/alpha:${{ matrix.game }}
