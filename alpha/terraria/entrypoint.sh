@@ -60,6 +60,8 @@ echo -e "${WHITE}(_____)                                        (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 echo -e "${GREEN} Current dotnet version:${WHITE} $(dotnet --version) ${NC}"
 
+sleep 3
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
