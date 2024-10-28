@@ -52,7 +52,7 @@ echo -e "${WHITE} |   |${BLUE} ${YELLOW} by that411guy ${WHITE}                 
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                                                                              (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-chmod +x /home/container/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
+chmod +x /home/container/LinuxServer/BeastsOfBermuda/Binaries/Linux/BeastsOfBermudaServer
 sleep 3
 
 # Switch to the container's working directory
