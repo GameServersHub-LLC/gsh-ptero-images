@@ -60,17 +60,25 @@ UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 sleep 3
 
-## check for serverupdates
-if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
+## Check for server updates
+if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
     cd /home/container
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Checking for Server Updates. please wait...${NC}"
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     sleep 2
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
-    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS --hotfix ${HOT_FIX}
+    
+    # Check if EXTRA_ARGS contains a numeric value and construct the hotfix command
+    if [[ "${HOT_FIX}" =~ ^[0-9]+$ ]]; then
+        HOTFIX_ARG="--hotfix ${HOT_FIX}"
+    else
+        HOTFIX_ARG=""
+    fi
+
+    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS ${HOTFIX_ARG}
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
- else
+else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Not updating game server as auto update was set to false. Starting Server${NC}"
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
