@@ -18,6 +18,12 @@ RUN apt update && apt upgrade -y && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
+## Configure locale
+RUN apt update && apt install -y locales && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8
+
 ## Install rcon
 RUN cd /tmp/ && \
     curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz && \
@@ -32,10 +38,6 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
         rm libssl1.1_1.1.0g-2ubuntu4_amd64.deb; \
     fi
 
-## Configure locale
-RUN update-locale LANG=en_US.UTF-8 && \
-    dpkg-reconfigure --frontend noninteractive locales
-
 ## Switch to non-root user
 USER container
 ENV USER=container HOME=/home/container
@@ -45,9 +47,4 @@ WORKDIR /home/container
 STOPSIGNAL SIGINT
 
 ## Add entrypoint script
-COPY --chown=container:container ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-## Set tini as the entrypoint
-ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
-CMD ["/entrypoint.sh"]
+COPY
