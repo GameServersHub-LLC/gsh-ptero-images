@@ -47,4 +47,9 @@ WORKDIR /home/container
 STOPSIGNAL SIGINT
 
 ## Add entrypoint script
-COPY
+COPY --chown=container:container ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+## Set tini as the entrypoint
+ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
+CMD ["/entrypoint.sh"]
