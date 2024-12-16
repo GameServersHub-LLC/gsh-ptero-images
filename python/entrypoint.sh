@@ -37,6 +37,7 @@ echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
 
+
 # Print current Python version
 python --version
 
