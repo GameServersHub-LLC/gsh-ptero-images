@@ -83,7 +83,7 @@ fi
 
 # RCON loop with command-line arguments for address and password
 (while read cmd; do
-    rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
 # Replace Startup Variables
