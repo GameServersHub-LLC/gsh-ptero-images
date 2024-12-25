@@ -1,11 +1,20 @@
 #!/bin/bash
-
+#System variables
+clear
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+NC='\033[0m'
 
 # Wait for the container to fully initialize
 sleep 1
 
-# Default the TZ environment variable to UTC.
-TZ=${TZ:-UTC}
+# Force the TZ environment variable to Eastern Standard Time
+TZ=America/New_York
 export TZ
 
 # Set environment variable that holds the Internal Docker IP
@@ -31,17 +40,17 @@ echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
-echo -e "${WHITE} _____                                                                          _____ ${NC}"
-echo -e "${WHITE}( ___ )                                                                        ( ___ )${NC}"
-echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
+echo -e "${WHITE} _____                                                          _____ ${NC}"
+echo -e "${WHITE}( ___ )                                                        ( ___ )${NC}"
+echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
 echo -e "${WHITE} |   |${RED} ▄▄▄· ▄▄▄  ▄ •▄     .▄▄ ·  ▄▄▄·     ▄▄▄ . ▄▄ •  ▄▄ •  ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |   |${RED}▐█ ▀█ ▀▄ █·█▌▄▌▪    ▐█ ▀. ▐█ ▀█     ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪ ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |   |${RED}▄█▀▀█ ▐▀▀▄ ▐▀▀▄·    ▄▀▀▀█▄▄█▀▀█     ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄ ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |   |${RED}▐█ ▪▐▌▐█•█▌▐█.█▌    ▐█▄▪▐█▐█ ▪▐▌    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█ ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |   |${RED} ▀  ▀ .▀  ▀·▀  ▀     ▀▀▀▀  ▀  ▀      ▀▀▀ ·▀▀▀▀ ·▀▀▀▀  ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                                                           ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
-echo -e "${WHITE}(_____)                                                                        (_____)${NC}"
+echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                                           ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
+echo -e "${WHITE}(_____)                                                        (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 
 # Set environment for Steam Proton
