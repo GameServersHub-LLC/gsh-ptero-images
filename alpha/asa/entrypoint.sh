@@ -81,6 +81,11 @@ else
     echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
 
+# RCON loop with command-line arguments for address and password
+(while read cmd; do
+    rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
+done) < /dev/stdin &
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"

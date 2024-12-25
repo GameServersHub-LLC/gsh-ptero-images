@@ -30,11 +30,12 @@
         RUN	        wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
                     && chmod +x /usr/sbin/winetricks
         
-        ## install rcon
-        RUN         cd /tmp/ \
-                    && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
-                    && tar xvf rcon.tar.gz \
-                    && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
+        ## Install rcon
+        RUN cd /tmp/ && \
+                curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz && \
+                tar xvf rcon.tar.gz && \
+                mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/ && \
+                rm -rf rcon.tar.gz rcon-0.10.3-amd64_linux
                     
         USER        container
         ENV         USER=container HOME=/home/container
