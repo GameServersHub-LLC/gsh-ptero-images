@@ -3,8 +3,8 @@
 # ---------------------------------------------
         FROM        debian:bookworm-slim
 
-        LABEL       author="Torsten Widmann" maintainer="info@goover.de"
-        
+        LABEL author="Mike H" maintainer="m.harrison@gameservershub.com"
+        ENV TZ=America/New_York
         ## install required packages
         RUN         dpkg --add-architecture i386
         RUN         apt update
