@@ -3,8 +3,8 @@
 # ---------------------------------------------
         FROM        debian:bookworm-slim
 
-        LABEL       author="Torsten Widmann" maintainer="info@goover.de"
-        
+        LABEL author="Mike H" maintainer="m.harrison@gameservershub.com"
+        ENV TZ=America/New_York
         ## install required packages
         RUN         dpkg --add-architecture i386
         RUN         apt update
@@ -30,11 +30,12 @@
         RUN	        wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
                     && chmod +x /usr/sbin/winetricks
         
-        ## install rcon
-        RUN         cd /tmp/ \
-                    && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
-                    && tar xvf rcon.tar.gz \
-                    && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
+        ## Install rcon
+        RUN cd /tmp/ && \
+                curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz && \
+                tar xvf rcon.tar.gz && \
+                mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/ && \
+                rm -rf rcon.tar.gz rcon-0.10.3-amd64_linux
                     
         USER        container
         ENV         USER=container HOME=/home/container
