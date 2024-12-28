@@ -53,6 +53,22 @@ echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|__
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 
+# GSH Image Check
+if [[ ! -f "/entrypoint.sh" ]] || [[ ! $(grep -L "Made By.*GSH" /entrypoint.sh) ]]; then
+    echo -e "${RED}ERROR: This egg requires GSH's ARK:SA image to function properly${NC}"
+    echo -e "${RED}Please use one of the following images:${NC}"
+    echo -e "${YELLOW}- ghcr.io/gameservershub-llc/alpha:asa${NC}"
+    echo -e "${YELLOW}- ghcr.io/gameservershub-llc/nonfree:asa${NC}"
+    exit 1
+fi
+
+# Check if ARK binary exists
+if [[ ! -f "./ShooterGame/Binaries/Win64/ArkAscendedServer.exe" ]]; then
+    echo -e "${RED}ERROR: ArkAscendedServer.exe not found${NC}"
+    echo -e "${YELLOW}Please check your installation${NC}"
+    exit 1
+fi
+
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
@@ -121,12 +137,21 @@ rmv() {
 }
 trap rmv 15 2
 
+# Launch ARK server with parameters
+function launch_ark() {
+    if [[ ! -f "/usr/local/bin/proton" ]]; then
+        echo -e "${RED}ERROR: Proton not found in expected location${NC}"
+        exit 1
+    fi
+    proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe "$@"
+}
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server with log monitoring
-eval ${MODIFIED_STARTUP} & ARK_PID=$!
+launch_ark ${MODIFIED_STARTUP} & ARK_PID=$!
 tail -c0 -F "ShooterGame/Saved/Logs/ShooterGame.log" --pid=$ARK_PID & TAIL_PID=$!
 wait $ARK_PID || true
 echo "Server process ended."
