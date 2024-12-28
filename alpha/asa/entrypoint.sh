@@ -21,7 +21,8 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# system informations                                                           
+# system informations     
+# Made By GSH                                                     
 echo -e "${YELLOW} Made By                                                          ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
@@ -128,14 +129,29 @@ touch "ShooterGame/Saved/Logs/ShooterGame.log"
 
 # Setup ARK-specific signal handling
 rmv() { 
-    echo "stopping server"
+    echo "Initiating graceful shutdown..."
+    
+    # Send save world command
+    echo "Saving world..."
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld"
+    sleep 5
+    
+    # Send shutdown command
+    echo "Sending shutdown command..."
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit"
+    
+    # Wait for server to close naturally
+    echo "Waiting for server to shut down..."
     if [ ! -z "$ARK_PID" ]; then
         wait ${ARK_PID} 2>/dev/null || true
     fi
+    
     echo "Server Closed"
     exit
 }
-trap rmv 15 2
+
+# Catch more signals for proper shutdown
+trap rmv SIGTERM SIGINT SIGQUIT
 
 # Launch ARK server with parameters
 function launch_ark() {
