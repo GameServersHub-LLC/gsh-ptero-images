@@ -17,6 +17,27 @@ sleep 1
 TZ=America/New_York
 export TZ
 
+# Download and extract file from GitHub
+echo "Downloading resources from GitHub..."
+GITHUB_URL="https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest"
+DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
+EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
+
+mkdir -p $DOWNLOAD_PATH
+mkdir -p $EXTRACT_PATH
+
+wget -q $GITHUB_URL -P $DOWNLOAD_PATH || {
+    echo "Failed to download file from GitHub"
+}
+
+if [ -f $DOWNLOAD_PATH/*.zip ]; then
+    unzip -o $DOWNLOAD_PATH/*.zip -d $EXTRACT_PATH
+    rm -f $DOWNLOAD_PATH/*.zip
+    echo "Successfully extracted files to $EXTRACT_PATH"
+else
+    echo "No zip file found to extract"
+fi
+
 # Set environment variable that holds the Internal Docker IP
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
@@ -52,7 +73,7 @@ echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                         
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-sleep 3
+
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
@@ -98,7 +119,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     fi
 
 else
-    echo -e "Not updating game server as auto update was set to false. Starting Server"
+    echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
 
 # RCON loop with command-line arguments for address and password
