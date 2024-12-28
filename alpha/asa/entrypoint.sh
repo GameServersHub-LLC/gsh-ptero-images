@@ -1,5 +1,4 @@
 #!/bin/bash
-# Made By GSH - Game Servers Hub
 #System variables
 clear
 RED='\033[0;31m'
@@ -53,15 +52,6 @@ echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                         
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-
-# GSH Image Check
-if [[ ! -f "/entrypoint.sh" ]] || [[ ! $(grep -L "Made By.*GSH" /entrypoint.sh) ]]; then
-    echo -e "${RED}ERROR: This egg requires GSH's ARK:SA image to function properly${NC}"
-    echo -e "${RED}Please use one of the following images:${NC}"
-    echo -e "${YELLOW}- ghcr.io/gameservershub-llc/alpha:asa${NC}"
-    echo -e "${YELLOW}- ghcr.io/gameservershub-llc/nonfree:asa${NC}"
-    exit 1
-fi
 
 # Check if ARK binary exists
 if [[ ! -f "./ShooterGame/Binaries/Win64/ArkAscendedServer.exe" ]]; then
