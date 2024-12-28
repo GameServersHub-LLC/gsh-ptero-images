@@ -1,4 +1,5 @@
 #!/bin/bash
+# Made By GSH - Game Servers Hub
 #System variables
 clear
 RED='\033[0;31m'
@@ -21,8 +22,7 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# system informations     
-# Made By GSH                                                     
+# system informations                                             
 echo -e "${YELLOW} Made By                                                          ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
