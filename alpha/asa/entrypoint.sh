@@ -21,7 +21,7 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# system informations                                             
+# system informations                                                           
 echo -e "${YELLOW} Made By                                                          ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
@@ -52,13 +52,6 @@ echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                         
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-
-# Check if ARK binary exists
-if [[ ! -f "./ShooterGame/Binaries/Win64/ArkAscendedServer.exe" ]]; then
-    echo -e "${RED}ERROR: ArkAscendedServer.exe not found${NC}"
-    echo -e "${YELLOW}Please check your installation${NC}"
-    exit 1
-fi
 
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
@@ -113,53 +106,9 @@ fi
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
-# Create required ARK directories and logs
-mkdir -p "ShooterGame/Saved/Logs" 
-touch "ShooterGame/Saved/Logs/ShooterGame.log"
-
-# Setup ARK-specific signal handling
-rmv() { 
-    echo "Initiating graceful shutdown..."
-    
-    # Send save world command
-    echo "Saving world..."
-    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld"
-    sleep 5
-    
-    # Send shutdown command
-    echo "Sending shutdown command..."
-    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit"
-    
-    # Wait for server to close naturally
-    echo "Waiting for server to shut down..."
-    if [ ! -z "$ARK_PID" ]; then
-        wait ${ARK_PID} 2>/dev/null || true
-    fi
-    
-    echo "Server Closed"
-    exit
-}
-
-# Catch more signals for proper shutdown
-trap rmv SIGTERM SIGINT SIGQUIT
-
-# Launch ARK server with parameters
-function launch_ark() {
-    if [[ ! -f "/usr/local/bin/proton" ]]; then
-        echo -e "${RED}ERROR: Proton not found in expected location${NC}"
-        exit 1
-    fi
-    proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe "$@"
-}
-
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Run the Server with log monitoring
-launch_ark ${MODIFIED_STARTUP} & ARK_PID=$!
-tail -c0 -F "ShooterGame/Saved/Logs/ShooterGame.log" --pid=$ARK_PID & TAIL_PID=$!
-wait $ARK_PID || true
-echo "Server process ended."
-kill $TAIL_PID 2>/dev/null || true
-exit 0
+# Run the Server
+eval ${MODIFIED_STARTUP}
