@@ -18,24 +18,32 @@ TZ=America/New_York
 export TZ
 
 # Download and extract file from GitHub
-echo "Downloading resources from GitHub..."
-GITHUB_URL="https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest"
+echo "Downloading latest AsaApi release from GitHub..."
 DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
 EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
 
 mkdir -p $DOWNLOAD_PATH
 mkdir -p $EXTRACT_PATH
 
-wget -q $GITHUB_URL -P $DOWNLOAD_PATH || {
-    echo "Failed to download file from GitHub"
-}
+# Get the latest release download URL using GitHub API
+LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
+    | grep "browser_download_url.*zip" \
+    | cut -d : -f 2,3 \
+    | tr -d \")
 
-if [ -f $DOWNLOAD_PATH/*.zip ]; then
-    unzip -o $DOWNLOAD_PATH/*.zip -d $EXTRACT_PATH
-    rm -f $DOWNLOAD_PATH/*.zip
-    echo "Successfully extracted files to $EXTRACT_PATH"
+if [ ! -z "$LATEST_RELEASE_URL" ]; then
+    echo "Downloading latest release from: $LATEST_RELEASE_URL"
+    wget -q "$LATEST_RELEASE_URL" -P $DOWNLOAD_PATH
+    
+    if [ -f $DOWNLOAD_PATH/*.zip ]; then
+        unzip -o $DOWNLOAD_PATH/*.zip -d $EXTRACT_PATH
+        rm -f $DOWNLOAD_PATH/*.zip
+        echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
+    else
+        echo "Failed to find downloaded zip file"
+    fi
 else
-    echo "No zip file found to extract"
+    echo "Failed to get latest release information from GitHub"
 fi
 
 # Set environment variable that holds the Internal Docker IP
