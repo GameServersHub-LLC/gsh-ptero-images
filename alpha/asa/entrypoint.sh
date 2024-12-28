@@ -110,5 +110,5 @@ done) < /dev/stdin &
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Check if this is an ASA server
-proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${MODIFIED_STARTUP}
+# Run the Server
+eval ${MODIFIED_STARTUP}
