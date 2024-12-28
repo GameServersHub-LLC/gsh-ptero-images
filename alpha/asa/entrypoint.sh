@@ -52,7 +52,7 @@ echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                         
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-
+sleep 3
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
@@ -98,7 +98,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     fi
 
 else
-    echo -e "Not updating game server as auto update was set to 0. Starting Server"
+    echo -e "Not updating game server as auto update was set to false. Starting Server"
 fi
 
 # RCON loop with command-line arguments for address and password
@@ -110,5 +110,11 @@ done) < /dev/stdin &
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Run the Server
-eval ${MODIFIED_STARTUP}
+# Check if this is an ASA server
+if [ -f "./ShooterGame/Binaries/Win64/ArkAscendedServer.exe" ]; then
+    echo "Starting ASA Server with Proton..."
+    proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${MODIFIED_STARTUP}
+else
+    # Run the Server normally
+    eval ${MODIFIED_STARTUP}
+fi
