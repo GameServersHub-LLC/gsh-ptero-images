@@ -106,9 +106,29 @@ fi
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
+# Create required ARK directories and logs
+mkdir -p "ShooterGame/Saved/Logs" 
+touch "ShooterGame/Saved/Logs/ShooterGame.log"
+
+# Setup ARK-specific signal handling
+rmv() { 
+    echo "stopping server"
+    if [ ! -z "$ARK_PID" ]; then
+        wait ${ARK_PID} 2>/dev/null || true
+    fi
+    echo "Server Closed"
+    exit
+}
+trap rmv 15 2
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Run the Server
-eval ${MODIFIED_STARTUP}
+# Run the Server with log monitoring
+eval ${MODIFIED_STARTUP} & ARK_PID=$!
+tail -c0 -F "ShooterGame/Saved/Logs/ShooterGame.log" --pid=$ARK_PID & TAIL_PID=$!
+wait $ARK_PID || true
+echo "Server process ended."
+kill $TAIL_PID 2>/dev/null || true
+exit 0
