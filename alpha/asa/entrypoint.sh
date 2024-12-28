@@ -28,19 +28,19 @@ mkdir -p $EXTRACT_PATH
 # Get the latest release download URL using GitHub API
 LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
     | grep "browser_download_url.*zip" \
-    | cut -d : -f 2,3 \
-    | tr -d \")
+    | cut -d '"' -f 4)
 
 if [ ! -z "$LATEST_RELEASE_URL" ]; then
     echo "Downloading latest release from: $LATEST_RELEASE_URL"
-    wget -q "$LATEST_RELEASE_URL" -P $DOWNLOAD_PATH
+    cd $DOWNLOAD_PATH
+    wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
     
-    if [ -f $DOWNLOAD_PATH/*.zip ]; then
-        unzip -o $DOWNLOAD_PATH/*.zip -d $EXTRACT_PATH
-        rm -f $DOWNLOAD_PATH/*.zip
+    if [ -f "AsaApi.zip" ]; then
+        unzip -o AsaApi.zip
+        rm -f AsaApi.zip
         echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
     else
-        echo "Failed to find downloaded zip file"
+        echo "Failed to download zip file from: $LATEST_RELEASE_URL"
     fi
 else
     echo "Failed to get latest release information from GitHub"
