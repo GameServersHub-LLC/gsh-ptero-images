@@ -111,10 +111,4 @@ MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Check if this is an ASA server
-if [ -f "./ShooterGame/Binaries/Win64/ArkAscendedServer.exe" ]; then
-    echo "Starting ASA Server with Proton..."
-    proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${MODIFIED_STARTUP}
-else
-    # Run the Server normally
-    eval ${MODIFIED_STARTUP}
-fi
+proton run ./ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${MODIFIED_STARTUP}
