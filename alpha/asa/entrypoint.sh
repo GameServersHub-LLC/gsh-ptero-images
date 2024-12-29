@@ -10,41 +10,25 @@ CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 NC='\033[0m'
 
+# Add shutdown handler function
+shutdown_handler() {
+    echo "Shutdown signal received, saving world..."
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld"
+    sleep 5
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit"
+    sleep 2
+    exit 0
+}
+
+# Set up trap for graceful shutdown
+trap 'shutdown_handler' SIGTERM
+
 # Wait for the container to fully initialize
 sleep 1
 
 # Force the TZ environment variable to Eastern Standard Time
 TZ=America/New_York
 export TZ
-
-# Download and extract file from GitHub
-echo "Downloading latest AsaApi release from GitHub..."
-DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
-EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
-
-mkdir -p $DOWNLOAD_PATH
-mkdir -p $EXTRACT_PATH
-
-# Get the latest release download URL using GitHub API
-LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
-    | grep "browser_download_url.*zip" \
-    | cut -d '"' -f 4)
-
-if [ ! -z "$LATEST_RELEASE_URL" ]; then
-    echo "Downloading latest release from: $LATEST_RELEASE_URL"
-    cd $DOWNLOAD_PATH
-    wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
-    
-    if [ -f "AsaApi.zip" ]; then
-        unzip -o AsaApi.zip
-        rm -f AsaApi.zip
-        echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
-    else
-        echo "Failed to download zip file from: $LATEST_RELEASE_URL"
-    fi
-else
-    echo "Failed to get latest release information from GitHub"
-fi
 
 # Set environment variable that holds the Internal Docker IP
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
@@ -81,7 +65,7 @@ echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                         
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-
+sleep 3
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
@@ -130,7 +114,7 @@ else
     echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
 
-# RCON loop with command-line arguments for address and password
+# Replace the existing RCON loop with just the background RCON stdin reader
 (while read cmd; do
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
@@ -139,5 +123,7 @@ done) < /dev/stdin &
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Run the Server
-eval ${MODIFIED_STARTUP}
+# Run the Server (modified to wait for server process)
+eval ${MODIFIED_STARTUP} &
+SERVER_PID=$!
+wait $SERVER_PID
