@@ -26,34 +26,34 @@ trap 'shutdown_handler' SIGTERM
 # Wait for the container to fully initialize
 sleep 1
 
-# Download and extract file from GitHub
-echo "Downloading latest AsaApi release from GitHub..."
-DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
-EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
-
-mkdir -p $DOWNLOAD_PATH
-mkdir -p $EXTRACT_PATH
-
-# Get the latest release download URL using GitHub API
-LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
-    | grep "browser_download_url.*zip" \
-    | cut -d '"' -f 4)
-
-if [ ! -z "$LATEST_RELEASE_URL" ]; then
-    echo "Downloading latest release from: $LATEST_RELEASE_URL"
-    cd $DOWNLOAD_PATH
-    wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
-    
-    if [ -f "AsaApi.zip" ]; then
-        unzip -o AsaApi.zip
-        rm -f AsaApi.zip
-        echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
-    else
-        echo "Failed to download zip file from: $LATEST_RELEASE_URL"
-    fi
-else
-    echo "Failed to get latest release information from GitHub"
-fi
+## Download and extract file from GitHub
+#echo "Downloading latest AsaApi release from GitHub..."
+#DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
+#EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
+#
+#mkdir -p $DOWNLOAD_PATH
+#mkdir -p $EXTRACT_PATH
+#
+## Get the latest release download URL using GitHub API
+#LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
+#    | grep "browser_download_url.*zip" \
+#    | cut -d '"' -f 4)
+#
+#if [ ! -z "$LATEST_RELEASE_URL" ]; then
+#    echo "Downloading latest release from: $LATEST_RELEASE_URL"
+#    cd $DOWNLOAD_PATH
+#    wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
+#    
+#    if [ -f "AsaApi.zip" ]; then
+#        unzip -o AsaApi.zip
+#        rm -f AsaApi.zip
+#        echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
+#    else
+#        echo "Failed to download zip file from: $LATEST_RELEASE_URL"
+#    fi
+#else
+#    echo "Failed to get latest release information from GitHub"
+#fi
 
 # Force the TZ environment variable to Eastern Standard Time
 TZ=America/New_York
