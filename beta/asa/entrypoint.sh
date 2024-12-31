@@ -145,7 +145,7 @@ fi
 
 # Replace the existing RCON loop with just the background RCON stdin reader
 (while read cmd; do
-    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
+    rcon -s -a "127.0.0.1:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
 # Replace Startup Variables
