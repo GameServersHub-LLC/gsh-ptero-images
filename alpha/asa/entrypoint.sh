@@ -95,9 +95,16 @@ if [ -f "$EXTRACT_PATH/AsaApiLoader.exe" ]; then
     CURRENT_VERSION=$(get_installed_version)
     
     if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
-        echo "Update available: $CURRENT_VERSION → $LATEST_VERSION"
-        read -p "Would you like to update? (y/N): " -n 1 -r
-        echo
+        echo -e "\n=== Update Available ==="
+        echo "Current version: $CURRENT_VERSION"
+        echo "Latest version:  $LATEST_VERSION"
+        echo "===================="
+        echo -en "\nWould you like to update? (y/N): "
+        stty -icanon
+        REPLY=$(dd bs=1 count=1 2>/dev/null)
+        stty icanon
+        echo # Add newline after input
+        
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "Downloading update..."
             LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
