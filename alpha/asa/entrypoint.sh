@@ -26,6 +26,47 @@ trap 'shutdown_handler' SIGTERM
 # Wait for the container to fully initialize
 sleep 1
 
+# Force the TZ environment variable to Eastern Standard Time
+TZ=America/New_York
+export TZ
+
+# Set environment variable that holds the Internal Docker IP
+INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
+export INTERNAL_IP
+
+# system informations                                                           
+echo -e "${YELLOW} Made By                                                          ${NC}"
+echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
+echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}    GG:::::::::::::::GS:::::SSSSSS::::::SH:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}   G:::::GGGGGGGG::::GS:::::S     SSSSSSSHH::::::H     H::::::HH ${NC}"
+echo -e "${MAGENTA}  G:::::G       GGGGGGS:::::S              H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G              S:::::S              H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G               S::::SSSS           H::::::HHHHH::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G    GGGGGGGGGG  SS::::::SSSSS      H:::::::::::::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G    G::::::::G    SSS::::::::SS    H:::::::::::::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G    GGGGG::::G       SSSSSS::::S   H::::::HHHHH::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G        G::::G            S:::::S  H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA}  G:::::G       G::::G            S:::::S  H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA}   G:::::GGGGGGGG::::GSSSSSSS     S:::::SHH::::::H     H::::::HH ${NC}"
+echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
+echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
+echo -e "${WHITE} _____                                                      _____ ${NC}"
+echo -e "${WHITE}( ___ )                                                    ( ___ )${NC}"
+echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
+echo -e "${WHITE} |   |${RED} ▄▄▄· ▄▄▄  ▄ •▄     .▄▄ ·  ▄▄▄·     ▄▄▄ . ▄▄ •  ▄▄ •  ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${RED}▐█ ▀█ ▀▄ █·█▌▄▌▪    ▐█ ▀. ▐█ ▀█     ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪ ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${RED}▄█▀▀█ ▐▀▀▄ ▐▀▀▄·    ▄▀▀▀█▄▄█▀▀█     ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄ ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${RED}▐█ ▪▐▌▐█•█▌▐█.█▌    ▐█▄▪▐█▐█ ▪▐▌    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█ ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${RED} ▀  ▀ .▀  ▀·▀  ▀     ▀▀▀▀  ▀  ▀      ▀▀▀ ·▀▀▀▀ ·▀▀▀▀  ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                                       ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
+echo -e "${WHITE}(_____)                                                    (_____)${NC}"
+echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
+sleep 3
+
 # Download and extract file from GitHub
 DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
 EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
@@ -102,46 +143,7 @@ else
     fi
 fi
 
-# Force the TZ environment variable to Eastern Standard Time
-TZ=America/New_York
-export TZ
 
-# Set environment variable that holds the Internal Docker IP
-INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
-export INTERNAL_IP
-
-# system informations                                                           
-echo -e "${YELLOW} Made By                                                          ${NC}"
-echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
-echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
-echo -e "${MAGENTA}    GG:::::::::::::::GS:::::SSSSSS::::::SH:::::::H     H:::::::H ${NC}"
-echo -e "${MAGENTA}   G:::::GGGGGGGG::::GS:::::S     SSSSSSSHH::::::H     H::::::HH ${NC}"
-echo -e "${MAGENTA}  G:::::G       GGGGGGS:::::S              H:::::H     H:::::H   ${NC}"
-echo -e "${MAGENTA} G:::::G              S:::::S              H:::::H     H:::::H   ${NC}"
-echo -e "${MAGENTA} G:::::G               S::::SSSS           H::::::HHHHH::::::H   ${NC}"
-echo -e "${MAGENTA} G:::::G    GGGGGGGGGG  SS::::::SSSSS      H:::::::::::::::::H   ${NC}"
-echo -e "${MAGENTA} G:::::G    G::::::::G    SSS::::::::SS    H:::::::::::::::::H   ${NC}"
-echo -e "${MAGENTA} G:::::G    GGGGG::::G       SSSSSS::::S   H::::::HHHHH::::::H   ${NC}"
-echo -e "${MAGENTA} G:::::G        G::::G            S:::::S  H:::::H     H:::::H   ${NC}"
-echo -e "${MAGENTA}  G:::::G       G::::G            S:::::S  H:::::H     H:::::H   ${NC}"
-echo -e "${MAGENTA}   G:::::GGGGGGGG::::GSSSSSSS     S:::::SHH::::::H     H::::::HH ${NC}"
-echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::::H ${NC}"
-echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
-echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
-echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
-echo -e "${WHITE} _____                                                      _____ ${NC}"
-echo -e "${WHITE}( ___ )                                                    ( ___ )${NC}"
-echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
-echo -e "${WHITE} |   |${RED} ▄▄▄· ▄▄▄  ▄ •▄     .▄▄ ·  ▄▄▄·     ▄▄▄ . ▄▄ •  ▄▄ •  ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${RED}▐█ ▀█ ▀▄ █·█▌▄▌▪    ▐█ ▀. ▐█ ▀█     ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪ ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${RED}▄█▀▀█ ▐▀▀▄ ▐▀▀▄·    ▄▀▀▀█▄▄█▀▀█     ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄ ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${RED}▐█ ▪▐▌▐█•█▌▐█.█▌    ▐█▄▪▐█▐█ ▪▐▌    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█ ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${RED} ▀  ▀ .▀  ▀·▀  ▀     ▀▀▀▀  ▀  ▀      ▀▀▀ ·▀▀▀▀ ·▀▀▀▀  ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                                       ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
-echo -e "${WHITE}(_____)                                                    (_____)${NC}"
-echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-sleep 3
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
