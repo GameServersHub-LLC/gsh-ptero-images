@@ -163,7 +163,7 @@ if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
 	    mkdir -p /home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}
         export STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/container/.steam/steam"
-        export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
+        export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}
         # Fix for pipx with protontricks
         export PATH=$PATH:/root/.local/bin
     else
@@ -222,11 +222,46 @@ if [ "${USE_ASA_API}" == "1" ] || [ "${USE_ASA_API}" == "true" ]; then
     fi
 fi
 
-# Replace Startup Variables
-MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
-echo -e ":/home/container$ ${MODIFIED_STARTUP}"
+# Build server startup command
+build_startup_cmd() {
+    local cmd="proton run ./ShooterGame/Binaries/Win64/${SERVER_EXECUTABLE}"
+    cmd+=" ${SERVER_MAP}?listen?SessionName=\"${SESSION_NAME}\""
+    cmd+="?Port=${SERVER_PORT}RCONPort=${RCON_PORT}?RCONEnabled=True"
+    
+    # Add conditional parameters
+    [ "$SERVER_PVE" != "0" ] && cmd+="?ServerPVE=True"
+    [ -n "$SERVER_PASSWORD" ] && cmd+="?ServerPassword=\"${SERVER_PASSWORD}\""
+    [ -n "$ARGS_PARAMS" ] && cmd+="${ARGS_PARAMS}"
+    
+    # Add standard parameters
+    cmd+=" -WinLiveMaxPlayers=${MAX_PLAYERS}"
+    cmd+=" -NoTransferFromFiltering"
+    cmd+=" -clusterid=${CLUSTER_ID:-}"
+    cmd+=" -ClusterDirOverride=\"${CLUSTER_DIR_OVERRIDE:-}\""
+    cmd+=" -oldconsole -servergamelog"
+    
+    # Add optional parameters
+    [ -n "$MOD_IDS" ] && cmd+=" -mods=$MOD_IDS"
+    [ -n "$PASS_MOD" ] && cmd+=" -passivemod=$PASS_MOD"
+    [ "$BATTLE_EYE" != "1" ] && cmd+=" -NoBattlEye"
+    [ -n "$ARGS_FLAGS" ] && cmd+=" ${ARGS_FLAGS}"
+    
+    echo "$cmd"
+}
 
-# Run the Server (modified to wait for server process)
-eval ${MODIFIED_STARTUP} &
+# Replace the existing RCON loop with just the background RCON stdin reader
+(while read cmd; do
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
+done) < /dev/stdin &
+
+# Build and execute startup command
+STARTUP_CMD=$(build_startup_cmd)
+echo -e ":/home/container$ ${STARTUP_CMD}"
+eval ${STARTUP_CMD} &
 SERVER_PID=$!
+
+# Monitor server
+tail -n 20 -f "ShooterGame/Saved/Logs/ShooterGame.log" &
 wait $SERVER_PID
+
+exit 0
