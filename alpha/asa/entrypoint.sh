@@ -33,11 +33,51 @@ EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
 mkdir -p $DOWNLOAD_PATH
 mkdir -p $EXTRACT_PATH
 
-# Check if AsaApiLoader.exe exists
+# Function to get latest version from GitHub
+get_latest_version() {
+    curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest | grep "tag_name" | cut -d '"' -f 4
+}
+
+# Function to get current installed version
+get_installed_version() {
+    if [ -f "$EXTRACT_PATH/version.txt" ]; then
+        cat "$EXTRACT_PATH/version.txt"
+    else
+        echo "0.0.0"
+    fi
+}
+
+# Check if AsaApiLoader.exe exists and check for updates
 if [ -f "$EXTRACT_PATH/AsaApiLoader.exe" ]; then
-    echo "AsaApiLoader.exe already exists, skipping download..."
+    echo "AsaApiLoader.exe exists, checking for updates..."
+    LATEST_VERSION=$(get_latest_version)
+    CURRENT_VERSION=$(get_installed_version)
+    
+    if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+        echo "Update available: $CURRENT_VERSION → $LATEST_VERSION"
+        read -p "Would you like to update? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "Downloading update..."
+            LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
+                | grep "browser_download_url.*zip" \
+                | cut -d '"' -f 4)
+            cd $DOWNLOAD_PATH
+            wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
+            if [ -f "AsaApi.zip" ]; then
+                unzip -o AsaApi.zip
+                rm -f AsaApi.zip
+                echo "$LATEST_VERSION" > "$EXTRACT_PATH/version.txt"
+                echo "Successfully updated to version $LATEST_VERSION"
+            fi
+        else
+            echo "Update skipped"
+        fi
+    else
+        echo "AsaApi is up to date (version $CURRENT_VERSION)"
+    fi
 else
-    echo "Downloading latest AsaApi release from GitHub..."
+    echo "AsaApiLoader.exe not found, performing first-time installation..."
     # Get the latest release download URL using GitHub API
     LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
         | grep "browser_download_url.*zip" \
@@ -51,7 +91,9 @@ else
         if [ -f "AsaApi.zip" ]; then
             unzip -o AsaApi.zip
             rm -f AsaApi.zip
-            echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
+            LATEST_VERSION=$(get_latest_version)
+            echo "$LATEST_VERSION" > "$EXTRACT_PATH/version.txt"
+            echo "Successfully installed version $LATEST_VERSION"
         else
             echo "Failed to download zip file from: $LATEST_RELEASE_URL"
         fi
