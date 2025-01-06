@@ -14,14 +14,17 @@ NC='\033[0m'
 shutdown_handler() {
     echo "Shutdown signal received, saving world..."
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld"
+    echo "Waiting for save to complete..."
     sleep 5
+    echo "Shutting down server..."
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit"
     sleep 2
+    echo "Server shutdown complete"
     exit 0
 }
 
 # Set up trap for graceful shutdown
-trap 'shutdown_handler' SIGTERM
+trap 'shutdown_handler' SIGTERM SIGINT
 
 # Wait for the container to fully initialize
 sleep 1
