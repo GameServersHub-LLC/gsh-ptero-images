@@ -99,6 +99,7 @@ if [ -f "$EXTRACT_PATH/AsaApiLoader.exe" ]; then
         echo "Current version: $CURRENT_VERSION"
         echo "Latest version:  $LATEST_VERSION"
         echo "===================="
+        echo "\nWould you like to update? (y/N): "
         echo -en "\nWould you like to update? (y/N): "
         stty -icanon
         REPLY=$(dd bs=1 count=1 2>/dev/null)
