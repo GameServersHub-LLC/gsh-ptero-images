@@ -161,9 +161,9 @@ fi
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
-	    mkdir -p /home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}
+        mkdir -p /home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}
         export STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/container/.steam/steam"
-        export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}
+        export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
         # Fix for pipx with protontricks
         export PATH=$PATH:/root/.local/bin
     else
@@ -172,7 +172,7 @@ if [ -f "/usr/local/bin/proton" ]; then
         echo -e "Server stops now"
         echo -e "----------------------------------------------------------------------------------"
         exit 0
-        fi
+    fi
 fi
 
 # Switch to the container's working directory
