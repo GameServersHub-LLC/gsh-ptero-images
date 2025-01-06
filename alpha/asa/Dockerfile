@@ -36,6 +36,17 @@
                 tar xvf rcon.tar.gz && \
                 mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/ && \
                 rm -rf rcon.tar.gz rcon-0.10.3-amd64_linux
+
+        # Add capabilities for process priority
+        RUN setcap cap_sys_nice+ep /usr/bin/wine*
+        RUN setcap cap_sys_nice+ep /usr/local/bin/proton
+
+        # Set higher ulimit for nice
+        RUN echo "* soft nice -20" >> /etc/security/limits.conf
+        RUN echo "* hard nice -20" >> /etc/security/limits.conf
+
+        # Fix permissions for container user
+        RUN chown -R container:container /usr/local/bin/proton
                     
         USER        container
         ENV         USER=container HOME=/home/container
