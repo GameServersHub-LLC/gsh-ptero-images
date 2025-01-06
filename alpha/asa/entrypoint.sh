@@ -273,10 +273,12 @@ build_startup_cmd() {
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
-# Build and execute startup command
-STARTUP_CMD=$(build_startup_cmd)
-echo -e ":/home/container$ ${STARTUP_CMD}"
-eval ${STARTUP_CMD} &
+# Replace Startup Variables
+MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
+
+# Execute the startup command
+echo -e ":/home/container$ ${MODIFIED_STARTUP}"
+eval ${MODIFIED_STARTUP} &
 SERVER_PID=$!
 
 # Monitor server in a way that won't interfere with shutdown
