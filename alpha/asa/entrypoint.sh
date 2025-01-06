@@ -225,8 +225,11 @@ fi
 # Build server startup command
 build_startup_cmd() {
     local cmd="proton run ./ShooterGame/Binaries/Win64/${SERVER_EXECUTABLE}"
-    cmd+=" ${SERVER_MAP}?listen?SessionName=\"${SESSION_NAME}\""
-    cmd+="?Port=${SERVER_PORT}RCONPort=${RCON_PORT}?RCONEnabled=True"
+    cmd+=" ${SERVER_MAP}?listen"
+    cmd+="?Port=${SERVER_PORT}"
+    cmd+="?RCONEnabled=True"
+    cmd+="?RCONPort=${RCON_PORT}"
+    cmd+="?SessionName=\"${SESSION_NAME}\""
     
     # Add conditional parameters
     [ "$SERVER_PVE" != "0" ] && cmd+="?ServerPVE=True"
@@ -236,8 +239,8 @@ build_startup_cmd() {
     # Add standard parameters
     cmd+=" -WinLiveMaxPlayers=${MAX_PLAYERS}"
     cmd+=" -NoTransferFromFiltering"
-    cmd+=" -clusterid=${CLUSTER_ID:-}"
-    cmd+=" -ClusterDirOverride=\"${CLUSTER_DIR_OVERRIDE:-}\""
+    [ -n "${CLUSTER_ID}" ] && cmd+=" -clusterid=${CLUSTER_ID}"
+    [ -n "${CLUSTER_DIR_OVERRIDE}" ] && cmd+=" -ClusterDirOverride=\"${CLUSTER_DIR_OVERRIDE}\""
     cmd+=" -oldconsole -servergamelog"
     
     # Add optional parameters
