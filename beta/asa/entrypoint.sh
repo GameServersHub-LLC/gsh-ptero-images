@@ -14,46 +14,20 @@ NC='\033[0m'
 shutdown_handler() {
     echo "Shutdown signal received, saving world..."
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld"
+    echo "Waiting for save to complete..."
     sleep 5
+    echo "Shutting down server..."
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit"
     sleep 2
+    echo "Server shutdown complete"
     exit 0
 }
 
 # Set up trap for graceful shutdown
-trap 'shutdown_handler' SIGTERM
+trap 'shutdown_handler' SIGTERM SIGINT
 
 # Wait for the container to fully initialize
 sleep 1
-
-## Download and extract file from GitHub
-#echo "Downloading latest AsaApi release from GitHub..."
-#DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
-#EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
-#
-#mkdir -p $DOWNLOAD_PATH
-#mkdir -p $EXTRACT_PATH
-#
-## Get the latest release download URL using GitHub API
-#LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
-#    | grep "browser_download_url.*zip" \
-#    | cut -d '"' -f 4)
-#
-#if [ ! -z "$LATEST_RELEASE_URL" ]; then
-#    echo "Downloading latest release from: $LATEST_RELEASE_URL"
-#    cd $DOWNLOAD_PATH
-#    wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
-#    
-#    if [ -f "AsaApi.zip" ]; then
-#        unzip -o AsaApi.zip
-#        rm -f AsaApi.zip
-#        echo "Successfully extracted latest AsaApi files to $EXTRACT_PATH"
-#    else
-#        echo "Failed to download zip file from: $LATEST_RELEASE_URL"
-#    fi
-#else
-#    echo "Failed to get latest release information from GitHub"
-#fi
 
 # Force the TZ environment variable to Eastern Standard Time
 TZ=America/New_York
@@ -95,6 +69,95 @@ echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|__
 echo -e "${WHITE}(_____)                                                    (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 sleep 3
+
+# Download and extract file from GitHub only if API is enabled
+if [ "${USE_ASA_API}" == "1" ] || [ "${USE_ASA_API}" == "true" ]; then
+    DOWNLOAD_PATH="/home/container/ShooterGame/Binaries/Win64"
+    EXTRACT_PATH="/home/container/ShooterGame/Binaries/Win64"
+
+    mkdir -p $DOWNLOAD_PATH
+    mkdir -p $EXTRACT_PATH
+
+    # Function to get latest version from GitHub
+    get_latest_version() {
+        curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest | grep "tag_name" | cut -d '"' -f 4
+    }
+
+    # Function to get current installed version
+    get_installed_version() {
+        if [ -f "$EXTRACT_PATH/version.txt" ]; then
+            cat "$EXTRACT_PATH/version.txt"
+        else
+            echo "0.0.0"
+        fi
+    }
+
+    # Check if AsaApiLoader.exe exists and check for updates
+    if [ -f "$EXTRACT_PATH/AsaApiLoader.exe" ]; then
+        echo "AsaApiLoader.exe exists, checking for updates..."
+        LATEST_VERSION=$(get_latest_version)
+        CURRENT_VERSION=$(get_installed_version)
+        
+        if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+            echo -e "\n=== Update Available ==="
+            echo "Current version: $CURRENT_VERSION"
+            echo "Latest version:  $LATEST_VERSION"
+            echo "===================="
+            echo -e "Would you like to update? [y/N] (timeout in 10s): "
+            
+            read -t 10 -n 1 REPLY
+            RESULT=$?
+            echo
+
+            if [ $RESULT -eq 0 ] && [[ $REPLY =~ ^[Yy]$ ]]; then
+                echo "Downloading update..."
+                LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
+                    | grep "browser_download_url.*zip" \
+                    | cut -d '"' -f 4)
+                cd $DOWNLOAD_PATH
+                wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
+                if [ -f "AsaApi.zip" ]; then
+                    unzip -o AsaApi.zip
+                    rm -f AsaApi.zip
+                    echo "$LATEST_VERSION" > "$EXTRACT_PATH/version.txt"
+                    echo "Successfully updated to version $LATEST_VERSION"
+                fi
+            else
+                if [ $RESULT -eq 142 ]; then
+                    echo "Update timed out after 10 seconds, skipping..."
+                else
+                    echo "Update skipped"
+                fi
+            fi
+        else
+            echo "AsaApi is up to date (version $CURRENT_VERSION)"
+        fi
+    else
+        echo "AsaApiLoader.exe not found, performing first-time installation..."
+        LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
+            | grep "browser_download_url.*zip" \
+            | cut -d '"' -f 4)
+
+        if [ ! -z "$LATEST_RELEASE_URL" ]; then
+            echo "Downloading latest release from: $LATEST_RELEASE_URL"
+            cd $DOWNLOAD_PATH
+            wget -q --show-progress "$LATEST_RELEASE_URL" -O AsaApi.zip
+            
+            if [ -f "AsaApi.zip" ]; then
+                unzip -o AsaApi.zip
+                rm -f AsaApi.zip
+                LATEST_VERSION=$(get_latest_version)
+                echo "$LATEST_VERSION" > "$EXTRACT_PATH/version.txt"
+                echo "Successfully installed version $LATEST_VERSION"
+            else
+                echo "Failed to download zip file from: $LATEST_RELEASE_URL"
+            fi
+        else
+            echo "Failed to get latest release information from GitHub"
+        fi
+    fi
+fi
+
 # Set environment for Steam Proton
 if [ -f "/usr/local/bin/proton" ]; then
     if [ ! -z ${SRCDS_APPID} ]; then
@@ -147,6 +210,17 @@ fi
 (while read cmd; do
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
+
+# Set executable based on USE_ASA_API
+SERVER_EXECUTABLE="ArkAscendedServer.exe"
+if [ "${USE_ASA_API}" == "1" ] || [ "${USE_ASA_API}" == "true" ]; then
+    if [ -f "./ShooterGame/Binaries/Win64/AsaApiLoader.exe" ]; then
+        SERVER_EXECUTABLE="AsaApiLoader.exe"
+        echo "Using AsaApi loader..."
+    else
+        echo "WARNING: AsaApi loader not found, falling back to default executable"
+    fi
+fi
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')

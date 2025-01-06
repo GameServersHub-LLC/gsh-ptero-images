@@ -8,7 +8,7 @@
         ## install required packages
         RUN         dpkg --add-architecture i386
         RUN         apt update
-        RUN         apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1 unzip libcap2-bin
+        RUN         apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1 unzip
         RUN         apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg locales numactl cabextract curl python3 python3-pip python3-setuptools tini file pipx
         RUN         useradd -d /home/container -m container
         
@@ -36,20 +36,6 @@
                 tar xvf rcon.tar.gz && \
                 mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/ && \
                 rm -rf rcon.tar.gz rcon-0.10.3-amd64_linux
-
-        # Set process priority permissions
-        RUN         apt install -y libcap2-bin
-        RUN         find /usr/local/bin -name "proton" -type f -exec setcap cap_sys_nice+ep {} \;
-        RUN         find /usr/bin -name "wine*" -type f -exec setcap cap_sys_nice+ep {} \; || true
-
-        # Set ulimit for wine
-        RUN         echo "wine soft nice -20" >> /etc/security/limits.conf
-        RUN         echo "wine hard nice -20" >> /etc/security/limits.conf
-        RUN         echo "container soft nice -20" >> /etc/security/limits.conf
-        RUN         echo "container hard nice -20" >> /etc/security/limits.conf
-
-        # Fix permissions for container user
-        RUN chown -R container:container /usr/local/bin/proton
                     
         USER        container
         ENV         USER=container HOME=/home/container
