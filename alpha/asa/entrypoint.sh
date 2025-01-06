@@ -286,13 +286,17 @@ done) < /dev/stdin &
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 
+# Clear the log file before starting
+echo "" > "ShooterGame/Saved/Logs/ShooterGame.log"
+
 # Execute the startup command
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 eval ${MODIFIED_STARTUP} &
 SERVER_PID=$!
 
 # Monitor server in a way that won't interfere with shutdown
-tail -n 20 -f "ShooterGame/Saved/Logs/ShooterGame.log" & TAIL_PID=$!
+# Using tail -F to follow the new file if it gets recreated, and --pid to exit when server exits
+tail -F --pid=$SERVER_PID "ShooterGame/Saved/Logs/ShooterGame.log" & TAIL_PID=$!
 trap 'kill $TAIL_PID 2>/dev/null' EXIT
 
 # Wait for server and handle interrupts
