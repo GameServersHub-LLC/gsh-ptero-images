@@ -99,13 +99,14 @@ if [ -f "$EXTRACT_PATH/AsaApiLoader.exe" ]; then
         echo "Current version: $CURRENT_VERSION"
         echo "Latest version:  $LATEST_VERSION"
         echo "===================="
-        echo -e "Would you like to update? (y/N): "
-        stty -icanon
-        REPLY=$(dd bs=1 count=1 2>/dev/null)
-        stty icanon
-        echo # Add newline after input
+        echo -e "Would you like to update? (y/N, timeout in 10s): "
         
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # Set up timeout read
+        read -t 10 -n 1 REPLY
+        RESULT=$?
+        echo # Add newline after input
+
+        if [ $RESULT -eq 0 ] && [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "Downloading update..."
             LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/ArkServerApi/AsaApi/releases/latest \
                 | grep "browser_download_url.*zip" \
@@ -119,7 +120,11 @@ if [ -f "$EXTRACT_PATH/AsaApiLoader.exe" ]; then
                 echo "Successfully updated to version $LATEST_VERSION"
             fi
         else
-            echo "Update skipped"
+            if [ $RESULT -eq 142 ]; then
+                echo "Update timed out after 10 seconds, skipping..."
+            else
+                echo "Update skipped"
+            fi
         fi
     else
         echo "AsaApi is up to date (version $CURRENT_VERSION)"
