@@ -13,18 +13,30 @@ NC='\033[0m'
 # Add shutdown handler function
 shutdown_handler() {
     echo "Shutdown signal received, saving world..."
-    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld"
-    echo "Waiting for save to complete..."
-    sleep 5
-    echo "Shutting down server..."
-    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit"
-    sleep 2
+    
+    # Try RCON save first
+    if rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "saveworld" > /dev/null 2>&1; then
+        echo "Save command sent successfully"
+        sleep 5
+    fi
+    
+    # Try RCON shutdown, but don't wait for response
+    rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "doexit" > /dev/null 2>&1
+    echo "Shutdown command sent"
+    
+    # Force kill the server process if it's still running after 10 seconds
+    sleep 10
+    if kill -0 $SERVER_PID 2>/dev/null; then
+        echo "Server still running, forcing shutdown..."
+        kill -9 $SERVER_PID 2>/dev/null || true
+    fi
+    
     echo "Server shutdown complete"
     exit 0
 }
 
-# Set up trap for graceful shutdown
-trap 'shutdown_handler' SIGTERM SIGINT
+# Set up trap for more signal types
+trap 'shutdown_handler' SIGTERM SIGINT SIGQUIT
 
 # Wait for the container to fully initialize
 sleep 1
@@ -225,23 +237,27 @@ fi
 # Build server startup command
 build_startup_cmd() {
     local cmd="proton run ./ShooterGame/Binaries/Win64/${SERVER_EXECUTABLE}"
-    cmd+=" ${SERVER_MAP}?listen"
+    
+    # Base parameters need to be in correct order
+    cmd+=" ${SERVER_MAP}"
+    cmd+="?SessionName=\"${SESSION_NAME}\""
+    cmd+="?listen"
     cmd+="?Port=${SERVER_PORT}"
+    cmd+="?MultiHome=${INTERNAL_IP}"
     cmd+="?RCONEnabled=True"
     cmd+="?RCONPort=${RCON_PORT}"
-    cmd+="?SessionName=\"${SESSION_NAME}\""
     
     # Add conditional parameters
     [ "$SERVER_PVE" != "0" ] && cmd+="?ServerPVE=True"
     [ -n "$SERVER_PASSWORD" ] && cmd+="?ServerPassword=\"${SERVER_PASSWORD}\""
     [ -n "$ARGS_PARAMS" ] && cmd+="${ARGS_PARAMS}"
     
-    # Add standard parameters
+    # Add standard parameters - these need to be after the ? parameters
+    cmd+=" -servergamelog"
     cmd+=" -WinLiveMaxPlayers=${MAX_PLAYERS}"
     cmd+=" -NoTransferFromFiltering"
     [ -n "${CLUSTER_ID}" ] && cmd+=" -clusterid=${CLUSTER_ID}"
     [ -n "${CLUSTER_DIR_OVERRIDE}" ] && cmd+=" -ClusterDirOverride=\"${CLUSTER_DIR_OVERRIDE}\""
-    cmd+=" -oldconsole -servergamelog"
     
     # Add optional parameters
     [ -n "$MOD_IDS" ] && cmd+=" -mods=$MOD_IDS"
@@ -263,8 +279,12 @@ echo -e ":/home/container$ ${STARTUP_CMD}"
 eval ${STARTUP_CMD} &
 SERVER_PID=$!
 
-# Monitor server
-tail -n 20 -f "ShooterGame/Saved/Logs/ShooterGame.log" &
-wait $SERVER_PID
+# Monitor server in a way that won't interfere with shutdown
+tail -n 20 -f "ShooterGame/Saved/Logs/ShooterGame.log" & TAIL_PID=$!
+trap 'kill $TAIL_PID 2>/dev/null' EXIT
+
+# Wait for server and handle interrupts
+wait $SERVER_PID || true
+kill $TAIL_PID 2>/dev/null || true
 
 exit 0
