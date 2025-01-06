@@ -283,6 +283,31 @@ build_startup_cmd() {
     rcon -s -a "localhost:$RCON_PORT" -p "$ARK_ADMIN_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
+# Build the startup command
+STARTUP_CMD="proton run ./ShooterGame/Binaries/Win64/${SERVER_EXECUTABLE}"
+STARTUP_CMD+=" ${SERVER_MAP}?listen?SessionName=\"${SESSION_NAME}\""
+STARTUP_CMD+="?Port=${SERVER_PORT}?RCONEnabled=True?RCONPort=${RCON_PORT}"
+STARTUP_CMD+="$( [ \"$SERVER_PVE\" == \"0\" ] || printf %s '?ServerPVE=True' )"
+STARTUP_CMD+="$(if [ -n \"${SERVER_PASSWORD:-}\" ]; then echo \"?ServerPassword=\\\"${SERVER_PASSWORD}\\\"\"; fi)"
+STARTUP_CMD+="${ARGS_PARAMS:-}"
+STARTUP_CMD+=" -WinLiveMaxPlayers=${MAX_PLAYERS}"
+STARTUP_CMD+=" -NoTransferFromFiltering"
+STARTUP_CMD+=" -clusterid=${CLUSTER_ID:-}"
+STARTUP_CMD+=" -ClusterDirOverride=\"${CLUSTER_DIR_OVERRIDE:-}\""
+STARTUP_CMD+=" -servergamelog"
+STARTUP_CMD+="$( [ -z \"${MOD_IDS:-}\" ] || printf %s \" -mods=${MOD_IDS}\" )"
+STARTUP_CMD+="$( [ -z \"${PASS_MOD:-}\" ] || printf '%s' \" -passivemod=${PASS_MOD}\" )"
+STARTUP_CMD+="$( [ \"${BATTLE_EYE:-1}\" != \"1\" ] || printf %s \" -NoBattlEye\" )"
+STARTUP_CMD+=" ${ARGS_FLAGS:-}"
+
+# Clear the log file before starting
+echo "" > "ShooterGame/Saved/Logs/ShooterGame.log"
+
+# Execute the startup command
+echo -e ":/home/container$ ${STARTUP_CMD}"
+eval ${STARTUP_CMD} &
+SERVER_PID=$!
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 
