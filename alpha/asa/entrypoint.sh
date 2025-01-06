@@ -103,7 +103,7 @@ if [ "${USE_ASA_API}" == "1" ] || [ "${USE_ASA_API}" == "true" ]; then
             echo "Current version: $CURRENT_VERSION"
             echo "Latest version:  $LATEST_VERSION"
             echo "===================="
-            echo -en "\nWould you like to update? (y/N, timeout in 10s): "
+            echo -e "Would you like to update? (y/N, timeout in 10s): "
             
             read -t 10 -n 1 REPLY
             RESULT=$?
