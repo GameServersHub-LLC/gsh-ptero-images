@@ -234,6 +234,16 @@ if [ "${USE_ASA_API}" == "1" ] || [ "${USE_ASA_API}" == "true" ]; then
     fi
 fi
 
+# Initialize variables with defaults
+ARGS_PARAMS="${ARGS_PARAMS:-}"
+ARGS_FLAGS="${ARGS_FLAGS:-}"
+MOD_IDS="${MOD_IDS:-}"
+PASS_MOD="${PASS_MOD:-}"
+CLUSTER_ID="${CLUSTER_ID:-}"
+CLUSTER_DIR_OVERRIDE="${CLUSTER_DIR_OVERRIDE:-}"
+SERVER_PASSWORD="${SERVER_PASSWORD:-}"
+BATTLE_EYE="${BATTLE_EYE:-1}"
+
 # Build server startup command
 build_startup_cmd() {
     local cmd="proton run ./ShooterGame/Binaries/Win64/${SERVER_EXECUTABLE}"
