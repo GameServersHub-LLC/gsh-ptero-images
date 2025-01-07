@@ -8,8 +8,8 @@ export INTERNAL_IP
 # Print Node.js Version
 node -v
 
-# Handle Git operations
-if [ -n "$GIT_ADDRESS" ] && [ "${AUTO_UPDATE}" == "1" ]; then
+# Handle Git operations only if USER_UPLOAD is not enabled
+if [ "${USER_UPLOAD}" != "1" ] && [ -n "$GIT_ADDRESS" ] && [ "${AUTO_UPDATE}" == "1" ]; then
     # Add .git extension if missing
     [[ ${GIT_ADDRESS} != *.git ]] && GIT_ADDRESS=${GIT_ADDRESS}.git
     
