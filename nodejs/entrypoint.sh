@@ -23,8 +23,10 @@ if [ -n "$GIT_ADDRESS" ]; then
         echo "Directory is empty, cloning repository..."
         git clone "$GIT_ADDRESS" --branch="${BRANCH}" .
     elif [ -d .git ]; then
-        echo "Repository exists, pulling updates..."
-        git pull
+        echo "Repository exists, fetching updates..."
+        git fetch origin "${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+        git reset --hard origin/"${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+        git clean -df
     else
         echo "Directory not empty and no git repository found."
     fi
