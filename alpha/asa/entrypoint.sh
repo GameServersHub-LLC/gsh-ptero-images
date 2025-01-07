@@ -244,6 +244,32 @@ CLUSTER_DIR_OVERRIDE="${CLUSTER_DIR_OVERRIDE:-}"
 SERVER_PASSWORD="${SERVER_PASSWORD:-}"
 BATTLE_EYE="${BATTLE_EYE:-1}"
 
+# Set license variables and force slots
+if [ -z "${LICENSE_ID}" ]; then
+    echo -e "${YELLOW}WARNING: No license ID specified, using defaults${NC}"
+    LICENSE_ID="1"
+fi
+
+if [ -z "${LICENSE_SECRET}" ]; then
+    echo -e "${YELLOW}WARNING: No license secret specified, using defaults${NC}"
+    LICENSE_SECRET="1"
+fi
+
+# Ensure slots directory exists
+mkdir -p /home/container/ShooterGame/Saved/Config/WindowsServer/Slots
+
+# Create or update the license file
+cat > "/home/container/ShooterGame/Saved/Config/WindowsServer/Slots/License.json" <<EOL
+{
+    "nodes": [
+        {
+            "id": "${LICENSE_ID}",
+            "secret": "${LICENSE_SECRET}"
+        }
+    ]
+}
+EOL
+
 # Build server startup command
 build_startup_cmd() {
     local cmd="proton run ./ShooterGame/Binaries/Win64/${SERVER_EXECUTABLE}"
