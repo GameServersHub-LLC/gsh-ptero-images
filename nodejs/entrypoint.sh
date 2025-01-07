@@ -23,10 +23,24 @@ if [ -n "$GIT_ADDRESS" ]; then
         echo "Directory is empty, cloning repository..."
         git clone "$GIT_ADDRESS" --branch="${BRANCH}" .
     elif [ -d .git ]; then
-        echo "Repository exists, fetching updates..."
+        echo "Repository exists, checking for updates..."
+        # Store current commit hash
+        OLD_COMMIT=$(git rev-parse HEAD)
+        
+        # Fetch and update
         git fetch origin "${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
         git reset --hard origin/"${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
         git clean -df
+        
+        # Show what changed
+        NEW_COMMIT=$(git rev-parse HEAD)
+        if [ "$OLD_COMMIT" != "$NEW_COMMIT" ]; then
+            echo "Updates found! Changes:"
+            git diff --stat --color $OLD_COMMIT..$NEW_COMMIT | sed 's/^/  /'
+            echo "Updated from $OLD_COMMIT to $NEW_COMMIT"
+        else
+            echo "Already up to date!"
+        fi
     else
         echo "Directory not empty and no git repository found."
     fi
