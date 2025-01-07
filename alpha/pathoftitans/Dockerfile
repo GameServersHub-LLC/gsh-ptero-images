@@ -1,6 +1,9 @@
-FROM --platform=$TARGETOS/$TARGETARCH ubuntu:22.04
+FROM --platform=$TARGETOS/$TARGETARCH ubuntu:22.04 AS builder
 
 LABEL author="Mike H" maintainer="m.harrison@gameservershub.com"
+LABEL org.opencontainers.image.source="https://github.com/yourusername/yourrepo" \
+      org.opencontainers.image.description="Path of Titans Server" \
+      org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/New_York
@@ -37,6 +40,10 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
         dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb && \
         rm libssl1.1_1.1.0g-2ubuntu4_amd64.deb; \
     fi
+
+## Add healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD nc -z localhost $SERVER_PORT || exit 1
 
 ## Switch to non-root user
 USER container

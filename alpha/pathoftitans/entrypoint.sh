@@ -60,43 +60,51 @@ UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 sleep 3
 
-## Check for server updates
-if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
+## check for serverupdates
+if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     cd /home/container
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Checking for Server Updates. please wait...${NC}"
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-    sleep 2
+    sleep 1
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
-    
-    # Check if EXTRA_ARGS contains a numeric value and construct the hotfix command
-    if [[ "${HOT_FIX}" =~ ^[0-9]+$ ]]; then
-        HOTFIX_ARG="--hotfix ${HOT_FIX}"
-    else
-        HOTFIX_ARG=""
-    fi
-
-    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS $HOTFIX_ARG
+    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
-else
+ else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Not updating game server as auto update was set to false. Starting Server${NC}"
+    echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    sleep 2
+    sleep 3
 fi
 
-# Escape special characters in environment variables (if needed)
-ESCAPED_RCON_PORT=$(printf '%q' "$RCON_PORT")
-ESCAPED_RCON_PASSWORD=$(printf '%q' "$RCON_PASSWORD")
+# Add trap for graceful shutdown
+trap 'echo "Shutting down..."; kill -TERM "$child" 2>/dev/null' SIGTERM
 
-# RCON loop with command-line arguments for address and password
+# Improved RCON handling with error checking
 (while read cmd; do
-    rcon -s -a "localhost:$ESCAPED_RCON_PORT" -p "$ESCAPED_RCON_PASSWORD" "$cmd"
+    if ! rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"; then
+        echo "RCON command failed: $cmd"
+    fi
 done) < /dev/stdin &
+
+# Log update results
+if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
+    update_log="/home/container/update.log"
+    echo "Update started at $(date)" > "$update_log"
+    if ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS >> "$update_log" 2>&1; then
+        echo "Update completed successfully at $(date)" >> "$update_log"
+    else
+        echo "Update failed at $(date)" >> "$update_log"
+    fi
+fi
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Run the Server
-eval ${MODIFIED_STARTUP}
+# Run the Server and store PID
+eval ${MODIFIED_STARTUP} &
+child=$!
+
+# Wait for process
+wait "$child"
