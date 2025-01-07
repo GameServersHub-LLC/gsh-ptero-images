@@ -9,7 +9,7 @@ export INTERNAL_IP
 node -v
 
 # Handle Git operations
-if [ -n "$GIT_ADDRESS" ]; then
+if [ -n "$GIT_ADDRESS" ] && [ "${AUTO_UPDATE}" == "1" ]; then
     # Add .git extension if missing
     [[ ${GIT_ADDRESS} != *.git ]] && GIT_ADDRESS=${GIT_ADDRESS}.git
     
