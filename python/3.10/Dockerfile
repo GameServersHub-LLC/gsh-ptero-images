@@ -1,6 +1,6 @@
 FROM        --platform=$TARGETOS/$TARGETARCH python:3.10-slim-bookworm
 
-LABEL       author="Michael Parker" maintainer="parker@pterodactyl.io"
+LABEL author="Mike H" maintainer="m.harrison@gameservershub.com"
 
 RUN         apt update \
             && apt -y install git gcc g++ ca-certificates dnsutils curl iproute2 ffmpeg procps tini \

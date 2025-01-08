@@ -37,13 +37,72 @@ echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
 
-
-# Print current Python version
+echo -e "${WHITE} _____                                                            _____ ${NC}"
+echo -e "${WHITE}( ___ )                                                          ( ___ )${NC}"
+echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
+echo -e "${WHITE} |   |  ▐ ▄       ·▄▄▄▄  ▄▄▄ .    ▐▄▄▄.▄▄ ·     ▄▄▄ . ▄▄ •  ▄▄ •  |   | ${NC}"
+echo -e "${WHITE} |   | •█▌▐█▪     ██▪ ██ ▀▄.▀·     ·██▐█ ▀.     ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪ |   | ${NC}"
+echo -e "${WHITE} |   | ▐█▐▐▌ ▄█▀▄ ▐█· ▐█▌▐▀▀▪▄   ▪▄ ██▄▀▀▀█▄    ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄ |   | ${NC}"
+echo -e "${WHITE} |   | ██▐█▌▐█▌.▐▌██. ██ ▐█▄▄▌   ▐▌▐█▌▐█▄▪▐█    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█ |   | ${NC}"
+echo -e "${WHITE} |   | ▀▀ █▪ ▀█▄▀▪▀▀▀▀▀•  ▀▀▀  ▀  ▀▀▀• ▀▀▀▀      ▀▀▀ ·▀▀▀▀ ·▀▀▀▀  |   | ${NC}"
+echo -e "${WHITE} |   |${YELLOW} by that411guy ${WHITE}                                                            ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
+echo -e "${WHITE}(_____)                                                          (_____)${NC}"
+echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
+# Print Python Version
 python --version
 
+# Handle Git operations only if USER_UPLOAD is not enabled
+if [ "${USER_UPLOAD}" != "1" ] && [ -n "$GIT_ADDRESS" ] && [ "${AUTO_UPDATE}" == "1" ]; then
+    # Add .git extension if missing
+    [[ ${GIT_ADDRESS} != *.git ]] && GIT_ADDRESS=${GIT_ADDRESS}.git
+    
+    # Handle authentication
+    if [ -n "${USERNAME}" ] && [ -n "${ACCESS_TOKEN}" ]; then
+        GIT_ADDRESS="https://${USERNAME}:${ACCESS_TOKEN}@${GIT_ADDRESS#https://}"
+    fi
+    
+    # Check if directory is empty
+    if [ -z "$(ls -A /home/container)" ]; then
+        echo "Directory is empty, cloning repository..."
+        git clone "$GIT_ADDRESS" --branch="${BRANCH}" .
+    elif [ -d .git ]; then
+        echo "Repository exists, checking for updates..."
+        # Store current commit hash
+        OLD_COMMIT=$(git rev-parse HEAD)
+        
+        # Fetch and update
+        git fetch origin "${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+        git reset --hard origin/"${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+        git clean -df
+        
+        # Show what changed
+        NEW_COMMIT=$(git rev-parse HEAD)
+        if [ "$OLD_COMMIT" != "$NEW_COMMIT" ]; then
+            echo "Updates found! Changes:"
+            git diff --stat --color $OLD_COMMIT..$NEW_COMMIT | sed 's/^/  /'
+            echo "Updated from $OLD_COMMIT to $NEW_COMMIT"
+        else
+            echo "Already up to date!"
+        fi
+    else
+        echo "Directory not empty and no git repository found."
+    fi
+fi
+
+# Install pip requirements if they exist
+if [ -f "requirements.txt" ]; then
+    python -m pip install -r requirements.txt
+fi
+
+# Install additional packages if specified
+if [ -n "$PIP_PACKAGES" ]; then
+    python -m pip install $PIP_PACKAGES
+fi
+
 # Replace Startup Variables
-MODIFIED_STARTUP=$(echo -e $(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g'))
-echo -e ":/home/container$ ${MODIFIED_STARTUP}"
+MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
+echo ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
 eval ${MODIFIED_STARTUP}
