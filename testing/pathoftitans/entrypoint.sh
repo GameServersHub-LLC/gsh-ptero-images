@@ -25,7 +25,7 @@ INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 # Generate random RCON password if not set or too short
-if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 8 ]; then
+if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 16 ]; then
     # Generate a 16 character random password with letters and numbers
     NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
     
