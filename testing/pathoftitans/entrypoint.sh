@@ -24,8 +24,8 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# Generate random RCON password only if not set
-if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ]; then
+# Generate random RCON password if not set or too short
+if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 8 ]; then
     # Generate a 16 character random password with letters and numbers
     NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
     
@@ -41,9 +41,11 @@ if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ]; then
     RCON_PASSWORD=$NEW_RCON_PASSWORD
     export RCON_PASSWORD
     
+    if [ ${#RCON_PASSWORD} -lt 8 ]; then
+        echo -e "${YELLOW}Previous password was too short (< 8 characters)${NC}"
+    fi
     echo -e "${GREEN}Generated new RCON password and updated Pterodactyl variable${NC}"
 fi
-
 
 # system informations                                                           
 echo -e "${YELLOW} Made By                                                          ${NC}"
