@@ -44,9 +44,6 @@ if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ]; then
     echo -e "${GREEN}Generated new RCON password and updated Pterodactyl variable${NC}"
 fi
 
-# Print RCON details to console
-echo -e "${GREEN}RCON Port:${WHITE} $RCON_PORT"
-echo -e "${GREEN}RCON Password:${WHITE} $RCON_PASSWORD${NC}"
 
 # system informations                                                           
 echo -e "${YELLOW} Made By                                                          ${NC}"
