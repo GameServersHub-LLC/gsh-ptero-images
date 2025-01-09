@@ -24,8 +24,13 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
+# Function to generate UUID v4
+generate_uuid() {
+    cat /proc/sys/kernel/random/uuid
+}
+
 # Generate random RCON password if not set or too short
-if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 16 ]; then
+if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 8 ]; then
     # Generate a 16 character random password with letters and numbers
     NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
     
@@ -45,6 +50,24 @@ if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RC
         echo -e "${YELLOW}Previous password was too short (< 8 characters)${NC}"
     fi
     echo -e "${GREEN}Generated new RCON password and updated Pterodactyl variable${NC}"
+fi
+
+# Generate new SERVER_GUID if default or empty
+if [ -z "${SERVER_GUID}" ] || [ "${SERVER_GUID}" == "ChangeMe!" ]; then
+    NEW_SERVER_GUID=$(generate_uuid)
+    
+    # Update Pterodactyl variable using API
+    curl -X PUT \
+        -H "Authorization: Bearer $PTERO_API_KEY" \
+        -H "Content-Type: application/json" \
+        -H "Accept: Application/vnd.pterodactyl.v1+json" \
+        -d "{\"key\": \"SERVER_GUID\", \"value\": \"$NEW_SERVER_GUID\"}" \
+        "$PTERO_URL/api/client/servers/$P_SERVER_UUID/startup/variable"
+
+    # Set for current session
+    SERVER_GUID=$NEW_SERVER_GUID
+    export SERVER_GUID
+    
 fi
 
 # system informations                                                           
