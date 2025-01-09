@@ -24,26 +24,29 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# Generate random RCON password if not already set
-if [ -z "${RCON_PASSWORD}" ]; then
+# Generate random RCON password only if not set
+if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ]; then
     # Generate a 16 character random password with letters and numbers
-    RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-    # Save the password to a file for reference
-    echo "RCON Password: ${RCON_PASSWORD}" > /home/container/rcon_password.txt
-    chmod 600 /home/container/rcon_password.txt
+    NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+    
+    # Update Pterodactyl variable using API with P_SERVER_UUID
+    curl -X PUT \
+        -H "Authorization: Bearer $PTERO_API_KEY" \
+        -H "Content-Type: application/json" \
+        -H "Accept: Application/vnd.pterodactyl.v1+json" \
+        -d "{\"key\": \"RCON_PASSWORD\", \"value\": \"$NEW_RCON_PASSWORD\"}" \
+        "$PTERO_URL/api/client/servers/$P_SERVER_UUID/startup/variable"
+
+    # Set for current session
+    RCON_PASSWORD=$NEW_RCON_PASSWORD
     export RCON_PASSWORD
     
-    # Update the startup command to include the new RCON password
-    STARTUP=$(echo "${STARTUP}" | sed "s/-RconPassword=.*? /-RconPassword=${RCON_PASSWORD} /g")
-    if [[ ${STARTUP} != *"RconPassword"* ]]; then
-        STARTUP="${STARTUP} -RconPassword=${RCON_PASSWORD}"
-    fi
+    echo -e "${GREEN}Generated new RCON password and updated Pterodactyl variable${NC}"
 fi
 
 # Print RCON details to console
 echo -e "${GREEN}RCON Port:${WHITE} $RCON_PORT"
-echo -e "${GREEN}RCON Password:${WHITE} $RCON_PASSWORD"
-echo -e "${GREEN}RCON password saved to:${WHITE} /home/container/rcon_password.txt${NC}"
+echo -e "${GREEN}RCON Password:${WHITE} $RCON_PASSWORD${NC}"
 
 # system informations                                                           
 echo -e "${YELLOW} Made By                                                          ${NC}"
