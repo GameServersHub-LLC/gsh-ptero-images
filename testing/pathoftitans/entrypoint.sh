@@ -47,7 +47,7 @@ update_ptero_variable() {
         -H "Content-Type: application/json" \
         -H "Accept: Application/vnd.pterodactyl.v1+json" \
         -d "{\"value\": \"$value\"}" \
-        "$PTERO_URL/api/client/servers/$server_id/startup/$key")
+        "$PTERO_URL/api/client/servers/$server_id/startup/variable/$key")
     
     # Get HTTP status code from response
     local status_code=$(echo "$response" | tail -n1)
@@ -55,7 +55,7 @@ update_ptero_variable() {
     
     # Debug output
     echo -e "${YELLOW}API Response for $key:${NC}"
-    echo -e "${YELLOW}URL: $PTERO_URL/api/client/servers/$server_id/startup/$key${NC}"
+    echo -e "${YELLOW}URL: $PTERO_URL/api/client/servers/$server_id/startup/variable/$key${NC}"
     echo -e "${YELLOW}Status: $status_code${NC}"
     echo -e "${YELLOW}Body: $body${NC}"
     
