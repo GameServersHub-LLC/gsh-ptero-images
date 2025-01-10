@@ -36,30 +36,77 @@ SERVER_ID=$(echo "$HOSTNAME" | grep -oP '^\d+')
 update_ptero_variable() {
     local key=$1
     local value=$2
-    curl -X PUT \
+    local response
+    
+    # Get server ID from hostname
+    local server_id=$(echo "$HOSTNAME" | grep -oP '^\d+')
+    
+    # Try the API call and capture the response
+    response=$(curl -s -w "\n%{http_code}" -X PUT \
         -H "Authorization: Bearer $PTERO_API_KEY" \
         -H "Content-Type: application/json" \
         -H "Accept: Application/vnd.pterodactyl.v1+json" \
         -d "{\"key\": \"$key\", \"value\": \"$value\"}" \
-        "$PTERO_URL/api/client/servers/$SERVER_ID/startup/variable"
+        "$PTERO_URL/api/client/servers/$server_id/startup/variable")
+    
+    # Get HTTP status code from response
+    local status_code=$(echo "$response" | tail -n1)
+    local body=$(echo "$response" | sed '$d')
+    
+    # Check for errors
+    if [ "$status_code" != "200" ]; then
+        echo -e "${RED}Failed to update $key. Status: $status_code${NC}"
+        echo -e "${RED}Response: $body${NC}"
+        
+        # Store value locally if API fails
+        echo "$value" > "/home/container/.${key}_value"
+        echo -e "${YELLOW}Stored $key locally as API update failed${NC}"
+        return 1
+    fi
+    
+    echo -e "${GREEN}Successfully updated $key in Pterodactyl${NC}"
+    return 0
 }
 
 # Generate random RCON password if not set or too short
 if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 8 ]; then
     NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-    update_ptero_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
-    RCON_PASSWORD=$NEW_RCON_PASSWORD
-    export RCON_PASSWORD
-    echo -e "${GREEN}Generated new RCON password and updated Pterodactyl variable${NC}"
+    
+    if update_ptero_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"; then
+        RCON_PASSWORD=$NEW_RCON_PASSWORD
+        export RCON_PASSWORD
+    else
+        # Use stored password if API failed
+        if [ -f "/home/container/.RCON_PASSWORD_value" ]; then
+            RCON_PASSWORD=$(cat "/home/container/.RCON_PASSWORD_value")
+            export RCON_PASSWORD
+        fi
+    fi
 fi
 
 # Generate new SERVER_GUID if default or empty
 if [ -z "${SERVER_GUID}" ] || [ "${SERVER_GUID}" == "ChangeMe!" ]; then
-    NEW_SERVER_GUID=$(generate_uuid)
-    update_ptero_variable "SERVER_GUID" "$NEW_SERVER_GUID"
-    SERVER_GUID=$NEW_SERVER_GUID
-    export SERVER_GUID
-    echo -e "${GREEN}Generated new Server GUID and updated Pterodactyl variable${NC}"
+    NEW_SERVER_GUID=$(cat /proc/sys/kernel/random/uuid)
+    
+    if update_ptero_variable "SERVER_GUID" "$NEW_SERVER_GUID"; then
+        SERVER_GUID=$NEW_SERVER_GUID
+        export SERVER_GUID
+    else
+        # Use stored GUID if API failed
+        if [ -f "/home/container/.SERVER_GUID_value" ]; then
+            SERVER_GUID=$(cat "/home/container/.SERVER_GUID_value")
+            export SERVER_GUID
+        fi
+    fi
+fi
+
+# Print server details with status
+echo -e "${GREEN}Server Details:${NC}"
+echo -e "${GREEN}RCON Port:${WHITE} $RCON_PORT"
+echo -e "${GREEN}RCON Password:${WHITE} $RCON_PASSWORD"
+echo -e "${GREEN}Server GUID:${WHITE} $SERVER_GUID"
+if [ -f "/home/container/.RCON_PASSWORD_value" ] || [ -f "/home/container/.SERVER_GUID_value" ]; then
+    echo -e "${YELLOW}Note: Some values are stored locally due to API issues${NC}"
 fi
 
 # system informations                                                           
