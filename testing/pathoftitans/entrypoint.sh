@@ -35,19 +35,25 @@ update_ptero_variable() {
     local value=$2
     local response
     
-    # Get full server identifier from environment variable
-    local server_id=${P_SERVER_ID:-$(curl -s -H "Authorization: Bearer $PTERO_API_KEY" "$PTERO_URL/api/client" | grep -o '"identifier":"[^"]*' | cut -d'"' -f4)}
+    # Get server ID from Pterodactyl environment variable
+    if [ -z "${PTERODACTYL_SERVER_UUID}" ]; then
+        echo -e "${RED}Error: Could not determine server UUID${NC}"
+        # Store value locally as fallback
+        echo "$value" > "/home/container/.${key}_value"
+        echo -e "${YELLOW}Stored $key locally as server UUID is missing${NC}"
+        return 1
+    fi
     
     # Debug server ID
-    echo -e "${YELLOW}Server ID: $server_id${NC}"
+    echo -e "${YELLOW}Server UUID: ${PTERODACTYL_SERVER_UUID}${NC}"
     
     # Try the API call and capture the response
     response=$(curl -s -w "\n%{http_code}" -X PATCH \
         -H "Authorization: Bearer $PTERO_API_KEY" \
         -H "Content-Type: application/json" \
         -H "Accept: Application/vnd.pterodactyl.v1+json" \
-        -d "{\"key\": \"$key\", \"value\": \"$value\"}" \
-        "$PTERO_URL/api/client/servers/$server_id/startup/variable/$key")
+        -d "{\"value\": \"$value\"}" \
+        "$PTERO_URL/api/client/servers/${PTERODACTYL_SERVER_UUID}/startup/variables/${key}")
     
     # Get HTTP status code from response
     local status_code=$(echo "$response" | tail -n1)
@@ -55,7 +61,7 @@ update_ptero_variable() {
     
     # Debug output
     echo -e "${YELLOW}API Response for $key:${NC}"
-    echo -e "${YELLOW}URL: $PTERO_URL/api/client/servers/$server_id/startup/variable/$key${NC}"
+    echo -e "${YELLOW}URL: $PTERO_URL/api/client/servers/${PTERODACTYL_SERVER_UUID}/startup/variables/${key}${NC}"
     echo -e "${YELLOW}Status: $status_code${NC}"
     echo -e "${YELLOW}Body: $body${NC}"
     
