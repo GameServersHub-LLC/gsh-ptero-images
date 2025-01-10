@@ -29,17 +29,17 @@ generate_uuid() {
     cat /proc/sys/kernel/random/uuid
 }
 
-# Extract server ID from container environment
-SERVER_ID=$(echo "$HOSTNAME" | grep -oP '^\d+')
-
 # Function to update Pterodactyl variable
 update_ptero_variable() {
     local key=$1
     local value=$2
     local response
     
-    # Get server ID from hostname
-    local server_id=$(echo "$HOSTNAME" | grep -oP '^\d+')
+    # Get full server identifier from environment variable
+    local server_id=${P_SERVER_ID:-$(curl -s -H "Authorization: Bearer $PTERO_API_KEY" "$PTERO_URL/api/client" | grep -o '"identifier":"[^"]*' | cut -d'"' -f4)}
+    
+    # Debug server ID
+    echo -e "${YELLOW}Server ID: $server_id${NC}"
     
     # Try the API call and capture the response
     response=$(curl -s -w "\n%{http_code}" -X PATCH \
