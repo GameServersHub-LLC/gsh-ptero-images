@@ -29,45 +29,37 @@ generate_uuid() {
     cat /proc/sys/kernel/random/uuid
 }
 
-# Generate random RCON password if not set or too short
-if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 8 ]; then
-    # Generate a 16 character random password with letters and numbers
-    NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-    
-    # Update Pterodactyl variable using API with P_SERVER_UUID
+# Extract server ID from container environment
+SERVER_ID=$(echo "$HOSTNAME" | grep -oP '^\d+')
+
+# Function to update Pterodactyl variable
+update_ptero_variable() {
+    local key=$1
+    local value=$2
     curl -X PUT \
         -H "Authorization: Bearer $PTERO_API_KEY" \
         -H "Content-Type: application/json" \
         -H "Accept: Application/vnd.pterodactyl.v1+json" \
-        -d "{\"key\": \"RCON_PASSWORD\", \"value\": \"$NEW_RCON_PASSWORD\"}" \
-        "$PTERO_URL/api/client/servers/$P_SERVER_UUID/startup/variable"
+        -d "{\"key\": \"$key\", \"value\": \"$value\"}" \
+        "$PTERO_URL/api/client/servers/$SERVER_ID/startup/variable"
+}
 
-    # Set for current session
+# Generate random RCON password if not set or too short
+if [ -z "${RCON_PASSWORD}" ] || [ "${RCON_PASSWORD}" == "ChangeMe!" ] || [ ${#RCON_PASSWORD} -lt 8 ]; then
+    NEW_RCON_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+    update_ptero_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
     RCON_PASSWORD=$NEW_RCON_PASSWORD
     export RCON_PASSWORD
-    
-    if [ ${#RCON_PASSWORD} -lt 8 ]; then
-        echo -e "${YELLOW}Previous password was too short (< 8 characters)${NC}"
-    fi
     echo -e "${GREEN}Generated new RCON password and updated Pterodactyl variable${NC}"
 fi
 
 # Generate new SERVER_GUID if default or empty
 if [ -z "${SERVER_GUID}" ] || [ "${SERVER_GUID}" == "ChangeMe!" ]; then
     NEW_SERVER_GUID=$(generate_uuid)
-    
-    # Update Pterodactyl variable using API
-    curl -X PUT \
-        -H "Authorization: Bearer $PTERO_API_KEY" \
-        -H "Content-Type: application/json" \
-        -H "Accept: Application/vnd.pterodactyl.v1+json" \
-        -d "{\"key\": \"SERVER_GUID\", \"value\": \"$NEW_SERVER_GUID\"}" \
-        "$PTERO_URL/api/client/servers/$P_SERVER_UUID/startup/variable"
-
-    # Set for current session
+    update_ptero_variable "SERVER_GUID" "$NEW_SERVER_GUID"
     SERVER_GUID=$NEW_SERVER_GUID
     export SERVER_GUID
-    
+    echo -e "${GREEN}Generated new Server GUID and updated Pterodactyl variable${NC}"
 fi
 
 # system informations                                                           
