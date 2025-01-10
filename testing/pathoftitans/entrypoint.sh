@@ -35,19 +35,19 @@ update_ptero_variable() {
     local value=$2
     local response
     
-    # Extract server ID (first part before the hyphen)
+    # Extract server identifier from hostname (full string after 'pterodactyl-')
     local server_id=$(hostname | sed 's/^pterodactyl-//' | cut -d'-' -f1)
     
     # Debug server ID
     echo -e "${YELLOW}Server ID: ${server_id}${NC}"
     
     # Try the API call and capture the response
-    response=$(curl -s -w "\n%{http_code}" -X PATCH \
+    response=$(curl -s -w "\n%{http_code}" -X PUT \
         -H "Authorization: Bearer $PTERO_API_KEY" \
         -H "Content-Type: application/json" \
         -H "Accept: Application/vnd.pterodactyl.v1+json" \
-        -d "{\"value\": \"$value\"}" \
-        "$PTERO_URL/api/client/servers/$server_id/startup/variable/$key")
+        -d "{\"key\": \"$key\", \"value\": \"$value\"}" \
+        "$PTERO_URL/api/client/servers/$server_id/startup/variable")
     
     # Get HTTP status code from response
     local status_code=$(echo "$response" | tail -n1)
@@ -55,7 +55,7 @@ update_ptero_variable() {
     
     # Debug output
     echo -e "${YELLOW}API Response for $key:${NC}"
-    echo -e "${YELLOW}URL: $PTERO_URL/api/client/servers/$server_id/startup/variable/$key${NC}"
+    echo -e "${YELLOW}URL: $PTERO_URL/api/client/servers/$server_id/startup/variables/$key${NC}"
     echo -e "${YELLOW}Status: $status_code${NC}"
     echo -e "${YELLOW}Body: $body${NC}"
     
