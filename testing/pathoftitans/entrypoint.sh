@@ -35,8 +35,8 @@ update_ptero_variable() {
     local value=$2
     local response
     
-    # Extract server identifier from hostname (full string after 'pterodactyl-')
-    local server_id=$(hostname | sed 's/^pterodactyl-//')
+    # Extract server ID (first part before the hyphen)
+    local server_id=$(hostname | sed 's/^pterodactyl-//' | cut -d'-' -f1)
     
     # Debug server ID
     echo -e "${YELLOW}Server ID: ${server_id}${NC}"
