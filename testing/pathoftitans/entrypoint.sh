@@ -42,10 +42,10 @@ update_ptero_variable() {
     echo -e "${YELLOW}Using API Key: ${PTERO_API_KEY:0:8}...${NC}"
     
     # Try the API call and capture the response
-    response=$(curl -s -w "\n%{http_code}" -X PATCH \
+    response=$(curl -s -w "\n%{http_code}" -X GET \
         -H "Authorization: Bearer ${PTERO_API_KEY}" \
         -H "Content-Type: application/json" \
-        -H "Accept: Application/vnd.pterodactyl.v1+json" \
+        -H "Accept: application/json" \
         -d "{\"value\": \"${value}\"}" \
         "${PTERO_URL}/api/client/servers/${server_id}/startup/variable/${key}")
     
