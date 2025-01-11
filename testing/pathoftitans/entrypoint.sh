@@ -42,12 +42,12 @@ update_ptero_variable() {
     echo -e "${YELLOW}Using API Key: ${PTERO_API_KEY:0:8}...${NC}"
     
     # Try the API call and capture the response
-    response=$(curl -s -w "\n%{http_code}" -X PUT \
+    response=$(curl -s -w "\n%{http_code}" -X PATCH \
         -H "Authorization: Bearer ${PTERO_API_KEY}" \
         -H "Content-Type: application/json" \
         -H "Accept: Application/vnd.pterodactyl.v1+json" \
-        -d "{\"key\": \"${key}\", \"value\": \"${value}\"}" \
-        "${PTERO_URL}/api/client/servers/${server_id}/startup")
+        -d "{\"value\": \"${value}\"}" \
+        "${PTERO_URL}/api/client/servers/${server_id}/startup/variable/${key}")
     
     # Get HTTP status code from response
     local status_code=$(echo "$response" | tail -n1)
@@ -55,7 +55,8 @@ update_ptero_variable() {
     
     # Debug output
     echo -e "${YELLOW}API Call Details:${NC}"
-    echo -e "${YELLOW}URL: ${PTERO_URL}/api/client/servers/${server_id}/startup${NC}"
+    echo -e "${YELLOW}URL: ${PTERO_URL}/api/client/servers/${server_id}/startup/variable/${key}${NC}"
+    echo -e "${YELLOW}Method: PATCH${NC}"
     echo -e "${YELLOW}Status: ${status_code}${NC}"
     echo -e "${YELLOW}Response Body: ${body}${NC}"
     
