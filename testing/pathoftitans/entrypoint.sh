@@ -35,6 +35,14 @@ update_ptero_variable() {
     local value=$2
     local response
     
+    # Validate API key format
+    if [[ ! $PTERO_API_KEY =~ ^ptlc_ ]]; then
+        echo -e "${RED}Invalid API key format. Must start with 'ptlc_'${NC}"
+        echo -e "${YELLOW}Storing value locally instead${NC}"
+        echo "$value" > "/home/container/.${key}_value"
+        return 1
+    fi
+    
     # Extract server ID (first part before the hyphen)
     local server_id=$(hostname | sed 's/^pterodactyl-//' | cut -d'-' -f1)
     
