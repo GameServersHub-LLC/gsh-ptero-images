@@ -24,6 +24,15 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
+# Export SERVER_UUID if available and create SERVER_ID from first 8 characters
+if [ -n "${SERVER_UUID}" ]; then
+    export SERVER_UUID
+    SERVER_ID=${SERVER_UUID:0:8}
+    export SERVER_ID
+    echo -e "${GREEN}Server UUID:${WHITE} $SERVER_UUID${NC}"
+    echo -e "${GREEN}Server ID:${WHITE} $SERVER_ID${NC}"
+fi
+sleep 5
 # system informations                                                           
 echo -e "${YELLOW} Made By                                                          ${NC}"
 echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
