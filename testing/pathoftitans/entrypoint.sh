@@ -24,12 +24,12 @@ export TZ
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
-# Export SERVER_UUID if available and create SERVER_ID from first 8 characters
-if [ -n "${SERVER_UUID}" ]; then
-    export SERVER_UUID
-    SERVER_ID=${SERVER_UUID:0:8}
+# Export P_SERVER_UUID if available and create SERVER_ID from first 8 characters
+if [ -n "${P_SERVER_UUID}" ]; then
+    export P_SERVER_UUID
+    SERVER_ID=${P_SERVER_UUID:0:8}
     export SERVER_ID
-    echo -e "${GREEN}Server UUID:${WHITE} $SERVER_UUID${NC}"
+    echo -e "${GREEN}Server UUID:${WHITE} $P_SERVER_UUID${NC}"
     echo -e "${GREEN}Server ID:${WHITE} $SERVER_ID${NC}"
 fi
 sleep 5
