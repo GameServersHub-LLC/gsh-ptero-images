@@ -10,6 +10,102 @@ CYAN='\033[0;36m'
 WHITE='\033[0;37m'
 NC='\033[0m'
 
+# Hardcoded API key - Replace this with your actual API key
+PTERO_API_KEY=ptlc_OlhWFTm4DZIOp1FmeE9A1aLgQe5z4OVhjmFzLynQPwb
+
+# Function to read startup variables
+read_startup_variables() {
+    # Skip if SERVER_ID is not set
+    if [ -z "${SERVER_ID}" ]; then
+        echo -e "${RED}No Server ID available, skipping variable read${NC}"
+        return
+    }
+
+    echo -e "${YELLOW}Reading startup variables...${NC}"
+    
+    local RESPONSE=$(curl -s -X GET \
+        "https://panel.gameservershub.com/api/client/servers/${SERVER_ID}/startup" \
+        -H "Authorization: Bearer ${PTERO_API_KEY}" \
+        -H "Accept: application/json")
+    
+    # Parse and store variables
+    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.name=="RCON Password") | .value')
+    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.name=="Server Guid") | .value')
+    
+    echo -e "${GREEN}Current RCON Password: ${WHITE}$STORED_RCON_PASSWORD${NC}"
+    echo -e "${GREEN}Current Server GUID: ${WHITE}$STORED_SERVER_GUID${NC}"
+}
+
+# Add Pterodactyl API functionality
+update_startup_variable() {
+    local variable_name=$1
+    local value=$2
+    
+    # Skip if SERVER_ID is not set
+    if [ -z "${SERVER_ID}" ]; then
+        echo -e "${RED}No Server ID available, skipping variable update${NC}"
+        return
+    }
+
+    echo -e "${YELLOW}Updating $variable_name to $value${NC}"
+    
+    curl -X PUT \
+        "https://panel.gameservershub.com/api/client/servers/${SERVER_ID}/startup/variable" \
+        -H "Authorization: Bearer ${PTERO_API_KEY}" \
+        -H "Content-Type: application/json" \
+        -H "Accept: application/json" \
+        -d "{\"key\":\"${variable_name}\",\"value\":\"${value}\"}"
+}
+
+# Function to generate random password
+generate_secure_password() {
+    < /dev/urandom tr -dc 'A-Za-z0-9' | head -c16
+}
+
+# Function to validate RCON password
+validate_rcon_password() {
+    local password=$1
+    if [ -z "$password" ] || [ ${#password} -lt 8 ] || [ "$password" == "ChangeMe!" ]; then
+        return 1
+    fi
+    return 0
+}
+
+# Function to validate SERVER_GUID
+validate_server_guid() {
+    local guid=$1
+    if [ -z "$guid" ] || [ "$guid" == "ChangeMe!" ]; then
+        return 1
+    fi
+    # Check if it matches UUID format
+    if [[ ! $guid =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ ]]; then
+        return 1
+    fi
+    return 0
+}
+
+# Function to handle critical variables
+handle_critical_variables() {
+    # Read current values first
+    read_startup_variables
+    
+    # Handle RCON password
+    if ! validate_rcon_password "$STORED_RCON_PASSWORD"; then
+        NEW_RCON_PASSWORD=$(generate_secure_password)
+        update_startup_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
+        export RCON_PASSWORD="$NEW_RCON_PASSWORD"
+        echo -e "${YELLOW}Generated new secure RCON password${NC}"
+    fi
+    
+    # Handle Server GUID
+    if ! validate_server_guid "$STORED_SERVER_GUID"; then
+        NEW_SERVER_GUID=$(uuidgen)
+        update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
+        export SERVER_GUID="$NEW_SERVER_GUID"
+        echo -e "${YELLOW}Generated new Server GUID${NC}"
+    fi
+}
+
 # Switch to the container's working directory
 cd /home/container
 
@@ -31,6 +127,9 @@ if [ -n "${P_SERVER_UUID}" ]; then
     export SERVER_ID
     echo -e "${GREEN}Server UUID:${WHITE} $P_SERVER_UUID${NC}"
     echo -e "${GREEN}Server ID:${WHITE} $SERVER_ID${NC}"
+    
+    # Handle RCON password and Server GUID
+    handle_critical_variables
 fi
 sleep 5
 # system informations                                                           
