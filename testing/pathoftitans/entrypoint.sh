@@ -19,7 +19,7 @@ read_startup_variables() {
     if [ -z "${SERVER_ID}" ]; then
         echo -e "${RED}No Server ID available, skipping variable read${NC}"
         return
-    }
+    fi
 
     echo -e "${YELLOW}Reading startup variables...${NC}"
     
@@ -45,7 +45,7 @@ update_startup_variable() {
     if [ -z "${SERVER_ID}" ]; then
         echo -e "${RED}No Server ID available, skipping variable update${NC}"
         return
-    }
+    fi
 
     echo -e "${YELLOW}Updating $variable_name to $value${NC}"
     
