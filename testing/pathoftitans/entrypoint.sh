@@ -28,15 +28,16 @@ read_startup_variables() {
         -H "Authorization: Bearer ${PTERO_API_KEY}" \
         -H "Accept: application/json")
     
-    # Parse and store variables
-    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="RCON_PASSWORD") | .server_value')
-    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="SERVER_GUID") | .server_value')
+    # Parse and store variables more carefully
+    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="RCON_PASSWORD") | .server_value // empty')
+    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="SERVER_GUID") | .server_value // empty')
     
-    if [ "$STORED_RCON_PASSWORD" = "null" ]; then STORED_RCON_PASSWORD=""; fi
-    if [ "$STORED_SERVER_GUID" = "null" ]; then STORED_SERVER_GUID=""; fi
+    # Store current values for comparison
+    CURRENT_RCON_PASSWORD="$STORED_RCON_PASSWORD"
+    CURRENT_SERVER_GUID="$STORED_SERVER_GUID"
     
-    echo -e "${GREEN}Current RCON Password: ${WHITE}$STORED_RCON_PASSWORD${NC}"
-    echo -e "${GREEN}Current Server GUID: ${WHITE}$STORED_SERVER_GUID${NC}"
+    echo -e "${GREEN}Found RCON Password: ${WHITE}$STORED_RCON_PASSWORD${NC}"
+    echo -e "${GREEN}Found Server GUID: ${WHITE}$STORED_SERVER_GUID${NC}"
 }
 
 # Add Pterodactyl API functionality
@@ -99,32 +100,36 @@ handle_critical_variables() {
     # Read current values first
     read_startup_variables
     
-    # Debug output
-    echo -e "${YELLOW}Debug - RCON Password validation:${NC}"
-    echo -e "Length: ${#STORED_RCON_PASSWORD}"
-    echo -e "Empty check: $([ -z "$STORED_RCON_PASSWORD" ] && echo "true" || echo "false")"
-    echo -e "Default check: $([ "$STORED_RCON_PASSWORD" == "ChangeMe!" ] && echo "true" || echo "false")"
+    local needs_update=false
     
-    # Handle RCON password
+    # Handle RCON password - only if it needs updating
     if [ -z "$STORED_RCON_PASSWORD" ] || [ ${#STORED_RCON_PASSWORD} -lt 8 ] || [ "$STORED_RCON_PASSWORD" == "ChangeMe!" ]; then
         NEW_RCON_PASSWORD=$(generate_secure_password)
         update_startup_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
         export RCON_PASSWORD="$NEW_RCON_PASSWORD"
-        echo -e "${YELLOW}Generated new RCON password${NC}"
+        echo -e "${YELLOW}Updated RCON password${NC}"
+        needs_update=true
     else
-        echo -e "${GREEN}Using existing valid RCON password${NC}"
         export RCON_PASSWORD="$STORED_RCON_PASSWORD"
+        echo -e "${GREEN}Using existing RCON password${NC}"
     fi
     
-    # Handle Server GUID
+    # Handle Server GUID - only if it needs updating
     if [ -z "$STORED_SERVER_GUID" ] || [ "$STORED_SERVER_GUID" == "ChangeMe!" ]; then
         NEW_SERVER_GUID=$(uuidgen)
         update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
         export SERVER_GUID="$NEW_SERVER_GUID"
-        echo -e "${YELLOW}Generated new Server GUID${NC}"
+        echo -e "${YELLOW}Updated Server GUID${NC}"
+        needs_update=true
     else
-        echo -e "${GREEN}Using existing valid Server GUID${NC}"
         export SERVER_GUID="$STORED_SERVER_GUID"
+        echo -e "${GREEN}Using existing Server GUID${NC}"
+    fi
+    
+    # If we made any updates, wait a moment and verify
+    if [ "$needs_update" = true ]; then
+        sleep 2
+        read_startup_variables
     fi
 }
 
