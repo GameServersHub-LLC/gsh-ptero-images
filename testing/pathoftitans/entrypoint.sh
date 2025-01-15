@@ -65,7 +65,14 @@ generate_secure_password() {
 # Function to validate RCON password
 validate_rcon_password() {
     local password=$1
-    if [ -z "$password" ] || [ ${#password} -lt 8 ] || [ "$password" == "ChangeMe!" ]; then
+    if [ -z "$password" ]; then
+        echo -e "${YELLOW}RCON password is empty${NC}"
+        return 1
+    elif [ ${#password} -lt 8 ]; then
+        echo -e "${YELLOW}RCON password is less than 8 characters${NC}"
+        return 1
+    elif [ "$password" == "ChangeMe!" ]; then
+        echo -e "${YELLOW}RCON password is set to default${NC}"
         return 1
     fi
     return 0
@@ -74,11 +81,11 @@ validate_rcon_password() {
 # Function to validate SERVER_GUID
 validate_server_guid() {
     local guid=$1
-    if [ -z "$guid" ] || [ "$guid" == "ChangeMe!" ]; then
+    if [ -z "$guid" ]; then
+        echo -e "${YELLOW}Server GUID is empty${NC}"
         return 1
-    fi
-    # Check if it matches UUID format
-    if [[ ! $guid =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ ]]; then
+    elif [ "$guid" == "ChangeMe!" ]; then
+        echo -e "${YELLOW}Server GUID is set to default${NC}"
         return 1
     fi
     return 0
@@ -94,15 +101,28 @@ handle_critical_variables() {
         NEW_RCON_PASSWORD=$(generate_secure_password)
         update_startup_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
         export RCON_PASSWORD="$NEW_RCON_PASSWORD"
-        echo -e "${YELLOW}Generated new secure RCON password${NC}"
+        echo -e "${GREEN}Updated RCON password to new secure value${NC}"
+    else
+        echo -e "${GREEN}Using existing valid RCON password${NC}"
+        export RCON_PASSWORD="$STORED_RCON_PASSWORD"
     fi
     
     # Handle Server GUID
-    if ! validate_server_guid "$STORED_SERVER_GUID"; then
+    if [ -n "$STORED_SERVER_GUID" ]; then
+        if ! validate_server_guid "$STORED_SERVER_GUID"; then
+            NEW_SERVER_GUID=$(uuidgen)
+            update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
+            export SERVER_GUID="$NEW_SERVER_GUID"
+            echo -e "${YELLOW}Generated new Server GUID${NC}"
+        else
+            echo -e "${GREEN}Using existing valid Server GUID${NC}"
+            export SERVER_GUID="$STORED_SERVER_GUID"
+        fi
+    else
         NEW_SERVER_GUID=$(uuidgen)
         update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
         export SERVER_GUID="$NEW_SERVER_GUID"
-        echo -e "${YELLOW}Generated new Server GUID${NC}"
+        echo -e "${YELLOW}Generated new Server GUID (none existed)${NC}"
     fi
 }
 

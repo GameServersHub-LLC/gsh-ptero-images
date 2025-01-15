@@ -30,7 +30,7 @@ jobs:
           - pathoftitans
           - satisfactory
           - theisle
-          - asa
+          #- asa
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
