@@ -18,7 +18,7 @@ read_startup_variables() {
     # Skip if SERVER_ID is not set
     if [ -z "${SERVER_ID}" ]; then
         echo -e "${RED}No Server ID available, skipping variable read${NC}"
-        return
+        return 1
     fi
 
     echo -e "${YELLOW}Reading startup variables...${NC}"
@@ -29,8 +29,11 @@ read_startup_variables() {
         -H "Accept: application/json")
     
     # Parse and store variables
-    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.name=="RCON Password") | .value')
-    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.name=="Server Guid") | .value')
+    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="RCON_PASSWORD") | .server_value')
+    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="SERVER_GUID") | .server_value')
+    
+    if [ "$STORED_RCON_PASSWORD" = "null" ]; then STORED_RCON_PASSWORD=""; fi
+    if [ "$STORED_SERVER_GUID" = "null" ]; then STORED_SERVER_GUID=""; fi
     
     echo -e "${GREEN}Current RCON Password: ${WHITE}$STORED_RCON_PASSWORD${NC}"
     echo -e "${GREEN}Current Server GUID: ${WHITE}$STORED_SERVER_GUID${NC}"
@@ -96,33 +99,32 @@ handle_critical_variables() {
     # Read current values first
     read_startup_variables
     
+    # Debug output
+    echo -e "${YELLOW}Debug - RCON Password validation:${NC}"
+    echo -e "Length: ${#STORED_RCON_PASSWORD}"
+    echo -e "Empty check: $([ -z "$STORED_RCON_PASSWORD" ] && echo "true" || echo "false")"
+    echo -e "Default check: $([ "$STORED_RCON_PASSWORD" == "ChangeMe!" ] && echo "true" || echo "false")"
+    
     # Handle RCON password
-    if ! validate_rcon_password "$STORED_RCON_PASSWORD"; then
+    if [ -z "$STORED_RCON_PASSWORD" ] || [ ${#STORED_RCON_PASSWORD} -lt 8 ] || [ "$STORED_RCON_PASSWORD" == "ChangeMe!" ]; then
         NEW_RCON_PASSWORD=$(generate_secure_password)
         update_startup_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
         export RCON_PASSWORD="$NEW_RCON_PASSWORD"
-        echo -e "${GREEN}Updated RCON password to new secure value${NC}"
+        echo -e "${YELLOW}Generated new RCON password${NC}"
     else
         echo -e "${GREEN}Using existing valid RCON password${NC}"
         export RCON_PASSWORD="$STORED_RCON_PASSWORD"
     fi
     
     # Handle Server GUID
-    if [ -n "$STORED_SERVER_GUID" ]; then
-        if ! validate_server_guid "$STORED_SERVER_GUID"; then
-            NEW_SERVER_GUID=$(uuidgen)
-            update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
-            export SERVER_GUID="$NEW_SERVER_GUID"
-            echo -e "${YELLOW}Generated new Server GUID${NC}"
-        else
-            echo -e "${GREEN}Using existing valid Server GUID${NC}"
-            export SERVER_GUID="$STORED_SERVER_GUID"
-        fi
-    else
+    if [ -z "$STORED_SERVER_GUID" ] || [ "$STORED_SERVER_GUID" == "ChangeMe!" ]; then
         NEW_SERVER_GUID=$(uuidgen)
         update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
         export SERVER_GUID="$NEW_SERVER_GUID"
-        echo -e "${YELLOW}Generated new Server GUID (none existed)${NC}"
+        echo -e "${YELLOW}Generated new Server GUID${NC}"
+    else
+        echo -e "${GREEN}Using existing valid Server GUID${NC}"
+        export SERVER_GUID="$STORED_SERVER_GUID"
     fi
 }
 
