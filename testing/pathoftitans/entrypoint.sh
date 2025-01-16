@@ -11,7 +11,7 @@ WHITE='\033[0;37m'
 NC='\033[0m'
 
 # Hardcoded API key - Replace this with your actual API key
-PTERO_API_KEY=ptlc_4dNDToZB8P9ecXBPYSupTzEtttwnyrVfvqtK41eSmyT
+PTERO_API_KEY=
 
 # Function to read startup variables
 read_startup_variables() {
