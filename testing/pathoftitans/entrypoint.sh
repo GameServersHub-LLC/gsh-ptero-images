@@ -102,8 +102,8 @@ handle_critical_variables() {
     
     local needs_update=false
     
-    # Handle RCON password - only if it needs updating
-    if [ -z "$STORED_RCON_PASSWORD" ] || [ ${#STORED_RCON_PASSWORD} -lt 8 ] || [ "$STORED_RCON_PASSWORD" == "ChangeMe!" ]; then
+    # Handle RCON password
+    if ! validate_rcon_password "$STORED_RCON_PASSWORD"; then
         NEW_RCON_PASSWORD=$(generate_secure_password)
         update_startup_variable "RCON_PASSWORD" "$NEW_RCON_PASSWORD"
         export RCON_PASSWORD="$NEW_RCON_PASSWORD"
@@ -114,8 +114,8 @@ handle_critical_variables() {
         echo -e "${GREEN}Using existing RCON password${NC}"
     fi
     
-    # Handle Server GUID - only if it needs updating
-    if [ -z "$STORED_SERVER_GUID" ] || [ "$STORED_SERVER_GUID" == "ChangeMe!" ]; then
+    # Handle Server GUID
+    if ! validate_server_guid "$STORED_SERVER_GUID"; then
         NEW_SERVER_GUID=$(uuidgen)
         update_startup_variable "SERVER_GUID" "$NEW_SERVER_GUID"
         export SERVER_GUID="$NEW_SERVER_GUID"
