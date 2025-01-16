@@ -29,8 +29,8 @@ read_startup_variables() {
         -H "Accept: application/json")
     
     # Parse and store variables more carefully
-    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="RCON_PASSWORD") | .server_value // empty')
-    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.env_variable=="SERVER_GUID") | .server_value // empty')
+    STORED_RCON_PASSWORD=$(echo $RESPONSE | jq -r '.data[] | select(.attributes.env_variable=="RCON_PASSWORD") | .attributes.server_value // empty')
+    STORED_SERVER_GUID=$(echo $RESPONSE | jq -r '.data[] | select(.attributes.env_variable=="SERVER_GUID") | .attributes.server_value // empty')
     
     # Store current values for comparison
     CURRENT_RCON_PASSWORD="$STORED_RCON_PASSWORD"
