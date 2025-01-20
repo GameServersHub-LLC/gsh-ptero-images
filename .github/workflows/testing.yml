@@ -27,9 +27,9 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          #- pathoftitans
-          #- satisfactory
-          #- theisle
+          - pathoftitans
+          - satisfactory
+          - theisle
           - php
           #- asa
     steps:
