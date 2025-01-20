@@ -16,16 +16,19 @@ RUN docker-php-ext-install zip
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configure Apache and permissions
-RUN a2enmod rewrite && \
-    chown -R container:container /var/run/apache2 /var/log/apache2 /var/lock/apache2
+# Configure Apache and create required directories
+RUN mkdir -p /var/run/apache2 /var/lock/apache2 /var/log/apache2 && \
+    a2enmod rewrite && \
+    chown -R www-data:www-data /var/run/apache2 /var/log/apache2 /var/lock/apache2
 
 # Copy entrypoint and set permissions first
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Setup pterodactyl user and permissions
-RUN useradd -d /home/container -m container
+# Setup pterodactyl user and grant apache permissions
+RUN useradd -d /home/container -m container && \
+    usermod -aG www-data container && \
+    chmod -R 775 /var/run/apache2 /var/log/apache2 /var/lock/apache2
 
 # Set working directory
 WORKDIR /home/container
