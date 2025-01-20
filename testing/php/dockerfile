@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
-    sudo \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,11 +25,17 @@ RUN mkdir -p /var/run/apache2 /var/lock/apache2 /var/log/apache2 && \
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Set permissions for apt operations
+RUN mkdir -p /var/lib/apt/lists && \
+    chown -R container:container /var/lib/apt/lists && \
+    chmod -R 755 /var/lib/apt/lists && \
+    chown -R container:container /var/cache/apt && \
+    chmod -R 755 /var/cache/apt && \
+    echo "APT::Get::AllowUnauthenticated \"true\";" > /etc/apt/apt.conf.d/02allow-unsigned
+
 # Setup pterodactyl user and grant apache permissions
 RUN useradd -d /home/container -m container && \
     usermod -aG www-data container && \
-    usermod -aG sudo container && \
-    echo "container ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     chmod -R 775 /var/run/apache2 /var/log/apache2 /var/lock/apache2
 
 # Set working directory

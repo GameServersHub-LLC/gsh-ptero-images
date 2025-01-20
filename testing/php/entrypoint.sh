@@ -1,6 +1,9 @@
 #!/bin/bash
 cd /home/container
 
+# Make internal Docker IP address available to processes
+export INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
+
 # Output Current PHP Version
 php -v
 
@@ -11,16 +14,5 @@ apache2ctl start
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Add command listener
-(
-    while read line; do
-        if [[ "$line" == "stop" ]]; then
-            pkill -SIGTERM apache2
-            break
-        fi
-        eval "$line"
-    done
-) &
-
 # Run the Server
-eval ${MODIFIED_STARTUP}
+exec env ${MODIFIED_STARTUP}
