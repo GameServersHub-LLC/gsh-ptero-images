@@ -16,17 +16,19 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Configure Apache
 RUN a2enmod rewrite
 
+# Copy entrypoint and set permissions first
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Setup pterodactyl user and permissions
 RUN useradd -d /home/container -m container
-USER container
-ENV USER=container HOME=/home/container
 
 # Set working directory
 WORKDIR /home/container
 
-# Copy entrypoint
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Switch to container user last
+USER container
+ENV USER=container HOME=/home/container
 
 # Switch to CMD instead of ENTRYPOINT for Pterodactyl
 CMD ["/bin/bash", "/entrypoint.sh"]
