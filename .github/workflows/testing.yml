@@ -30,6 +30,7 @@ jobs:
           - pathoftitans
           - satisfactory
           - theisle
+          - php
           #- asa
     steps:
       - name: Checkout repository

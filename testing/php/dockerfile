@@ -1,0 +1,16 @@
+FROM php:8.0-apache
+
+# Install composer and dependencies
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN apt-get update && apt-get install -y zip unzip
+
+# Configure Apache
+RUN a2enmod rewrite
+COPY . /var/www/html/
+WORKDIR /var/www/html
+
+# Install PHP dependencies
+RUN composer install --no-dev
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html
