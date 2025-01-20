@@ -14,5 +14,11 @@ apache2ctl start
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo ":/home/container$ ${MODIFIED_STARTUP}"
 
-# Run the Server
-exec env ${MODIFIED_STARTUP}
+# Run the Server and keep container alive
+${MODIFIED_STARTUP} &
+
+# Keep container running and handle commands
+while true
+do
+    sleep 1
+done
