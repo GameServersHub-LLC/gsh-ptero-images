@@ -21,22 +21,21 @@ RUN mkdir -p /var/run/apache2 /var/lock/apache2 /var/log/apache2 && \
     a2enmod rewrite && \
     chown -R www-data:www-data /var/run/apache2 /var/log/apache2 /var/lock/apache2
 
+# Setup pterodactyl user first
+RUN useradd -d /home/container -m container && \
+    usermod -aG www-data container
+
+# Set permissions for apt and apache
+RUN mkdir -p /var/lib/apt/lists /var/cache/apt && \
+    chown -R container:container /var/lib/apt/lists /var/cache/apt && \
+    chmod -R 755 /var/lib/apt/lists /var/cache/apt && \
+    echo "APT::Get::AllowUnauthenticated \"true\";" > /etc/apt/apt.conf.d/02allow-unsigned && \
+    chmod -R 775 /var/run/apache2 /var/log/apache2 /var/lock/apache2 && \
+    chown -R container:container /etc/apt/apt.conf.d/02allow-unsigned
+
 # Copy entrypoint and set permissions first
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
-# Set permissions for apt operations
-RUN mkdir -p /var/lib/apt/lists && \
-    chown -R container:container /var/lib/apt/lists && \
-    chmod -R 755 /var/lib/apt/lists && \
-    chown -R container:container /var/cache/apt && \
-    chmod -R 755 /var/cache/apt && \
-    echo "APT::Get::AllowUnauthenticated \"true\";" > /etc/apt/apt.conf.d/02allow-unsigned
-
-# Setup pterodactyl user and grant apache permissions
-RUN useradd -d /home/container -m container && \
-    usermod -aG www-data container && \
-    chmod -R 775 /var/run/apache2 /var/log/apache2 /var/lock/apache2
 
 # Set working directory
 WORKDIR /home/container
