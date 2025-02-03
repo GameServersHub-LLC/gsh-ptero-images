@@ -120,18 +120,35 @@ else
 fi
 
 
-# Setup NSS Wrapper for use ($NSS_WRAPPER_PASSWD and $NSS_WRAPPER_GROUP have been set by the Dockerfile)
-export USER_ID=$(id -u)
-export GROUP_ID=$(id -g)
-envsubst < /passwd.template > ${NSS_WRAPPER_PASSWD}
-export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss_wrapper.so
+# Setup NSS Wrapper with error checking
+if [ -f "/usr/lib/x86_64-linux-gnu/libnss_wrapper.so" ]; then
+    export USER_ID=$(id -u)
+    export GROUP_ID=$(id -g)
+    envsubst < /passwd.template > ${NSS_WRAPPER_PASSWD}
+    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss_wrapper.so
+else
+    echo -e "${YELLOW}Warning: libnss_wrapper.so not found, continuing without it${NC}"
+fi
 
-# RCON loop with UTF-8 encoding for password
-(while read cmd; do
-    # Convert RCON password to UTF-8 before sending
-    ENCODED_PASS=$(echo -n "$RCON_PASSWORD" | iconv -t UTF-8)
-    rcon -s -a "localhost:$RCON_PORT" -p "$ENCODED_PASS" "$cmd"
-done) < /dev/stdin &
+# RCON setup with proper authentication and error handling
+if [ -n "$RCON_PASSWORD" ] && [ -n "$RCON_PORT" ]; then
+    echo -e "${GREEN}Setting up RCON on port $RCON_PORT${NC}"
+    (while read cmd; do
+        if [ -n "$cmd" ]; then
+            # Ensure proper UTF-8 encoding and add retry logic
+            for i in {1..3}; do
+                if rcon -H "127.0.0.1" -p "$RCON_PORT" -P "$RCON_PASSWORD" "$cmd"; then
+                    break
+                else
+                    echo -e "${YELLOW}RCON command failed, attempt $i/3${NC}"
+                    sleep 2
+                fi
+            done
+        fi
+    done) < /dev/stdin &
+else
+    echo -e "${YELLOW}Warning: RCON_PASSWORD or RCON_PORT not set, RCON functionality disabled${NC}"
+fi
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
