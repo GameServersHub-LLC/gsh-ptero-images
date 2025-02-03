@@ -128,7 +128,7 @@ export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss_wrapper.so
 
 # RCON loop with command-line arguments for address and password
 (while read cmd; do
-    rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
+    rcon -s -a "0.0.0.0:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
 # Replace Startup Variables
