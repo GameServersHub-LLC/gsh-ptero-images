@@ -130,25 +130,25 @@ else
     echo -e "${YELLOW}Warning: libnss_wrapper.so not found, continuing without it${NC}"
 fi
 
-# RCON setup with proper authentication and error handling
-if [ -n "$RCON_PASSWORD" ] && [ -n "$RCON_PORT" ]; then
-    echo -e "${GREEN}Setting up RCON on port $RCON_PORT${NC}"
-    (while read cmd; do
-        if [ -n "$cmd" ]; then
-            # Ensure proper UTF-8 encoding and add retry logic
-            for i in {1..3}; do
-                if rcon -H "127.0.0.1" -p "$RCON_PORT" -P "$RCON_PASSWORD" "$cmd"; then
-                    break
-                else
-                    echo -e "${YELLOW}RCON command failed, attempt $i/3${NC}"
-                    sleep 2
-                fi
-            done
-        fi
-    done) < /dev/stdin &
-else
-    echo -e "${YELLOW}Warning: RCON_PASSWORD or RCON_PORT not set, RCON functionality disabled${NC}"
-fi
+## RCON setup with proper authentication and error handling
+#if [ -n "$RCON_PASSWORD" ] && [ -n "$RCON_PORT" ]; then
+#    echo -e "${GREEN}Setting up RCON on port $RCON_PORT${NC}"
+#    (while read cmd; do
+#        if [ -n "$cmd" ]; then
+#            # Ensure proper UTF-8 encoding and add retry logic
+#            for i in {1..3}; do
+#                if rcon -H "127.0.0.1" -p "$RCON_PORT" -P "$RCON_PASSWORD" "$cmd"; then
+#                    break
+#                else
+#                    echo -e "${YELLOW}RCON command failed, attempt $i/3${NC}"
+#                    sleep 2
+#                fi
+#            done
+#        fi
+#    done) < /dev/stdin &
+#else
+#    echo -e "${YELLOW}Warning: RCON_PASSWORD or RCON_PORT not set, RCON functionality disabled${NC}"
+#fi
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
