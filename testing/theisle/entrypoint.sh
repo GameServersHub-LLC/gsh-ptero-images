@@ -126,9 +126,11 @@ export GROUP_ID=$(id -g)
 envsubst < /passwd.template > ${NSS_WRAPPER_PASSWD}
 export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss_wrapper.so
 
-# RCON loop with command-line arguments for address and password
+# RCON loop with UTF-8 encoding for password
 (while read cmd; do
-    rcon -s -a "0.0.0.0:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
+    # Convert RCON password to UTF-8 before sending
+    ENCODED_PASS=$(echo -n "$RCON_PASSWORD" | iconv -t UTF-8)
+    rcon -s -a "localhost:$RCON_PORT" -p "$ENCODED_PASS" "$cmd"
 done) < /dev/stdin &
 
 # Replace Startup Variables
