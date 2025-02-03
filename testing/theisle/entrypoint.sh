@@ -126,6 +126,11 @@ export GROUP_ID=$(id -g)
 envsubst < /passwd.template > ${NSS_WRAPPER_PASSWD}
 export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libnss_wrapper.so
 
+# RCON loop with command-line arguments for address and password
+(while read cmd; do
+    rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
+done) < /dev/stdin &
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"

@@ -58,6 +58,14 @@ RUN             apt install -y \
 RUN             update-locale lang=en_US.UTF-8 \
                 && dpkg-reconfigure --frontend noninteractive locales
 
+## Install rcon
+RUN cd /tmp/ && \
+    curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz && \
+    tar xvf rcon.tar.gz && \
+    mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/ && \
+    rm -rf rcon.tar.gz rcon-0.10.3-amd64_linux
+
+
 ## Setup user and working directory
 RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
