@@ -165,24 +165,27 @@ export INTERNAL_IP
 # Switch to the container's working directory
 cd /home/container || exit 1
 
-# Collect and parse all specified mods
+# Process mod string to proper format
 if [ -n "${MODIFICATIONS}" ]; then
-    # Add @ to numbers that don't already have it and ensure trailing semicolon
-    CLIENT_MODS=$(echo "${MODIFICATIONS}" | sed -E 's/([0-9]+)(?![@;])/\@\1/g')
-    if [[ ${CLIENT_MODS} != *\; ]]; then
-        CLIENT_MODS="${CLIENT_MODS};"
-    fi
+    # Strip existing @ symbols and spaces
+    CLEAN_MODS=$(echo "${MODIFICATIONS}" | tr -d ' ' | sed 's/@//g')
+    # Add @ to each number and join with semicolons
+    CLIENT_MODS=$(echo $CLEAN_MODS | sed 's/[;,]/;@/g')
+    CLIENT_MODS="@${CLIENT_MODS}"
+    # Remove trailing semicolon if present
+    CLIENT_MODS=$(echo $CLIENT_MODS | sed 's/;$//')
 else
     CLIENT_MODS=""
 fi
 
-# Handle server mods the same way
+# Process server mods the same way
 if [ -n "${SERVERMODS}" ]; then
-    # Add @ to numbers that don't already have it and ensure trailing semicolon
-    SERVERMODS=$(echo "${SERVERMODS}" | sed -E 's/([0-9]+)(?![@;])/\@\1/g')
-    if [[ ${SERVERMODS} != *\; ]]; then
-        SERVERMODS="${SERVERMODS};"
-    fi
+    CLEAN_MODS=$(echo "${SERVERMODS}" | tr -d ' ' | sed 's/@//g')
+    SERVERMODS=$(echo $CLEAN_MODS | sed 's/[;,]/;@/g')
+    SERVERMODS="@${SERVERMODS}"
+    SERVERMODS=$(echo $SERVERMODS | sed 's/;$//')
+else
+    SERVERMODS=""
 fi
 
 # If the mod list file exists and is valid, parse and add mods to the client-side mods list
