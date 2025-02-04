@@ -111,8 +111,8 @@ RunSteamCMD() {
                 # Make the mods contents all lowercase
                 ModsLowercase "${MODS_DIR}/@$2"
                 # Move any .bikey's to the keys directory
-                echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
-                find "${MODS_DIR}/@$2" -name "*.bikey" -type f -exec cp {} ./keys \;
+                echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}${CONFIG_DIR}/keys/${NC} folder..."
+                find "${MODS_DIR}/@$2" -name "*.bikey" -type f -exec cp {} ${CONFIG_DIR}/keys \;
                 echo -e "${GREEN}[UPDATE]: Mod download/update successful!${NC}"
             fi
             break
@@ -152,8 +152,8 @@ RemoveDuplicates() {
 ## === ENTRYPOINT START ===
 
 # Create required directories
-mkdir -p battleye keys serverprofile "${MODS_DIR}"
-chmod 755 battleye keys serverprofile "${MODS_DIR}"
+mkdir -p battleye keys serverprofile mods mpmissions
+chmod 755 battleye keys serverprofile mods mpmissions
 
 # Wait for the container to fully initialize
 sleep 1
