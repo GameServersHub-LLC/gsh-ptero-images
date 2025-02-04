@@ -11,6 +11,7 @@ STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containin
 WORKSHOP_DIR="./Steam/steamapps/workshop"       # SteamCMD's directory containing workshop downloads
 STEAMCMD_LOG="${STEAMCMD_DIR}/steamcmd.log"     # Log file for SteamCMD
 GAME_ID=221100                                  # SteamCMD ID for the DayZ GAME (not server). Only used for Workshop mod downloads.
+MODS_DIR="./mods"                               # Base directory for all mods
 
 # Color Codes
 CYAN='\033[0;36m'
@@ -102,16 +103,16 @@ RunSteamCMD() {
             if [ $1 -eq 0 ]; then # Server
                 echo -e "\n${GREEN}[UPDATE]: Game server is up to date!${NC}"
             else # Mod
-                # Move the downloaded mod to the root directory, and replace existing mod if needed
-                mkdir -p ./@$2
-                rm -rf ./@$2/*
-                mv -f ${WORKSHOP_DIR}/content/$GAME_ID/$2/* ./@$2
+                # Move the downloaded mod to the mods directory
+                mkdir -p "${MODS_DIR}/@$2"
+                rm -rf "${MODS_DIR}/@$2/*"
+                mv -f ${WORKSHOP_DIR}/content/$GAME_ID/$2/* "${MODS_DIR}/@$2"
                 rm -d ${WORKSHOP_DIR}/content/$GAME_ID/$2
                 # Make the mods contents all lowercase
-                ModsLowercase @$2
+                ModsLowercase "${MODS_DIR}/@$2"
                 # Move any .bikey's to the keys directory
                 echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
-                find ./@$2 -name "*.bikey" -type f -exec cp {} ./keys \;
+                find "${MODS_DIR}/@$2" -name "*.bikey" -type f -exec cp {} ./keys \;
                 echo -e "${GREEN}[UPDATE]: Mod download/update successful!${NC}"
             fi
             break
@@ -149,6 +150,10 @@ RemoveDuplicates() {
 }
 
 ## === ENTRYPOINT START ===
+
+# Create required directories
+mkdir -p battleye keys serverprofile "${MODS_DIR}"
+chmod 755 battleye keys serverprofile "${MODS_DIR}"
 
 # Wait for the container to fully initialize
 sleep 1
@@ -221,13 +226,13 @@ if [ "${UPDATE_SERVER}" -eq 1 ]; then
         do
             if [[ $modID =~ ^[0-9]+$ ]]; then # Only check mods that are in ID-form
                 # Create mod directory if it doesn't exist
-                mkdir -p "./@${modID}"
+                mkdir -p "${MODS_DIR}/@${modID}"
                 
                 # Get mod's latest update in epoch time from its Steam Workshop changelog page
                 latestUpdate=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep '<p id=' | head -1 | cut -d'"' -f2)
                 
                 # Get current mod timestamp or use 0 if directory is empty/new
-                currentTime=$(find "./@${modID}" -type f -exec stat -c %Y {} + 2>/dev/null | sort -nr | head -n1)
+                currentTime=$(find "${MODS_DIR}/@${modID}" -type f -exec stat -c %Y {} + 2>/dev/null | sort -nr | head -n1)
                 if [ -z "$currentTime" ]; then
                     currentTime=0
                 fi
@@ -273,6 +278,10 @@ if [ "${MODS_LOWERCASE}" -eq 1 ]; then
         ModsLowercase $modDir
     done
 fi
+
+# Modify startup command to reference mods directory
+CLIENT_MODS=$(echo $CLIENT_MODS | sed "s|@|${MODS_DIR}/@|g")
+SERVERMODS=$(echo $SERVERMODS | sed "s|@|${MODS_DIR}/@|g")
 
 # Setup NSS Wrapper for use ($NSS_WRAPPER_PASSWD and $NSS_WRAPPER_GROUP have been set by the Dockerfile)
 export USER_ID=$(id -u)
