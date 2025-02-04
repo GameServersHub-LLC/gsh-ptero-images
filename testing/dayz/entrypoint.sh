@@ -219,30 +219,35 @@ if [ "${UPDATE_SERVER}" -eq 1 ]; then
         echo -e "\n${GREEN}[UPDATE]:${NC} Checking all ${CYAN}Steam Workshop mods${NC} for updates..."
         for modID in $(echo $allMods | sed -e 's/@//g')
         do
-            if [ $modID -eq $modID ] 2>/dev/null; then # Only check mods that are in ID-form
+            if [[ $modID =~ ^[0-9]+$ ]]; then # Only check mods that are in ID-form
+                # Create mod directory if it doesn't exist
+                mkdir -p "./@${modID}"
+                
                 # Get mod's latest update in epoch time from its Steam Workshop changelog page
                 latestUpdate=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep '<p id=' | head -1 | cut -d'"' -f2)
-                # If the update time is valid and newer than the local directory's creation date, or the mod hasn't been downloaded yet, download the mod
-                if [ ! -d @$modID ] || [ -n "$latestUpdate" ] && [ "$latestUpdate" -eq "$latestUpdate" ] 2>/dev/null && [ "$latestUpdate" -gt $(find @$modID | head -1 | xargs stat -c%Y) ]; then
-                    # Get the mod's name from the Workshop page as well
+                
+                # Get current mod timestamp or use 0 if directory is empty/new
+                currentTime=$(find "./@${modID}" -type f -exec stat -c %Y {} + 2>/dev/null | sort -nr | head -n1)
+                if [ -z "$currentTime" ]; then
+                    currentTime=0
+                fi
+                
+                # Check if update needed
+                if [ "$currentTime" -eq 0 ] || [ -n "$latestUpdate" ] && [ "$latestUpdate" -gt "$currentTime" ]; then
+                    # Get the mod's name
                     modName=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep 'workshopItemTitle' | cut -d'>' -f2 | cut -d'<' -f1)
-                    if [ -z "$modName" ]; then # Set default name if unavailable
+                    if [ -z "$modName" ]; then
                         modName="[NAME UNAVAILABLE]"
                     fi
-                    if [ ! -d @$modID ]; then
+                    
+                    if [ "$currentTime" -eq 0 ]; then
                         echo -e "\n${GREEN}[UPDATE]:${NC} Downloading new Mod: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
                     else
                         echo -e "\n${GREEN}[UPDATE]:${NC} Mod update found for: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
                     fi
-                    if [ -n "$latestUpdate" ] && [ "$latestUpdate" -eq "$latestUpdate" ] 2>/dev/null; then # Notify last update date, if valid
-                        echo -e "\tMod was last updated: ${CYAN}$(date -d @${latestUpdate})${NC}"
-                    fi
                     
-                    # Delete SteamCMD appworkshop cache before running to avoid mod download failures
-                    echo -e "\tClearing SteamCMD appworkshop cache..."
-                    rm -f ${WORKSHOP_DIR}/appworkshop_$GAME_ID.acf
-
-                    echo -e "\tAttempting mod update/download via SteamCMD...\n"
+                    # Clear cache and download
+                    rm -f "${WORKSHOP_DIR}/appworkshop_${GAME_ID}.acf"
                     RunSteamCMD 1 $modID
                 fi
             fi
