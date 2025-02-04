@@ -166,11 +166,25 @@ export INTERNAL_IP
 cd /home/container || exit 1
 
 # Collect and parse all specified mods
-if [ -n "${MODIFICATIONS}" ] && [ "${MODIFICATIONS}" != *\; ]; then # Add manually specified mods to the client-side mods list, while checking for trailing semicolon
-    CLIENT_MODS="${MODIFICATIONS};"
+if [ -n "${MODIFICATIONS}" ]; then
+    # Add @ to numbers that don't already have it and ensure trailing semicolon
+    CLIENT_MODS=$(echo "${MODIFICATIONS}" | sed -E 's/([0-9]+)(?![@;])/\@\1/g')
+    if [[ ${CLIENT_MODS} != *\; ]]; then
+        CLIENT_MODS="${CLIENT_MODS};"
+    fi
 else
-    CLIENT_MODS=${MODIFICATIONS}
+    CLIENT_MODS=""
 fi
+
+# Handle server mods the same way
+if [ -n "${SERVERMODS}" ]; then
+    # Add @ to numbers that don't already have it and ensure trailing semicolon
+    SERVERMODS=$(echo "${SERVERMODS}" | sed -E 's/([0-9]+)(?![@;])/\@\1/g')
+    if [[ ${SERVERMODS} != *\; ]]; then
+        SERVERMODS="${SERVERMODS};"
+    fi
+fi
+
 # If the mod list file exists and is valid, parse and add mods to the client-side mods list
 if [ -f "${MOD_FILE}" ] && [ -n "$(cat ${MOD_FILE} | grep 'Created by DayZ Launcher')" ]; then
     CLIENT_MODS+=$(cat ${MOD_FILE} | grep 'id=' | cut -d'=' -f3 | cut -d'"' -f1 | xargs printf '@%s;')
