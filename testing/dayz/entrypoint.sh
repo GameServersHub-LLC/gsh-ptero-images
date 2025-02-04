@@ -172,21 +172,19 @@ if [ -n "${MODIFICATIONS}" ]; then
     # Add @ to each number
     CLIENT_MODS=$(echo $CLEAN_MODS | sed 's/[;]/;@/g')
     CLIENT_MODS="@${CLIENT_MODS}"
-    # Remove trailing semicolon if present
-    CLIENT_MODS=$(echo $CLIENT_MODS | sed 's/;$//')
+    # Remove trailing semicolon and any empty segments
+    CLIENT_MODS=$(echo $CLIENT_MODS | sed 's/;$//' | sed 's/;@$//' | sed 's/^@;//')
 else
     CLIENT_MODS=""
 fi
 
-# Handle server mods the same way as client mods
+# Process server mods the same way
 if [ -n "${SERVERMODS}" ]; then
-    # Strip existing @ symbols and spaces, replace commas with semicolons
     CLEAN_MODS=$(echo "${SERVERMODS}" | tr -d ' ' | sed 's/@//g' | tr ',' ';')
-    # Add @ to each number
     SERVERMODS=$(echo $CLEAN_MODS | sed 's/[;]/;@/g')
     SERVERMODS="@${SERVERMODS}"
-    # Remove trailing semicolon if present
-    SERVERMODS=$(echo $SERVERMODS | sed 's/;$//')
+    # Remove trailing semicolon and any empty segments
+    SERVERMODS=$(echo $SERVERMODS | sed 's/;$//' | sed 's/;@$//' | sed 's/^@;//')
 else
     SERVERMODS=""
 fi
