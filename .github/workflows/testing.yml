@@ -27,10 +27,10 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          - pathoftitans
-          - satisfactory
-          - theisle
-          - php
+          #- pathoftitans
+          #- satisfactory
+          #- theisle
+          #- php
           #- asa
           - dayz
     steps:

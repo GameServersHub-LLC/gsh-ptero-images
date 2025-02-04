@@ -52,7 +52,28 @@ RUN             apt install -y \
                         libsqlite3-0 \
                         libsqlite3-dev \
                         libssl-dev \
-                        libunwind8
+                        libunwind8 \
+                        xorg \
+                        build-essential \
+                        libgl1-mesa-glx \
+                        libgl1-mesa-dri \
+                        libvulkan1 \
+                        pulseaudio \
+                        git \
+                        ca-certificates \
+                        curl \
+                        pkg-config \
+                        libcurl4-openssl-dev \
+                        libboost-all-dev \
+                        libpulse-dev \
+                        libxrandr-dev \
+                        libxi-dev \
+                        libx11-dev \
+                        libgl-dev \
+                        libudev-dev \
+                        libjsoncpp-dev \
+                        libopenal-dev \
+                        steam
 
 ## configure locale
 RUN             update-locale lang=en_US.UTF-8 \
