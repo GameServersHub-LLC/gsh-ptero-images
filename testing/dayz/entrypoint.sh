@@ -57,6 +57,7 @@ sleep 3
 echo -e "${WHITE} _______                                                                   _______ ${NC}"
 echo -e "${WHITE}( _____ )                                                                 ( _____ )${NC}"
 echo -e "${WHITE} |     | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|     | ${NC}"
+echo -e "${WHITE} |     |                                                                   |     | ${NC}"
 echo -e "${WHITE} |     | ${RED} ▓${WHITE}█████▄  ▄▄▄     ${RED}▓${WHITE}██   ██${RED}▓   ▒${WHITE}███████${RED}▒   ▓${WHITE}█████   ▄████   ▄████  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED} ▒${WHITE}██▀ ██▌${RED}▒${WHITE}████▄    ${RED}▒${WHITE}██  ██${RED}▒   ▒ ▒ ▒ ${WHITE}▄▀${RED}░   ▓${WHITE}█   ▀  ██${RED}▒ ${WHITE}▀█${RED}▒ ${WHITE}██${RED}▒ ${WHITE}▀█${RED}▒ ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED} ░${WHITE}██   █▌${RED}▒${WHITE}██  ▀█▄   ${RED}▒${WHITE}██ ██${RED}░   ░ ▒ ${WHITE}▄▀${RED}▒░    ▒${WHITE}███   ${RED}▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░ ${WHITE}|     | ${NC}"
@@ -66,10 +67,10 @@ echo -e "${WHITE} |     | ${RED}  ▒▒▓  ▒  ▒▒   ▓▒${WHITE}█${RE
 echo -e "${WHITE} |     | ${RED}  ░ ▒  ▒   ▒   ▒▒ ░▓${WHITE}██ ${RED}░▒░    ░░▒ ▒ ░ ▒    ░ ░  ░  ░   ░   ░   ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${WHITE}|     | ${NC}"
-echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                    ${WHITE}|     | ${NC}"
-echo -e "${WHITE} |_____| ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|_____| ${NC}"
-echo -e "${WHITE}( _____ )                                                                  ( _____ )${NC}"
-
+echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                   ${WHITE}|     | ${NC}"
+echo -e "${WHITE} |     |                                                                   |     | ${NC}"
+echo -e "${WHITE} |_____| ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|_____| ${NC}"
+echo -e "${WHITE}( _____ )                                                                 ( _____ )${NC}"
 
 echo -e "${WHITE} _______                                                                   _______ ${NC}"
 echo -e "${WHITE}( _____ )                                                                 ( _____ )${NC}"
