@@ -1,10 +1,58 @@
 #!/bin/bash
 
-## File: DayZ Image - entrypoint.sh
-## Author: David Wolfe (Red-Thirten)
-## Contributors: Aussie Server Hosts (https://aussieserverhosts.com/)
-## Date: 2024/06/05
-## License: MIT License
+clear
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[0;37m'
+NC='\033[0m'
+
+# Wait for the container to fully initialize
+sleep 1
+
+# Force the TZ environment variable to Eastern Standard Time
+TZ=America/New_York
+export TZ
+
+# Set environment variable that holds the Internal Docker IP
+INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
+export INTERNAL_IP
+
+# system informations                                                           
+echo -e "${YELLOW} Made By                                                          ${NC}"
+echo -e "${MAGENTA}         GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
+echo -e "${MAGENTA}      GGG::::::::::::G SS:::::::::::::::SH:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}    GG:::::::::::::::GS:::::SSSSSS::::::SH:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}   G:::::GGGGGGGG::::GS:::::S     SSSSSSSHH::::::H     H::::::HH ${NC}"
+echo -e "${MAGENTA}  G:::::G       GGGGGGS:::::S              H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G              S:::::S              H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G               S::::SSSS           H::::::HHHHH::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G    GGGGGGGGGG  SS::::::SSSSS      H:::::::::::::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G    G::::::::G    SSS::::::::SS    H:::::::::::::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G    GGGGG::::G       SSSSSS::::S   H::::::HHHHH::::::H   ${NC}"
+echo -e "${MAGENTA} G:::::G        G::::G            S:::::S  H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA}  G:::::G       G::::G            S:::::S  H:::::H     H:::::H   ${NC}"
+echo -e "${MAGENTA}   G:::::GGGGGGGG::::GSSSSSSS     S:::::SHH::::::H     H::::::HH ${NC}"
+echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
+echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
+echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
+echo -e "${WHITE} _____                                                     _____ ${NC}"
+echo -e "${WHITE}( ___ )                                                   ( ___ )${NC}"
+echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
+echo -e "${WHITE} |   | ·▄▄▄▄   ▄▄▄·  ▄· ▄▌    ·▄▄▄▄•    ▄▄▄ . ▄▄ •  ▄▄ •   |   | ${NC}"
+echo -e "${WHITE} |   | ██▪ ██ ▐█ ▀█ ▐█▪██▌    ▪▀·.█▌    ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪  |   | ${NC}"
+echo -e "${WHITE} |   | ▐█· ▐█▌▄█▀▀█ ▐█▌▐█▪    ▄█▀▀▀•    ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄  |   | ${NC}"
+echo -e "${WHITE} |   | ██. ██ ▐█ ▪▐▌ ▐█▀·.    █▌▪▄█▀    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█  |   | ${NC}"
+echo -e "${WHITE} |   | ▀▀▀▀▀•  ▀  ▀   ▀ •     ·▀▀▀ •     ▀▀▀ ·▀▀▀▀ ·▀▀▀▀   |   | ${NC}"
+echo -e "${WHITE} |   |${YELLOW} by that411guy                                      ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
+echo -e "${WHITE}(_____)                                                   (_____)${NC}"
+echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
+sleep 3
 
 ## === CONSTANTS ===
 STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containing steamcmd.sh
@@ -12,13 +60,6 @@ WORKSHOP_DIR="./Steam/steamapps/workshop"       # SteamCMD's directory containin
 STEAMCMD_LOG="${STEAMCMD_DIR}/steamcmd.log"     # Log file for SteamCMD
 GAME_ID=221100                                  # SteamCMD ID for the DayZ GAME (not server). Only used for Workshop mod downloads.
 MODS_DIR="./mods"                               # Base directory for all mods
-
-# Color Codes
-CYAN='\033[0;36m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
 
 ## === ENVIRONMENT VARS ===
 # STARTUP, STARTUP_PARAMS, STEAM_USER, STEAM_PASS, SERVER_BINARY, MOD_FILE, MODIFICATIONS, SERVERMODS, UPDATE_SERVER, VALIDATE_SERVER, MODS_LOWERCASE, STEAMCMD_EXTRA_FLAGS, STEAMCMD_APPID, SERVER_PASSWORD, STEAMCMD_ATTEMPTS, DISABLE_MOD_UPDATES
@@ -158,9 +199,6 @@ chmod 755 battleye keys serverprofile mods mpmissions
 # Wait for the container to fully initialize
 sleep 1
 
-# Set environment variable that holds the Internal Docker IP
-INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
-export INTERNAL_IP
 
 # Switch to the container's working directory
 cd /home/container || exit 1
