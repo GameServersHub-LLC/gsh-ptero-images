@@ -48,7 +48,7 @@ echo -e "${WHITE} |   | ██▪ ██ ▐█ ▀█ ▐█▪██▌    ▪
 echo -e "${WHITE} |   | ▐█· ▐█▌▄█▀▀█ ▐█▌▐█▪    ▄█▀▀▀•    ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄  |   | ${NC}"
 echo -e "${WHITE} |   | ██. ██ ▐█ ▪▐▌ ▐█▀·.    █▌▪▄█▀    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█  |   | ${NC}"
 echo -e "${WHITE} |   | ▀▀▀▀▀•  ▀  ▀   ▀ •     ·▀▀▀ •     ▀▀▀ ·▀▀▀▀ ·▀▀▀▀   |   | ${NC}"
-echo -e "${WHITE} |   |${YELLOW} by that411guy                                      ${WHITE}|   | ${NC}"
+echo -e "${WHITE} |   |${YELLOW} by that411guy                                       ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)                                                   (_____)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
