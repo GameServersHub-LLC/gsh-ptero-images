@@ -55,7 +55,7 @@ echo -e "${WHITE} |     | ${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     
 echo -e "${WHITE} |     | ${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                   ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |_____| ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|_____| ${NC}"
-echo -e "${WHITE}(_______) ${YELLOW} by that411guy                                                    ${WHITE}(_______)${NC}"
+echo -e "${WHITE}(_______) ${YELLOW} by that411guy                                                  ${WHITE}(_______)${NC}"
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 sleep 3  
 ## === CONSTANTS ===
