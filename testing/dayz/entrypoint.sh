@@ -54,17 +54,31 @@ echo -e "${WHITE}(_____)                                                   (____
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 sleep 3
 
+echo -e "${WHITE} _____                                                                  _____ ${NC}"
+echo -e "${WHITE}( ___ )                                                                ( ___ )${NC}"
+echo -e "${WHITE} |   |                                                                  |   | ${NC}"
+echo -e "${WHITE} |   | ▓█████▄  ▄▄▄     ▓██   ██▓   ▒███████▒   ▓█████   ▄████   ▄████  |   | ${NC}"
+echo -e "${WHITE} |   | ▒██▀ ██▌▒████▄    ▒██  ██▒   ▒ ▒ ▒ ▄▀░   ▓█   ▀  ██▒ ▀█▒ ██▒ ▀█▒ |   | ${NC}"
+echo -e "${WHITE} |   | ░██   █▌▒██  ▀█▄   ▒██ ██░   ░ ▒ ▄▀▒░    ▒███   ▒██░▄▄▄░▒██░▄▄▄░ |   | ${NC}"
+echo -e "${WHITE} |   | ░▓█▄   ▌░██▄▄▄▄██  ░ ▐██▓░     ▄▀▒   ░   ▒▓█  ▄ ░▓█  ██▓░▓█  ██▓ |   | ${NC}"
+echo -e "${WHITE} |   | ░▒████▓  ▓█   ▓██▒ ░ ██▒▓░   ▒███████▒   ░▒████▒░▒▓███▀▒░▒▓███▀▒ |   | ${NC}"
+echo -e "${WHITE} |   |  ▒▒▓  ▒  ▒▒   ▓▒█░  ██▒▒▒    ░▒▒ ▓░▒░▒   ░░ ▒░ ░ ░▒   ▒  ░▒   ▒  |   | ${NC}"
+echo -e "${WHITE} |   |  ░ ▒  ▒   ▒   ▒▒ ░▓██ ░▒░    ░░▒ ▒ ░ ▒    ░ ░  ░  ░   ░   ░   ░  |   | ${NC}"
+echo -e "${WHITE} |   |  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  |   | ${NC}"
+echo -e "${WHITE} |   |    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  |   | ${NC}"
+echo -e "${WHITE} |   |  ░                ░ ░        ░                                   |   | ${NC}"
 
-echo -e "${WHITE} ▓█████▄  ▄▄▄     ▓██   ██▓   ▒███████▒   ▓█████   ▄████   ▄████  ${NC}"
-echo -e "${WHITE} ▒██▀ ██▌▒████▄    ▒██  ██▒   ▒ ▒ ▒ ▄▀░   ▓█   ▀  ██▒ ▀█▒ ██▒ ▀█▒ ${NC}"
-echo -e "${WHITE} ░██   █▌▒██  ▀█▄   ▒██ ██░   ░ ▒ ▄▀▒░    ▒███   ▒██░▄▄▄░▒██░▄▄▄░ ${NC}"
-echo -e "${WHITE} ░▓█▄   ▌░██▄▄▄▄██  ░ ▐██▓░     ▄▀▒   ░   ▒▓█  ▄ ░▓█  ██▓░▓█  ██▓ ${NC}"
-echo -e "${WHITE} ░▒████▓  ▓█   ▓██▒ ░ ██▒▓░   ▒███████▒   ░▒████▒░▒▓███▀▒░▒▓███▀▒ ${NC}"
-echo -e "${WHITE}  ▒▒▓  ▒  ▒▒   ▓▒█░  ██▒▒▒    ░▒▒ ▓░▒░▒   ░░ ▒░ ░ ░▒   ▒  ░▒   ▒  ${NC}"
-echo -e "${WHITE}  ░ ▒  ▒   ▒   ▒▒ ░▓██ ░▒░    ░░▒ ▒ ░ ▒    ░ ░  ░  ░   ░   ░   ░  ${NC}"
-echo -e "${WHITE}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${NC}"
-echo -e "${WHITE}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${NC}"
-echo -e "${WHITE}  ░                ░ ░        ░                                   ${NC}"
+echo -e "${RED}                                                                  ${NC}"
+echo -e "${RED} ${WHITE}▓█████▄  ▄▄▄     ▓██   ██▓   ${RED}▒${WHITE}███████${RED}▒${WHITE}   ▓█████   ▄████   ▄████  ${NC}"
+echo -e "${RED} ▒${WHITE}██▀ ██▌${RED}▒${WHITE}████▄    ${RED}▒${WHITE}██  ██${RED}▒   ▒ ▒ ▒ ${WHITE}▄▀${RED}░   ${WHITE}▓█   ▀  ██${RED}▒ ${WHITE}▀█${RED}▒ ${WHITE}██${RED}▒ ${WHITE}▀█${RED}▒ ${NC}"
+echo -e "${RED} ░${WHITE}██   █▌${RED}▒${WHITE}██  ▀█▄   ${RED}▒${WHITE}██ ██${RED}░   ░ ▒ ${WHITE}▄▀${RED}▒░    ▒${WHITE}███   ${RED}▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░ ${NC}"
+echo -e "${RED} ░${WHITE}▓█▄   ▌${RED}░${WHITE}██▄▄▄▄██  ${RED}░ ${WHITE}▐██▓${RED}░     ${WHITE}▄▀${RED}▒   ░   ▒▓${WHITE}█  ▄ ${RED}░▓${WHITE}█  ██${RED}▓░▓${WHITE}█  ██▓ ${NC}"
+echo -e "${RED} ░▒${WHITE}████▓  ▓█   ▓██${RED}▒ ░ ${WHITE}██${RED}▒▓░   ▒${WHITE}███████${RED}▒   ░▒${WHITE}████${RED}▒░▒▓${WHITE}███▀${RED}▒░▒▓${WHITE}███▀${RED}▒ ${NC}"
+echo -e "${RED}  ▒▒▓  ▒  ▒▒   ▓▒${WHITE}█${RED}░  ${WHITE}██${RED}▒▒▒    ░▒▒ ▓░▒░▒   ░░ ▒░ ░ ░▒   ▒  ░▒   ▒  ${NC}"
+echo -e "${RED}  ░ ▒  ▒   ▒   ▒▒ ░▓${WHITE}██ ${RED}░▒░    ░░▒ ▒ ░ ▒    ░ ░  ░  ░   ░   ░   ░  ${NC}"
+echo -e "${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${NC}"
+echo -e "${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${NC}"
+echo -e "${RED}  ░                ░ ░        ░                                   ${NC}"
 
 ## === CONSTANTS ===
 STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containing steamcmd.sh
