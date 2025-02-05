@@ -54,6 +54,19 @@ echo -e "${WHITE}(_____)                                                   (____
 echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
 sleep 3
 
+
+echo -e "${WHITE} ==================================================================== ${NC}"
+echo -e "${WHITE} =       ======================        =======        =============== ${NC}"
+echo -e "${WHITE} =  ====  ==========================  ========  ===================== ${NC}"
+echo -e "${WHITE} =  ====  =========================  =========  ===================== ${NC}"
+echo -e "${WHITE} =  ====  ===   ===  =  ===========  =========  =========   ====   == ${NC}"
+echo -e "${WHITE} =  ====  ==  =  ==  =  ==========  ==========      ====  =  ==  =  = ${NC}"
+echo -e "${WHITE} =  ====  =====  ===    =========  ===========  =========    ===    = ${NC}"
+echo -e "${WHITE} =  ====  ===    =====  =========  ===========  ===========  =====  = ${NC}"
+echo -e "${WHITE} =  ====  ==  =  ==  =  ========  ============  ========  =  ==  =  = ${NC}"
+echo -e "${WHITE} =       ====    ===   ========        =======        ===   ====   == ${NC}"
+echo -e "${WHITE} ==================================================================== ${NC}"
+
 ## === CONSTANTS ===
 STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containing steamcmd.sh
 WORKSHOP_DIR="./Steam/steamapps/workshop"       # SteamCMD's directory containing workshop downloads
