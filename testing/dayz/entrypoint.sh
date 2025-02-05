@@ -68,9 +68,9 @@ echo -e "${WHITE} |     | ${RED}  ░ ▒  ▒   ▒   ▒▒ ░▓${WHITE}█�
 echo -e "${WHITE} |     | ${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                   ${WHITE}|     | ${NC}"
-echo -e "${WHITE} |     | ${YELLOW} by that411guy                                                     ${WHITE}|     | ${NC}"
+echo -e "${WHITE} |     | ${YELLOW} by that411guy                                                    ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |_____| ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|_____| ${NC}"
-echo -e "${WHITE}(_______)                                                                 (_______)${NC}"
+echo -e "${WHITE}(_______)${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')                                 (_______)${NC}"
  
 ## === CONSTANTS ===
 STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containing steamcmd.sh
