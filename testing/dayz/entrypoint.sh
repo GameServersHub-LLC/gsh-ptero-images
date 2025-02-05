@@ -40,20 +40,6 @@ echo -e "${MAGENTA}    GG:::::::::::::::GS::::::SSSSSS:::::SH:::::::H     H:::::
 echo -e "${MAGENTA}      GGG::::::GGG:::GS:::::::::::::::SS H:::::::H     H:::::::H ${NC}"
 echo -e "${MAGENTA}         GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${YELLOW} If you need support please join our discord at: discord.gg/gsh   ${NC}"
-echo -e "${WHITE} _____                                                     _____ ${NC}"
-echo -e "${WHITE}( ___ )                                                   ( ___ )${NC}"
-echo -e "${WHITE} |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   | ${NC}"
-echo -e "${WHITE} |   | ·▄▄▄▄   ▄▄▄·  ▄· ▄▌    ·▄▄▄▄•    ▄▄▄ . ▄▄ •  ▄▄ •   |   | ${NC}"
-echo -e "${WHITE} |   | ██▪ ██ ▐█ ▀█ ▐█▪██▌    ▪▀·.█▌    ▀▄.▀·▐█ ▀ ▪▐█ ▀ ▪  |   | ${NC}"
-echo -e "${WHITE} |   | ▐█· ▐█▌▄█▀▀█ ▐█▌▐█▪    ▄█▀▀▀•    ▐▀▀▪▄▄█ ▀█▄▄█ ▀█▄  |   | ${NC}"
-echo -e "${WHITE} |   | ██. ██ ▐█ ▪▐▌ ▐█▀·.    █▌▪▄█▀    ▐█▄▄▌▐█▄▪▐█▐█▄▪▐█  |   | ${NC}"
-echo -e "${WHITE} |   | ▀▀▀▀▀•  ▀  ▀   ▀ •     ·▀▀▀ •     ▀▀▀ ·▀▀▀▀ ·▀▀▀▀   |   | ${NC}"
-echo -e "${WHITE} |   |${YELLOW} by that411guy                                       ${WHITE}|   | ${NC}"
-echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
-echo -e "${WHITE}(_____)                                                   (_____)${NC}"
-echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
-sleep 3
-
 echo -e "${WHITE} _______                                                                   _______ ${NC}"
 echo -e "${WHITE}( _____ )                                                                 ( _____ )${NC}"
 echo -e "${WHITE} |     | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|     | ${NC}"
@@ -70,8 +56,9 @@ echo -e "${WHITE} |     | ${RED}    ░          ░  ░░ ░          ░ �
 echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                   ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${YELLOW} by that411guy                                                    ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |_____| ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|_____| ${NC}"
-echo -e "${WHITE}(_______)${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')                                 (_______)${NC}"
- 
+echo -e "${WHITE}(_______)                                                                 (_______)${NC}"
+echo -e "${GREEN} Current timezone:${WHITE} $TZ ${GREEN} Current Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}
+sleep 3  
 ## === CONSTANTS ===
 STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containing steamcmd.sh
 WORKSHOP_DIR="./Steam/steamapps/workshop"       # SteamCMD's directory containing workshop downloads
