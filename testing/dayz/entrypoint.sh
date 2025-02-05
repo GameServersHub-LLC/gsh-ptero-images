@@ -68,17 +68,22 @@ echo -e "${WHITE} |     |  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░
 echo -e "${WHITE} |     |    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  |     | ${NC}"
 echo -e "${WHITE} |     |  ░                ░ ░        ░                                   |     | ${NC}"
 
-echo -e "${RED}                                                                  ${NC}"
-echo -e "${RED} ▓${WHITE}█████▄  ▄▄▄     ${RED}▓${WHITE}██   ██${RED}▓   ▒${WHITE}███████${RED}▒   ▓${WHITE}█████   ▄████   ▄████  ${NC}"
-echo -e "${RED} ▒${WHITE}██▀ ██▌${RED}▒${WHITE}████▄    ${RED}▒${WHITE}██  ██${RED}▒   ▒ ▒ ▒ ${WHITE}▄▀${RED}░   ▓${WHITE}█   ▀  ██${RED}▒ ${WHITE}▀█${RED}▒ ${WHITE}██${RED}▒ ${WHITE}▀█${RED}▒ ${NC}"
-echo -e "${RED} ░${WHITE}██   █▌${RED}▒${WHITE}██  ▀█▄   ${RED}▒${WHITE}██ ██${RED}░   ░ ▒ ${WHITE}▄▀${RED}▒░    ▒${WHITE}███   ${RED}▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░ ${NC}"
-echo -e "${RED} ░▓${WHITE}█▄   ▌${RED}░${WHITE}██▄▄▄▄██  ${RED}░ ${WHITE}▐██${RED}▓░     ${WHITE}▄▀${RED}▒   ░   ▒▓${WHITE}█  ▄ ${RED}░▓${WHITE}█  ██${RED}▓░▓${WHITE}█  ██${RED}▓ ${NC}"
-echo -e "${RED} ░▒${WHITE}████${RED}▓  ▓${WHITE}█   ${RED}▓${WHITE}██${RED}▒ ░ ${WHITE}██${RED}▒▓░   ▒${WHITE}███████${RED}▒   ░▒${WHITE}████${RED}▒░▒▓${WHITE}███▀${RED}▒░▒▓${WHITE}███▀${RED}▒ ${NC}"
-echo -e "${RED}  ▒▒▓  ▒  ▒▒   ▓▒${WHITE}█${RED}░  ${WHITE}██${RED}▒▒▒    ░▒▒ ▓░▒░▒   ░░ ▒░ ░ ░▒   ▒  ░▒   ▒  ${NC}"
-echo -e "${RED}  ░ ▒  ▒   ▒   ▒▒ ░▓${WHITE}██ ${RED}░▒░    ░░▒ ▒ ░ ▒    ░ ░  ░  ░   ░   ░   ░  ${NC}"
-echo -e "${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${NC}"
-echo -e "${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${NC}"
-echo -e "${RED}  ░                ░ ░        ░                                   ${NC}"
+
+
+echo -e "${WHITE} _______                                                                  ______  ${NC}"
+echo -e "${WHITE}( _____ )                                                                ( _____ )${NC}"
+echo -e "${WHITE} |     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|     | ${NC}"
+echo -e "${WHITE} |     | ${RED}                                                                  ${NC}"
+echo -e "${WHITE} |     | ${RED} ▓${WHITE}█████▄  ▄▄▄     ${RED}▓${WHITE}██   ██${RED}▓   ▒${WHITE}███████${RED}▒   ▓${WHITE}█████   ▄████   ▄████  ${NC}"
+echo -e "${WHITE} |     | ${RED} ▒${WHITE}██▀ ██▌${RED}▒${WHITE}████▄    ${RED}▒${WHITE}██  ██${RED}▒   ▒ ▒ ▒ ${WHITE}▄▀${RED}░   ▓${WHITE}█   ▀  ██${RED}▒ ${WHITE}▀█${RED}▒ ${WHITE}██${RED}▒ ${WHITE}▀█${RED}▒ ${NC}"
+echo -e "${WHITE} |     | ${RED} ░${WHITE}██   █▌${RED}▒${WHITE}██  ▀█▄   ${RED}▒${WHITE}██ ██${RED}░   ░ ▒ ${WHITE}▄▀${RED}▒░    ▒${WHITE}███   ${RED}▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░▒${WHITE}██${RED}░${WHITE}▄▄▄${RED}░ ${NC}"
+echo -e "${WHITE} |     | ${RED} ░▓${WHITE}█▄   ▌${RED}░${WHITE}██▄▄▄▄██  ${RED}░ ${WHITE}▐██${RED}▓░     ${WHITE}▄▀${RED}▒   ░   ▒▓${WHITE}█  ▄ ${RED}░▓${WHITE}█  ██${RED}▓░▓${WHITE}█  ██${RED}▓ ${NC}"
+echo -e "${WHITE} |     | ${RED} ░▒${WHITE}████${RED}▓  ▓${WHITE}█   ${RED}▓${WHITE}██${RED}▒ ░ ${WHITE}██${RED}▒▓░   ▒${WHITE}███████${RED}▒   ░▒${WHITE}████${RED}▒░▒▓${WHITE}███▀${RED}▒░▒▓${WHITE}███▀${RED}▒ ${NC}"
+echo -e "${WHITE} |     | ${RED}  ▒▒▓  ▒  ▒▒   ▓▒${WHITE}█${RED}░  ${WHITE}██${RED}▒▒▒    ░▒▒ ▓░▒░▒   ░░ ▒░ ░ ░▒   ▒  ░▒   ▒  ${NC}"
+echo -e "${WHITE} |     | ${RED}  ░ ▒  ▒   ▒   ▒▒ ░▓${WHITE}██ ${RED}░▒░    ░░▒ ▒ ░ ▒    ░ ░  ░  ░   ░   ░   ░  ${NC}"
+echo -e "${WHITE} |     | ${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${NC}"
+echo -e "${WHITE} |     | ${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${NC}"
+echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                   ${NC}"
 
 ## === CONSTANTS ===
 STEAMCMD_DIR="./steamcmd"                       # SteamCMD's directory containing steamcmd.sh
