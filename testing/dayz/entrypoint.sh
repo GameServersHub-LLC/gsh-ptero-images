@@ -68,7 +68,7 @@ echo -e "${WHITE} |     | ${RED}  ░ ▒  ▒   ▒   ▒▒ ░▓${WHITE}█�
 echo -e "${WHITE} |     | ${RED}  ░ ░  ░   ░   ▒   ▒ ▒ ░░     ░ ░ ░ ░ ░      ░   ░ ░   ░ ░ ░   ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}    ░          ░  ░░ ░          ░ ░          ░  ░      ░       ░  ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |     | ${RED}  ░                ░ ░        ░                                   ${WHITE}|     | ${NC}"
-echo -e "${WHITE} |     | ${YELLOW} by that411guy                                                 ${WHITE}|     | ${NC}"
+echo -e "${WHITE} |     | ${YELLOW} by that411guy                                                     ${WHITE}|     | ${NC}"
 echo -e "${WHITE} |_____| ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|_____| ${NC}"
 echo -e "${WHITE}(_______)                                                                 (_______)${NC}"
  
