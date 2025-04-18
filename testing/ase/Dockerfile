@@ -38,12 +38,7 @@ RUN         dpkg --add-architecture i386 \
                 libsdl1.2debian \
                 libsdl2-2.0-0:i386 \
                 libssl-dev:i386 \
-                libtinfo6:i386 \
-                libstdc++6 \
-                libc6 \
-                ca-certificates \
-                libgl1-mesa-glx \
-                xvfb
+                libtinfo6:i386
 
 # Install rcon
 RUN         cd /tmp/ \
@@ -65,22 +60,22 @@ ENV         LANG=en_US.UTF-8
 ENV         LANGUAGE=en_US:en
 ENV         LC_ALL=en_US.UTF-8
 
-# Install SteamCMD
-RUN         mkdir -p /home/container/steamcmd \
-            && cd /home/container/steamcmd \
-            && curl -sSL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar xzf - \
-            && chmod +x steamcmd.sh \
-            && ./steamcmd.sh +quit
-
 # Setup user and working directory
 RUN         useradd -m -d /home/container -s /bin/bash container
+
+# Install SteamCMD properly (before switching to container user)
+RUN         mkdir -p /home/container/steamcmd && \
+            cd /home/container/steamcmd && \
+            curl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz && \
+            tar -xzvf steamcmd.tar.gz && \
+            rm steamcmd.tar.gz && \
+            chmod +x steamcmd.sh && \
+            chown -R container:container /home/container
+
+# Switch to container user
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
-
-# Fix steamcmd permissions and run initial setup
-RUN         chmod +x /home/container/steamcmd/steamcmd.sh \
-            && /home/container/steamcmd/steamcmd.sh +quit
 
 STOPSIGNAL  SIGINT
 
