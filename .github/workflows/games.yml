@@ -28,9 +28,9 @@ jobs:
       matrix:
         game:
           - pathoftitans
-          - beastofbermuda
-          - theisle
-          - satisfactory
+          #- beastofbermuda
+          #- theisle
+          #- satisfactory
     
     steps:
       - name: Checkout repository
