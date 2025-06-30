@@ -1,0 +1,162 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2025-06-30T11:52:25-04:00",
+    "name": "Spinosaurus Package New",
+    "author": "servers@gameservershub.com",
+    "description": "Path Of Titans Egg by GameServersHub\r\nGameServersHub.com",
+    "features": null,
+    "docker_images": {
+        "Release": "ghcr.io/gameservershub-llc/testing:pathoftitans"
+    },
+    "file_denylist": [],
+    "startup": "awk -v slots=\"$SLOTS\" '\/\\[\\\/Script\\\/PathOfTitans\\.IGameSession\\]\/{print; flag=1; next} flag && \/MaxPlayers\/{print \"MaxPlayers=\" slots; flag=0; next} flag && \/^$\/{print \"MaxPlayers=\" slots; print; flag=0; next} {print}' .\/PathOfTitans\/Saved\/Config\/LinuxServer\/Game.ini > .\/PathOfTitans\/Saved\/Config\/LinuxServer\/temp.ini && mv .\/PathOfTitans\/Saved\/Config\/LinuxServer\/temp.ini .\/PathOfTitans\/Saved\/Config\/LinuxServer\/Game.ini && .\/PathOfTitans\/Binaries\/Linux\/PathOfTitansServer-Linux-Shipping -ServerName=\"${SERVER_NAME}\" -Port=$SERVER_PORT -BranchKey=$BETA_BRANCH $(if [ -n \"$SERVER_PASSWORD\" ]; then echo \"-ServerPassword=\\\"${SERVER_PASSWORD}\\\"\"; fi) $(if [ -n \"$RCON_PASSWORD\" ]; then echo \"-RconPassword=\\\"${RCON_PASSWORD}\\\"\"; fi) -AuthToken=$AG_AUTH_TOKEN -ServerGUID=$SERVER_GUID -Database=$DATABASE -nullRHI -log",
+    "config": {
+        "files": "{\r\n    \"\/PathOfTitans\/Saved\/Config\/LinuxServer\/Game.ini\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"Port\": \"Port={{server.build.env.RCON_PORT}}\",\r\n            \"ServerDiscord\": \"ServerDiscord={{server.build.env.DISCORD}}\",\r\n            \"Password\": \"Password={{server.build.env.RCON_PASSWORD}}\",\r\n            \"ServerPassword\": \"ServerPassword={{server.build.env.SERVER_PASSWORD}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"[REGISTER SERVER]\"\r\n}",
+        "logs": "{}",
+        "stop": "^^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/bash\r\n# Path of Titans Server: Installation Script (Official)\r\n#\r\n# Server Files: /mnt/server\r\nclear\r\nRED='\\033[0;31m'\r\nGREEN='\\033[0;32m'\r\nYELLOW='\\033[1;33m'\r\nBLUE='\\033[0;34m'\r\nNC='\\033[0m'\r\necho -e \"${BLUE}######################################################################################${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}# ${YELLOW}Starting Official Path of Titans Installation...                           ${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}# ${RED}(c) Copyright 2022 - GameServersHub.com                                       ${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}# ${YELLOW}Path Of Titans Install Script - Official Dev Version                      ${NC}\"\r\necho -e \"${BLUE}# ${YELLOW}Egg by GameServersHub - that411guy                                         ${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}######################################################################################${NC}\"\r\nsleep 3\r\n\r\necho -e \"${YELLOW}Installing comprehensive package list...${NC}\"\r\napt -y update\r\napt-get install -y --no-install-recommends apt-utils apt-transport-https ca-certificates libunwind8 icu-devtools openssl libkrb5-3 zlib1g libuuid1 dos2unix gnupg gnupg2 debian-archive-keyring gcc g++ lib32gcc-s1 lib32z1 lib32stdc++6 iproute2 gdb libsdl1.2debian libfontconfig libcurl4 curl\r\napt upgrade -y\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Setting up server environment...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\nexport HOME=/mnt/server\r\ncd /mnt/server\r\n\r\necho -e \"${YELLOW}Downloading AlderonGamesCmd...${NC}\"\r\nrm -rf /mnt/server/AlderonGamesCmd\r\ncurl -sSL -o /mnt/server/AlderonGamesCmd https://launcher-cdn.alderongames.com/AlderonGamesCmd-Linux-x64\r\n\r\necho -e \"${YELLOW}Setting permissions and installing server...${NC}\"\r\nchmod a+x ./AlderonGamesCmd\r\n\r\necho -e \"${GREEN}Installing Path of Titans server with Auth Token...${NC}\"\r\n./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --auth-token $AG_AUTH_TOKEN\r\n\r\n# Fix ownership (required for SteamCMD compatibility)\r\nchown -R root:root /mnt\r\n\r\necho -e \"${YELLOW}Setting final permissions...${NC}\"\r\nchmod a+x ./AlderonGamesCmd\r\n\r\n# Set permissions for additional scripts if they exist\r\nif [ -f ./Update.sh ]; then\r\n    chmod a+x ./Update.sh\r\nfi\r\nif [ -f ./PathOfTitansServer.sh ]; then\r\n    chmod a+x ./PathOfTitansServer.sh\r\nfi\r\n\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\necho -e \"${YELLOW}Creating folders and downloading config files...${NC}\"\r\necho -e \"${BLUE}-------------------------------------------------${NC}\"\r\n\r\nmkdir -p $HOME/PathOfTitans\r\nmkdir -p $HOME/PathOfTitans/Saved\r\nmkdir -p $HOME/PathOfTitans/Saved/Config\r\nmkdir -p $HOME/PathOfTitans/Saved/Config/LinuxServer\r\nmkdir -p $HOME/Engine\r\nmkdir -p $HOME/Engine/Binaries\r\nmkdir -p $HOME/Engine/Binaries/Linux\r\nmkdir -p $HOME/Engine/Binaries/Linux/CrashReportClient\r\n\r\necho -e \"${YELLOW}Downloading default configuration files...${NC}\"\r\nwget -O $HOME/PathOfTitans/Saved/Config/LinuxServer/Game.ini https://raw.githubusercontent.com/GameServersHub-LLC/Ptero-Eggs/main/game_eggs/own_games/path_of_titans_gsh_egg/Game.ini >/dev/null 2>&1\r\nwget -O $HOME/.pteroignore https://raw.githubusercontent.com/GameServersHub-LLC/Ptero-Eggs/main/game_eggs/own_games/path_of_titans_gsh_egg/.pteroignore >/dev/null 2>&1\r\nwget -O $HOME/PathOfTitans/Saved/MOTD.txt https://raw.githubusercontent.com/GameServersHub-LLC/Ptero-Eggs/main/game_eggs/own_games/path_of_titans_gsh_egg/MOTD.txt >/dev/null 2>&1\r\nwget -O $HOME/PathOfTitans/Saved/Rules.txt https://raw.githubusercontent.com/GameServersHub-LLC/Ptero-Eggs/main/game_eggs/own_games/path_of_titans_gsh_egg/Rules.txt >/dev/null 2>&1\r\nwget -O $HOME/PathOfTitans/Saved/Config/LinuxServer/Commands.ini https://raw.githubusercontent.com/GameServersHub-LLC/Ptero-Eggs/main/game_eggs/own_games/path_of_titans_gsh_egg/Commands.ini >/dev/null 2>&1\r\nwget -O $HOME/PathOfTitans/Saved/Config/LinuxServer/GameUserSettings.ini https://raw.githubusercontent.com/GameServersHub-LLC/Ptero-Eggs/main/game_eggs/own_games/path_of_titans_gsh_egg/GameUserSettings.ini >/dev/null 2>&1\r\n\r\necho -e \"${YELLOW}Setting final executable permissions...${NC}\"\r\nchmod +x $HOME/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping\r\n\r\necho -e \"${BLUE}######################################################################################${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}# ${YELLOW}Installation completed successfully!${NC}                                   ${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}# ${RED}(c) Copyright 2022 - GameServersHub.com${NC}                                ${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}# ${YELLOW}Path Of Titans Install Script - Official Dev Version${NC}               ${NC}\"\r\necho -e \"${BLUE}# ${YELLOW}Egg by GameServersHub - that411guy${NC}                                   ${NC}\"\r\necho -e \"${BLUE}#                                                                                     ${NC}\"\r\necho -e \"${BLUE}######################################################################################${NC}\"\r\n\r\nexit 0",
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server Name",
+            "description": "Sets the name for the server",
+            "env_variable": "SERVER_NAME",
+            "default_value": "Hosted by GSH",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:70",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Password",
+            "description": "You can leave this blank to remove the need for a server password!",
+            "env_variable": "SERVER_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:64",
+            "field_type": "text"
+        },
+        {
+            "name": "Discord Link",
+            "description": "Add your Discord link for players to connect to your Discord server! ****Only add the end of the link example: (https:\/\/discord.gg\/gsh) Only add the gsh part!",
+            "env_variable": "DISCORD",
+            "default_value": "gsh",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:70",
+            "field_type": "text"
+        },
+        {
+            "name": "Player Slots",
+            "description": "Max player slots on the server",
+            "env_variable": "SLOTS",
+            "default_value": "100",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|min:1|max:200",
+            "field_type": "text"
+        },
+        {
+            "name": "RCON Port",
+            "description": "This here is your RCON Port For your bots to use!!!",
+            "env_variable": "RCON_PORT",
+            "default_value": "27000",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "nullable|integer|min:1025|max:65535",
+            "field_type": "text"
+        },
+        {
+            "name": "RCON Password",
+            "description": "You must generate a unique\/complex password using a password generator tool like https:\/\/1password.com\/password-generator this protects your servers from any hacking attempts!\r\n\r\nPlease read https:\/\/guides.gsh-servers.com\/security-practices\/how-to-protect-your-passwords for more information on how to secure your RCON passwords.",
+            "env_variable": "RCON_PASSWORD",
+            "default_value": "ChangeMe!",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:70",
+            "field_type": "text"
+        },
+        {
+            "name": "Stats Port",
+            "description": "",
+            "env_variable": "STATS_PORT",
+            "default_value": "27003",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "nullable|integer|min:1025|max:65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Query Port",
+            "description": "",
+            "env_variable": "QUERY_PORT",
+            "default_value": "27003",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "nullable|integer|min:1025|max:65535",
+            "field_type": "text"
+        },
+        {
+            "name": "Auth Token",
+            "description": "The AlderonGames Auth Token: Go to https:\/\/alderongames.com\/oauth\/hosting-token to generate one",
+            "env_variable": "AG_AUTH_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:99999",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Guid",
+            "description": "A GUIDv4: https:\/\/duckduckgo.com\/?q=random+guid&atb=v296-1&ia=answer",
+            "env_variable": "SERVER_GUID",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:50",
+            "field_type": "text"
+        },
+        {
+            "name": "Beta Branch",
+            "description": "The branch to use for this instance use \"production\" or \"public-test\"",
+            "env_variable": "BETA_BRANCH",
+            "default_value": "production",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:production,public-test",
+            "field_type": "text"
+        },
+        {
+            "name": "Database",
+            "description": "Choose for players save files to be \"Local\" or \"Remote\"",
+            "env_variable": "DATABASE",
+            "default_value": "Local",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:Local,Remote,LocalToRemote",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto update server",
+            "description": "",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        }
+    ]
+}

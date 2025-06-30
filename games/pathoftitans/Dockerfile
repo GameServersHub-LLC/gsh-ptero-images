@@ -23,7 +23,8 @@ RUN apt update && apt upgrade -y && \
         tini \
         tzdata \
         iproute2 \
-        net-tools && \
+        net-tools \
+        libicu-dev && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 ## Configure locale

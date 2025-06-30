@@ -60,6 +60,77 @@ UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
 chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
 sleep 3
 
+## Setup core dumps
+echo -e "${YELLOW}Setting up core dumps folder${NC}"
+mkdir -p /coredumps
+chmod 777 /coredumps
+
+echo -e "${YELLOW}Setting up core pattern settings permanently${NC}"
+# Remove existing files first
+rm -f /etc/sysctl.d/60-core-pattern.conf
+echo 'kernel.core_uses_pid=1' > /etc/sysctl.d/60-core-pattern.conf
+echo 'kernel.core_pattern=/coredumps/core-%e-%s-%u-%g-%p-%t' >> /etc/sysctl.d/60-core-pattern.conf
+
+# Apply sysctl settings (may not work in container without --privileged)
+sysctl -p /etc/sysctl.d/60-core-pattern.conf 2>/dev/null || echo -e "${YELLOW}Note: Core dump sysctl settings require --privileged mode${NC}"
+
+# Set unlimited core dump size
+ulimit -c unlimited
+
+# Disable Ubuntu's crash reporting if apport exists
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl stop apport 2>/dev/null || true
+    systemctl disable apport 2>/dev/null || true
+elif [ -f /etc/default/apport ]; then
+    echo 'enabled=0' > /etc/default/apport
+fi
+
+echo -e "${GREEN}Core dumps configured - dumps will be saved to /coredumps/${NC}"
+
+# Add error handling
+set -e
+trap 'echo -e "${RED}Script failed at line $LINENO${NC}"' ERR
+
+# Add cleanup function for graceful shutdown
+cleanup() {
+    echo -e "${YELLOW}Received shutdown signal, gracefully stopping server...${NC}"
+    pkill -TERM PathOfTitansServer 2>/dev/null || true
+    sleep 5
+    pkill -KILL PathOfTitansServer 2>/dev/null || true
+    exit 0
+}
+
+# Trap signals for graceful shutdown
+trap cleanup SIGTERM SIGINT
+
+# Validate required environment variables
+echo -e "${YELLOW}Validating environment variables...${NC}"
+required_vars=("STARTUP" "RCON_PORT" "RCON_PASSWORD")
+missing_vars=()
+
+for var in "${required_vars[@]}"; do
+    if [ -z "${!var}" ]; then
+        missing_vars+=("$var")
+    fi
+done
+
+if [ ${#missing_vars[@]} -ne 0 ]; then
+    echo -e "${RED}ERROR: Missing required environment variables: ${missing_vars[*]}${NC}"
+    echo -e "${YELLOW}Please ensure these variables are set in your container environment${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}Environment validation passed${NC}"
+
+# Display container information
+echo -e "${CYAN}=== Container Information ===${NC}"
+echo -e "${CYAN}Hostname:${WHITE} $(hostname)${NC}"
+echo -e "${CYAN}Internal IP:${WHITE} $INTERNAL_IP${NC}"
+echo -e "${CYAN}RCON Port:${WHITE} $RCON_PORT${NC}"
+echo -e "${CYAN}Beta Branch:${WHITE} ${BETA_BRANCH:-"default"}${NC}"
+echo -e "${CYAN}Auto Update:${WHITE} ${AUTO_UPDATE:-"1"}${NC}"
+echo -e "${CYAN}================================${NC}"
+
 ## check for serverupdates
 if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     cd /home/container
@@ -86,5 +157,32 @@ done) < /dev/stdin &
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
+# Log server startup
+echo -e "${GREEN}Starting Path of Titans Server...${NC}"
+echo -e "${YELLOW}Command: ${MODIFIED_STARTUP}${NC}"
+
+# Temporarily disable error exit for server execution
+set +e
+
 # Run the Server
 eval ${MODIFIED_STARTUP}
+
+# Capture exit code
+SERVER_EXIT_CODE=$?
+
+# Log server shutdown
+echo -e "${YELLOW}Server process ended with exit code: $SERVER_EXIT_CODE${NC}"
+
+if [ $SERVER_EXIT_CODE -ne 0 ]; then
+    echo -e "${RED}Server exited with error code $SERVER_EXIT_CODE${NC}"
+    
+    # Check for core dumps
+    if ls /coredumps/core-* 1> /dev/null 2>&1; then
+        echo -e "${CYAN}Core dumps found in /coredumps/:${NC}"
+        ls -la /coredumps/core-*
+    else
+        echo -e "${YELLOW}No core dumps found${NC}"
+    fi
+fi
+
+exit $SERVER_EXIT_CODE
