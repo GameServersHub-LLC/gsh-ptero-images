@@ -10,11 +10,11 @@ RUN useradd -m -d /home/container -s /bin/bash container
 
 ## Update base packages and configure locale
 RUN apt update && apt upgrade -y && \
-    apt install -y gcc g++ libgcc-s1 libc++-dev gdb libc6 git wget curl tar zip unzip binutils xz-utils liblzo2-2 cabextract \
-    iproute2 net-tools netcat-traditional telnet libatomic1 libsdl2-2.0-0 libfontconfig1-dev libicu-dev libunwind8 sqlite3 \
-    libsqlite3-dev libzip-dev locales ffmpeg libcurl4-gnutls-dev liblua5.1-0 libluajit-5.1-2 \
-    libsqlite3-0 bzip2 zlib1g-dev libevent-dev libmariadb-dev-compat libmariadb-dev libssl-dev libfluidsynth-dev \
-    libssl3 libjsoncpp-dev libncurses5 libncursesw5 tini tzdata && \
+    apt install -y build-essential git wget curl tar zip unzip binutils xz-utils \
+    iproute2 net-tools netcat-traditional telnet sqlite3 locales ffmpeg \
+    libatomic1 libsdl2-2.0-0 libfontconfig1 libicu-dev libunwind8 \
+    libsqlite3-dev zlib1g-dev libevent-dev libssl-dev \
+    libncurses5 tini tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen en_US.UTF-8 && \
