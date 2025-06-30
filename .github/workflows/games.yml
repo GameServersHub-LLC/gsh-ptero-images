@@ -27,7 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          #- pathoftitans
+          - pathoftitans
           #- beastofbermuda
           #- theisle
           #- satisfactory
