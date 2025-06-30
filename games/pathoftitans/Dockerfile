@@ -21,7 +21,9 @@ RUN apt update && apt upgrade -y && \
         sqlite3 \
         locales \
         tini \
-        tzdata && \
+        tzdata \
+        iproute2 \
+        net-tools && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 ## Configure locale
