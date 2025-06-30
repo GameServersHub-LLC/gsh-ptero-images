@@ -27,13 +27,13 @@ jobs:
       fail-fast: false
       matrix:
         game:
-          #- pathoftitans
+          - pathoftitans
           #- satisfactory
           #- theisle
           #- php
           #- asa
           #- dayz
-          - ase
+          #- ase
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
