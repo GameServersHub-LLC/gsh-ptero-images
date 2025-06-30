@@ -8,18 +8,27 @@ ENV TZ=America/New_York
 ## Add container user
 RUN useradd -m -d /home/container -s /bin/bash container
 
-## Update base packages and configure locale
+## Update base packages
 RUN apt update && apt upgrade -y && \
-    apt install -y build-essential git wget curl tar zip unzip binutils xz-utils \
-    iproute2 net-tools netcat telnet sqlite3 locales ffmpeg \
-    libatomic1 libfontconfig-dev libicu-dev \
-    libsqlite3-dev zlib1g-dev libevent-dev libssl-dev \
-    libncurses-dev tini tzdata && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    apt install -y \
+        build-essential \
+        git \
+        wget \
+        curl \
+        tar \
+        zip \
+        unzip \
+        sqlite3 \
+        locales \
+        tini \
+        tzdata && \
+    apt clean && rm -rf /var/lib/apt/lists/*
+
+## Configure locale
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8 && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ## Install rcon
 RUN cd /tmp/ && \
