@@ -33,7 +33,8 @@ RUN apt update && apt upgrade -y && \
         strace \
         lsof \
         tcpdump \
-        dnsutils && \
+        dnsutils \
+        libicu-dev && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 ## Configure locale

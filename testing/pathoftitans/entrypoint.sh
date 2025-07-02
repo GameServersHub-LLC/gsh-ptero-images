@@ -86,6 +86,20 @@ elif [ -f /etc/default/apport ]; then
 fi
 
 echo -e "${GREEN}Core dumps configured - dumps will be saved to /coredumps/${NC}"
+echo -e "${YELLOW}Note: For core dumps to work properly, run container with --privileged or --cap-add=SYS_PTRACE${NC}"
+echo -e "${YELLOW}Tip: Mount a volume to /coredumps to preserve core dumps: -v /host/path:/coredumps${NC}"
+echo ""
+echo -e "${CYAN}=== ON-DEMAND CORE DUMP FUNCTIONALITY ===${NC}"
+if command -v gcore >/dev/null 2>&1; then
+    echo -e "${GREEN}✓ gcore is available for on-demand core dumps${NC}"
+    echo -e "${GREEN}You can generate core dumps of the running server using:${NC}"
+    echo -e "${YELLOW}Method 1 - Signal:${NC} docker kill --signal=SIGUSR1 <container_name>"
+    echo -e "${YELLOW}Method 2 - File:${NC} touch /coredumps/trigger_core_dump (or from host: touch /host/path/trigger_core_dump)"
+    echo -e "${WHITE}Generated files will be named: manual_core_YYYYMMDD_HHMMSS.<pid>${NC}"
+else
+    echo -e "${RED}✗ Warning: gcore not found - on-demand core dumps disabled${NC}"
+fi
+echo -e "${CYAN}=========================================${NC}"
 
 # Add error handling
 set -e
@@ -100,8 +114,61 @@ cleanup() {
     exit 0
 }
 
-# Trap signals for graceful shutdown
+# Function to generate core dump on demand using gcore
+generate_core_dump() {
+    echo -e "${CYAN}=== GENERATING CORE DUMP ON DEMAND ===${NC}"
+    
+    # Check if gcore is available
+    if ! command -v gcore >/dev/null 2>&1; then
+        echo -e "${RED}Error: gcore command not found${NC}"
+        echo -e "${YELLOW}gcore is required for on-demand core dumps${NC}"
+        return 1
+    fi
+    
+    # Find the Path of Titans server process
+    POT_PID=$(pgrep -f "PathOfTitansServer-Linux-Shipping" | head -n1)
+    
+    if [ -z "$POT_PID" ]; then
+        echo -e "${RED}Error: Path of Titans server process not found${NC}"
+        return 1
+    fi
+    
+    echo -e "${YELLOW}Found Path of Titans server with PID: $POT_PID${NC}"
+    
+    # Generate timestamp for unique filename
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    CORE_PREFIX="manual_core_${TIMESTAMP}"
+    
+    echo -e "${YELLOW}Generating core dump using gcore...${NC}"
+    echo -e "${YELLOW}Output will be: /coredumps/${CORE_PREFIX}.$POT_PID${NC}"
+    
+    # Use gcore with -a flag to dump all memory mappings
+    if gcore -a -o "/coredumps/${CORE_PREFIX}" "$POT_PID" 2>&1; then
+        echo -e "${GREEN}Core dump generated successfully!${NC}"
+        
+        # Show the generated file info
+        if [ -f "/coredumps/${CORE_PREFIX}.$POT_PID" ]; then
+            echo -e "${CYAN}Core dump details:${NC}"
+            ls -lah "/coredumps/${CORE_PREFIX}.$POT_PID"
+            echo -e "${YELLOW}File size: $(du -h "/coredumps/${CORE_PREFIX}.$POT_PID" | cut -f1)${NC}"
+        fi
+    else
+        echo -e "${RED}Failed to generate core dump${NC}"
+        return 1
+    fi
+    
+    echo -e "${CYAN}=================================${NC}"
+}
+
+# Signal handler for manual core dump generation (SIGUSR1)
+handle_core_dump_signal() {
+    echo -e "${CYAN}Received SIGUSR1 - generating core dump...${NC}"
+    generate_core_dump
+}
+
+# Trap signals for graceful shutdown and core dump generation
 trap cleanup SIGTERM SIGINT
+trap handle_core_dump_signal SIGUSR1
 
 # Validate required environment variables
 echo -e "${YELLOW}Validating environment variables...${NC}"
@@ -153,6 +220,17 @@ fi
     rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
+# Background monitor for core dump trigger file
+(while true; do
+    if [ -f "/coredumps/trigger_core_dump" ]; then
+        echo -e "${CYAN}Core dump trigger file detected, generating core dump...${NC}"
+        generate_core_dump
+        # Remove the trigger file after processing
+        rm -f "/coredumps/trigger_core_dump"
+    fi
+    sleep 5
+done) &
+
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
@@ -178,11 +256,39 @@ if [ $SERVER_EXIT_CODE -ne 0 ]; then
     
     # Check for core dumps
     if ls /coredumps/core-* 1> /dev/null 2>&1; then
+        echo -e "${CYAN}=== CORE DUMPS FOUND ===${NC}"
         echo -e "${CYAN}Core dumps found in /coredumps/:${NC}"
         ls -la /coredumps/core-*
+        echo -e "${CYAN}========================${NC}"
+        
+        # Get the newest core dump for analysis
+        NEWEST_CORE=$(ls -at /coredumps/core-* 2>/dev/null | head -n1)
+        if [ -n "$NEWEST_CORE" ]; then
+            echo -e "${YELLOW}Most recent core dump: $NEWEST_CORE${NC}"
+            echo -e "${YELLOW}Core dump size: $(du -h "$NEWEST_CORE" | cut -f1)${NC}"
+            echo -e "${YELLOW}Core dump timestamp: $(stat -c %y "$NEWEST_CORE")${NC}"
+            
+            # Try to get basic info from the core dump if gdb is available
+            if command -v gdb >/dev/null 2>&1 && [ -f "/home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping" ]; then
+                echo -e "${CYAN}Attempting to extract stack trace from core dump...${NC}"
+                timeout 30 gdb --batch --quiet -ex "thread apply all bt" -ex "quit" \
+                    /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping "$NEWEST_CORE" 2>/dev/null || \
+                    echo -e "${YELLOW}Could not extract stack trace (this is normal if binary doesn't match core)${NC}"
+            fi
+        fi
     else
         echo -e "${YELLOW}No core dumps found${NC}"
+        echo -e "${YELLOW}Current ulimit -c setting: $(ulimit -c)${NC}"
+        echo -e "${YELLOW}Core pattern: $(cat /proc/sys/kernel/core_pattern 2>/dev/null || echo 'Cannot read core pattern')${NC}"
     fi
+    
+    # Additional debugging information
+    echo -e "${CYAN}=== DEBUGGING INFO ===${NC}"
+    echo -e "${CYAN}Available disk space in /coredumps:${NC}"
+    df -h /coredumps 2>/dev/null || echo "Cannot check disk space"
+    echo -e "${CYAN}Recent system messages (last 20 lines):${NC}"
+    dmesg | tail -20 2>/dev/null || echo "Cannot access system messages"
+    echo -e "${CYAN}===================${NC}"
 fi
 
 exit $SERVER_EXIT_CODE
