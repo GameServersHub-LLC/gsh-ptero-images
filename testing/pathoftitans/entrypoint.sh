@@ -62,17 +62,63 @@ sleep 3
 
 ## Setup core dumps
 echo -e "${YELLOW}Setting up core dumps folder${NC}"
-mkdir -p /coredumps
-chmod 777 /coredumps
 
-echo -e "${YELLOW}Setting up core pattern settings permanently${NC}"
-# Remove existing files first
-rm -f /etc/sysctl.d/60-core-pattern.conf
-echo 'kernel.core_uses_pid=1' > /etc/sysctl.d/60-core-pattern.conf
-echo 'kernel.core_pattern=/coredumps/core-%e-%s-%u-%g-%p-%t' >> /etc/sysctl.d/60-core-pattern.conf
+# Try multiple locations for core dumps (Pterodactyl-friendly)
+CORE_DUMP_DIRS=(
+    "/home/container/coredumps"
+    "/home/container/.coredumps" 
+    "/tmp/coredumps"
+    "/coredumps"
+)
 
-# Apply sysctl settings (may not work in container without --privileged)
-sysctl -p /etc/sysctl.d/60-core-pattern.conf 2>/dev/null || echo -e "${YELLOW}Note: Core dump sysctl settings require --privileged mode${NC}"
+CORE_DUMP_DIR=""
+for dir in "${CORE_DUMP_DIRS[@]}"; do
+    echo -e "${CYAN}Trying core dump directory: $dir${NC}"
+    if mkdir -p "$dir" 2>/dev/null && [ -w "$dir" ]; then
+        CORE_DUMP_DIR="$dir"
+        echo -e "${GREEN}✓ Using writable directory: $CORE_DUMP_DIR${NC}"
+        break
+    else
+        echo -e "${YELLOW}⚠ Cannot use $dir (not writable or creation failed)${NC}"
+    fi
+done
+
+if [ -z "$CORE_DUMP_DIR" ]; then
+    echo -e "${RED}✗ No writable directory found for core dumps${NC}"
+    echo -e "${YELLOW}Core dumps will be disabled${NC}"
+    CORE_DUMPS_ENABLED=false
+else
+    echo -e "${GREEN}✓ Core dumps will be saved to: $CORE_DUMP_DIR${NC}"
+    CORE_DUMPS_ENABLED=true
+fi
+
+if [ "$CORE_DUMPS_ENABLED" = true ]; then
+    echo -e "${YELLOW}Setting up core pattern settings${NC}"
+    # Try to configure sysctl settings, handle read-only filesystem gracefully
+    if echo 'kernel.core_uses_pid=1' > /etc/sysctl.d/60-core-pattern.conf 2>/dev/null && \
+       echo "kernel.core_pattern=$CORE_DUMP_DIR/core-%e-%s-%u-%g-%p-%t" >> /etc/sysctl.d/60-core-pattern.conf 2>/dev/null; then
+        echo -e "${GREEN}✓ Core pattern configuration file created${NC}"
+        # Apply sysctl settings
+        if sysctl -p /etc/sysctl.d/60-core-pattern.conf 2>/dev/null; then
+            echo -e "${GREEN}✓ Core pattern settings applied${NC}"
+        else
+            echo -e "${YELLOW}⚠ Core pattern settings configured but not applied (requires elevated privileges)${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠ Cannot write sysctl configuration (read-only filesystem or no permissions)${NC}"
+        echo -e "${YELLOW}  Attempting to apply settings directly...${NC}"
+        # Try to apply settings directly without writing to file
+        if sysctl -w kernel.core_uses_pid=1 2>/dev/null && \
+           sysctl -w "kernel.core_pattern=$CORE_DUMP_DIR/core-%e-%s-%u-%g-%p-%t" 2>/dev/null; then
+            echo -e "${GREEN}✓ Core pattern settings applied directly${NC}"
+        else
+            echo -e "${YELLOW}⚠ Cannot apply core pattern settings - limited permissions in Pterodactyl${NC}"
+            echo -e "${YELLOW}  Automatic crash dumps may not work, but gcore will still function${NC}"
+        fi
+    fi
+else
+    echo -e "${YELLOW}Skipping core pattern setup - no writable directory available${NC}"
+fi
 
 # Set unlimited core dump size
 ulimit -c unlimited
@@ -85,17 +131,25 @@ elif [ -f /etc/default/apport ]; then
     echo 'enabled=0' > /etc/default/apport
 fi
 
-echo -e "${GREEN}Core dumps configured - dumps will be saved to /coredumps/${NC}"
-echo -e "${YELLOW}Note: For core dumps to work properly, run container with --privileged or --cap-add=SYS_PTRACE${NC}"
-echo -e "${YELLOW}Tip: Mount a volume to /coredumps to preserve core dumps: -v /host/path:/coredumps${NC}"
+if [ "$CORE_DUMPS_ENABLED" = true ]; then
+    echo -e "${GREEN}Core dumps configured - dumps will be saved to $CORE_DUMP_DIR${NC}"
+    echo -e "${YELLOW}Note: Running in Pterodactyl with limited permissions${NC}"
+    echo -e "${YELLOW}Automatic crash dumps may be limited, but gcore will work${NC}"
+else
+    echo -e "${RED}Core dumps disabled - no writable directory available${NC}"
+fi
 echo ""
 echo -e "${CYAN}=== ON-DEMAND CORE DUMP FUNCTIONALITY ===${NC}"
-if command -v gcore >/dev/null 2>&1; then
+if command -v gcore >/dev/null 2>&1 && [ "$CORE_DUMPS_ENABLED" = true ]; then
     echo -e "${GREEN}✓ gcore is available for on-demand core dumps${NC}"
     echo -e "${GREEN}You can generate core dumps of the running server using:${NC}"
-    echo -e "${YELLOW}Method 1 - Signal:${NC} docker kill --signal=SIGUSR1 <container_name>"
-    echo -e "${YELLOW}Method 2 - File:${NC} touch /coredumps/trigger_core_dump (or from host: touch /host/path/trigger_core_dump)"
+    echo -e "${YELLOW}Method 1 - Signal (in Pterodactyl console):${NC}"
+    echo -e "${WHITE}  Enter: kill -SIGUSR1 \$(pgrep -f PathOfTitansServer)${NC}"
+    echo -e "${YELLOW}Method 2 - File trigger:${NC} touch $CORE_DUMP_DIR/trigger_core_dump"
     echo -e "${WHITE}Generated files will be named: manual_core_YYYYMMDD_HHMMSS.<pid>${NC}"
+    echo -e "${WHITE}Core dumps will be saved to: $CORE_DUMP_DIR${NC}"
+elif [ "$CORE_DUMPS_ENABLED" != true ]; then
+    echo -e "${RED}✗ Core dumps disabled - no writable directory available${NC}"
 else
     echo -e "${RED}✗ Warning: gcore not found - on-demand core dumps disabled${NC}"
 fi
@@ -139,18 +193,25 @@ generate_core_dump() {
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     CORE_PREFIX="manual_core_${TIMESTAMP}"
     
+    # Check if core dumps are enabled and directory is available
+    if [ "$CORE_DUMPS_ENABLED" != true ] || [ ! -w "$CORE_DUMP_DIR" ]; then
+        echo -e "${RED}Error: Core dumps are not available${NC}"
+        echo -e "${YELLOW}No writable directory found during startup${NC}"
+        return 1
+    fi
+    
     echo -e "${YELLOW}Generating core dump using gcore...${NC}"
-    echo -e "${YELLOW}Output will be: /coredumps/${CORE_PREFIX}.$POT_PID${NC}"
+    echo -e "${YELLOW}Output will be: $CORE_DUMP_DIR/${CORE_PREFIX}.$POT_PID${NC}"
     
     # Use gcore with -a flag to dump all memory mappings
-    if gcore -a -o "/coredumps/${CORE_PREFIX}" "$POT_PID" 2>&1; then
+    if gcore -a -o "$CORE_DUMP_DIR/${CORE_PREFIX}" "$POT_PID" 2>&1; then
         echo -e "${GREEN}Core dump generated successfully!${NC}"
         
         # Show the generated file info
-        if [ -f "/coredumps/${CORE_PREFIX}.$POT_PID" ]; then
+        if [ -f "$CORE_DUMP_DIR/${CORE_PREFIX}.$POT_PID" ]; then
             echo -e "${CYAN}Core dump details:${NC}"
-            ls -lah "/coredumps/${CORE_PREFIX}.$POT_PID"
-            echo -e "${YELLOW}File size: $(du -h "/coredumps/${CORE_PREFIX}.$POT_PID" | cut -f1)${NC}"
+            ls -lah "$CORE_DUMP_DIR/${CORE_PREFIX}.$POT_PID"
+            echo -e "${YELLOW}File size: $(du -h "$CORE_DUMP_DIR/${CORE_PREFIX}.$POT_PID" | cut -f1)${NC}"
         fi
     else
         echo -e "${RED}Failed to generate core dump${NC}"
@@ -220,16 +281,18 @@ fi
     rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
 done) < /dev/stdin &
 
-# Background monitor for core dump trigger file
-(while true; do
-    if [ -f "/coredumps/trigger_core_dump" ]; then
-        echo -e "${CYAN}Core dump trigger file detected, generating core dump...${NC}"
-        generate_core_dump
-        # Remove the trigger file after processing
-        rm -f "/coredumps/trigger_core_dump"
-    fi
-    sleep 5
-done) &
+# Background monitor for core dump trigger file (only if core dumps are enabled)
+if [ "$CORE_DUMPS_ENABLED" = true ]; then
+    (while true; do
+        if [ -f "$CORE_DUMP_DIR/trigger_core_dump" ]; then
+            echo -e "${CYAN}Core dump trigger file detected, generating core dump...${NC}"
+            generate_core_dump
+            # Remove the trigger file after processing
+            rm -f "$CORE_DUMP_DIR/trigger_core_dump"
+        fi
+        sleep 5
+    done) &
+fi
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
@@ -254,15 +317,15 @@ echo -e "${YELLOW}Server process ended with exit code: $SERVER_EXIT_CODE${NC}"
 if [ $SERVER_EXIT_CODE -ne 0 ]; then
     echo -e "${RED}Server exited with error code $SERVER_EXIT_CODE${NC}"
     
-    # Check for core dumps
-    if ls /coredumps/core-* 1> /dev/null 2>&1; then
+    # Check for core dumps in the configured directory
+    if [ "$CORE_DUMPS_ENABLED" = true ] && ls $CORE_DUMP_DIR/core-* 1> /dev/null 2>&1; then
         echo -e "${CYAN}=== CORE DUMPS FOUND ===${NC}"
-        echo -e "${CYAN}Core dumps found in /coredumps/:${NC}"
-        ls -la /coredumps/core-*
+        echo -e "${CYAN}Core dumps found in $CORE_DUMP_DIR:${NC}"
+        ls -la $CORE_DUMP_DIR/core-*
         echo -e "${CYAN}========================${NC}"
         
         # Get the newest core dump for analysis
-        NEWEST_CORE=$(ls -at /coredumps/core-* 2>/dev/null | head -n1)
+        NEWEST_CORE=$(ls -at $CORE_DUMP_DIR/core-* 2>/dev/null | head -n1)
         if [ -n "$NEWEST_CORE" ]; then
             echo -e "${YELLOW}Most recent core dump: $NEWEST_CORE${NC}"
             echo -e "${YELLOW}Core dump size: $(du -h "$NEWEST_CORE" | cut -f1)${NC}"
@@ -278,14 +341,21 @@ if [ $SERVER_EXIT_CODE -ne 0 ]; then
         fi
     else
         echo -e "${YELLOW}No core dumps found${NC}"
+        if [ "$CORE_DUMPS_ENABLED" = true ]; then
+            echo -e "${YELLOW}Checked directory: $CORE_DUMP_DIR${NC}"
+        else
+            echo -e "${YELLOW}Core dumps were disabled during startup${NC}"
+        fi
         echo -e "${YELLOW}Current ulimit -c setting: $(ulimit -c)${NC}"
         echo -e "${YELLOW}Core pattern: $(cat /proc/sys/kernel/core_pattern 2>/dev/null || echo 'Cannot read core pattern')${NC}"
     fi
     
     # Additional debugging information
     echo -e "${CYAN}=== DEBUGGING INFO ===${NC}"
-    echo -e "${CYAN}Available disk space in /coredumps:${NC}"
-    df -h /coredumps 2>/dev/null || echo "Cannot check disk space"
+    if [ "$CORE_DUMPS_ENABLED" = true ]; then
+        echo -e "${CYAN}Available disk space in $CORE_DUMP_DIR:${NC}"
+        df -h "$CORE_DUMP_DIR" 2>/dev/null || echo "Cannot check disk space"
+    fi
     echo -e "${CYAN}Recent system messages (last 20 lines):${NC}"
     dmesg | tail -20 2>/dev/null || echo "Cannot access system messages"
     echo -e "${CYAN}===================${NC}"
