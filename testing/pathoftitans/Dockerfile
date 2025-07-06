@@ -24,6 +24,7 @@ RUN apt update && apt upgrade -y && \
         tzdata \
         iproute2 \
         net-tools \
+        heaptrack \
         libicu-dev && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
