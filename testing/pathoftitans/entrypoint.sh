@@ -55,7 +55,7 @@ echo -e "${WHITE} |   |${RED}  ██▀·▄█▀▀█  ▐█.▪██▀�
 echo -e "${WHITE} |   |${RED} ▐█▪·•▐█ ▪▐▌ ▐█▌·██▌▐▀    ▐█▌.▐▌██▌.     ▐█▌·▐█▌ ▐█▌·▐█ ▪▐▌██▐█▌▐█▄▪▐█  ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |   |${RED} .▀    ▀  ▀  ▀▀▀ ▀▀▀ ·     ▀█▄▀▪▀▀▀      ▀▀▀ ▀▀▀ ▀▀▀  ▀  ▀ ▀▀ █▪ ▀▀▀▀   ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
-echo -e "${WHITE}(_____)${BRIGHT_YELLOW}                    🎮  SERVER STARTING UP... 🎮                       ${WHITE}(_____)${NC}"
+echo -e "${WHITE}(_____)${BRIGHT_YELLOW}                    🎮  SERVER STARTING UP... 🎮                        ${WHITE}(_____)${NC}"
 echo -e "${GREEN} Timezone:${WHITE} $TZ ${GREEN} Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}  
 UE_TRUE_SCRIPT_NAME=$(echo \"$0\" | xargs readlink -f)
 UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
