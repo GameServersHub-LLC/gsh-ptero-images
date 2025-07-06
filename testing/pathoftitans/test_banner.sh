@@ -1,5 +1,5 @@
 #!/bin/bash
-#System variables
+# Test script for Path of Titans banner display
 clear
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -15,19 +15,9 @@ BRIGHT_GREEN='\033[1;32m'
 BRIGHT_YELLOW='\033[1;33m'
 BRIGHT_CYAN='\033[1;36m'
 
-# Switch to the container's working directory
-cd /home/container
-
-# Wait for the container to fully initialize
-sleep 1
-
 # Force the TZ environment variable to Eastern Standard Time
 TZ=America/New_York
 export TZ
-
-# Make internal Docker IP address available to processes.
-INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
-export INTERNAL_IP
 
 # system informations                                                           
 echo -e "${YELLOW} Made By         ${MAGENTA}GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
@@ -56,37 +46,4 @@ echo -e "${WHITE} |   |${RED} ▐█▪·•▐█ ▪▐▌ ▐█▌·██�
 echo -e "${WHITE} |   |${RED} .▀    ▀  ▀  ▀▀▀ ▀▀▀ ·     ▀█▄▀▪▀▀▀      ▀▀▀ ▀▀▀ ▀▀▀  ▀  ▀ ▀▀ █▪ ▀▀▀▀   ${WHITE}|   | ${NC}"
 echo -e "${WHITE} |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___| ${NC}"
 echo -e "${WHITE}(_____)${BRIGHT_YELLOW}                    🎮 SERVER STARTING UP... 🎮                       ${WHITE}(_____)${NC}"
-echo -e "${GREEN} Timezone:${WHITE} $TZ ${GREEN} Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}  
-UE_TRUE_SCRIPT_NAME=$(echo \"$0\" | xargs readlink -f)
-UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
-chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
-sleep 3
-
-## check for serverupdates
-if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
-    cd /home/container
-    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Checking for Server Updates. please wait...${NC}"
-    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-    sleep 1
-    export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
-    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
-    chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
- else
-    echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
-    echo -e "${BLUE}---------------------------------------------------------------${NC}"
-    sleep 3
-fi
-
-# RCON loop with command-line arguments for address and password
-(while read cmd; do
-    rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
-done) < /dev/stdin &
-
-# Replace Startup Variables
-MODIFIED_STARTUP=$(echo -e ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
-echo -e ":/home/container$ ${MODIFIED_STARTUP}"
-
-# Run the Server
-eval ${MODIFIED_STARTUP}
+echo -e "${GREEN} Timezone:${WHITE} $TZ ${GREEN} Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC} 
