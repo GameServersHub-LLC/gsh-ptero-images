@@ -60,31 +60,44 @@ cd /home/container || exit 1
 
 ## just in case someone removed the defaults.
 if [ "${STEAM_USER}" == "" ]; then
-    echo -e "steam user is not set.\n"
-    echo -e "Using anonymous user.\n"
+    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
+    echo -e "${YELLOW}Steam user is not set.${NC}"
+    echo -e "${YELLOW}Using anonymous user.${NC}"
+    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     STEAM_USER=anonymous
     STEAM_PASS=""
     STEAM_AUTH=""
 else
-    echo -e "user set to ${STEAM_USER}"
+    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
+    echo -e "${YELLOW}User set to ${STEAM_USER}${NC}"
+    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
+fi
+
+## Set default SRCDS_APPID if not provided (Satisfactory Dedicated Server)
+if [ -z ${SRCDS_APPID} ]; then
+    echo -e "${YELLOW}SRCDS_APPID not set, using default Satisfactory app ID: 1690800${NC}"
+    SRCDS_APPID=1690800
 fi
 
 ## if auto_update is not set or to 1 update
 if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then 
+    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
+    echo -e "${YELLOW}Checking for Satisfactory Server Updates (App ID: ${SRCDS_APPID})...${NC}"
+    echo -e "${BLUE}---------------------------------------------------------------------${NC}"
+    
     # Update Source Server
-    if [ ! -z ${SRCDS_APPID} ]; then
-	    if [ "${STEAM_USER}" == "anonymous" ]; then
-            ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
-	    else
-            numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
-	    fi
+    if [ "${STEAM_USER}" == "anonymous" ]; then
+        ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
     else
-        echo -e "Checking for Updates..."
-        sleep 3
+        numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update 1007 +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
     fi
-
+    
+    echo -e "${GREEN}Update check completed!${NC}"
+    sleep 2
 else
-    echo -e "Not updating game server as auto update was set to 0. Starting Server"
+    echo -e "${BLUE}---------------------------------------------------------------${NC}"
+    echo -e "${YELLOW}Not updating game server as auto update was set to 0. Starting Server${NC}"
+    echo -e "${BLUE}---------------------------------------------------------------${NC}"
     sleep 2
 fi
 

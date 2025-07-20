@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2025-07-06T18:37:06-04:00",
+    "exported_at": "2025-07-20T12:38:40-04:00",
     "name": "Satisfactory",
     "author": "servers@gameservershub.com",
     "description": "Satisfactory is a first-person open-world factory building game with a dash of exploration and combat. Play alone or with friends, explore an alien planet, create multi-story factories, and enter conveyor belt heaven!",
@@ -16,7 +16,7 @@
         "ghcr.io\/gameservershub-llc\/nonfree-games:satisfactory": "ghcr.io\/gameservershub-llc\/nonfree-games:satisfactory"
     },
     "file_denylist": [],
-    "startup": ".\/Engine\/Binaries\/Linux\/*-Linux-Shipping FactoryGame -ini:Engine:[HTTPServer.Listeners]:DefaultBindAddress=any -Port={{SERVER_PORT}} -BeaconPort={{BEACONPORT}} -ServerQueryPort={{QUERYPORT}} $(if {{DISABLE_SEASONAL}}; then echo \"-DisableSeasonalEvents\"; fi)",
+    "startup": ".\/Engine\/Binaries\/Linux\/*-Linux-Shipping FactoryGame -Port={{SERVER_PORT}} -ReliablePort={{RELIABLE_PORT}} $(if {{DISABLE_SEASONAL}}; then echo \"-DisableSeasonalEvents\"; fi) -unattended",
     "config": {
         "files": "{\r\n    \"FactoryGame\/Saved\/Config\/LinuxServer\/Game.ini\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"MaxPlayers\": \"MaxPlayers={{server.build.env.MAX_PLAYERS}}\"\r\n        }\r\n    },\r\n    \"FactoryGame\/Saved\/Config\/LinuxServer\/Engine.ini\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"mNumRotatingAutosaves\": \"mNumRotatingAutosaves={{server.build.env.NUM_AUTOSAVES}}\",\r\n            \"bImplicitSend\": \"bImplicitSend={{server.build.env.UPLOAD_CRASH_REPORT}}\",\r\n            \"InitialConnectTimeout\": \"InitialConnectTimeout={{server.build.env.INIT_CONNECT_TIMEOUT}}\",\r\n            \"ConnectionTimeout\": \"ConnectionTimeout={{server.build.env.CONNECT_TIMEOUT}}\"\r\n        }\r\n    },\r\n    \"FactoryGame\/Saved\/Config\/LinuxServer\/GameUserSettings.ini\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"mFloatValues\": \"mFloatValues=((\\\"FG.AutosaveInterval\\\", {{server.build.env.AUTOSAVE_INTERVAL}}))\",\r\n            \"mIntValues\": \"mIntValues=((\\\"FG.NetworkQuality\\\", {{server.build.env.NETWORK_QUALITY}}))\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Engine Initialization\"\r\n}",
@@ -132,20 +132,10 @@
             "field_type": "text"
         },
         {
-            "name": "Beacon Port",
-            "description": "",
-            "env_variable": "BEACONPORT",
+            "name": "Reliable Port",
+            "description": "Reliable messaging port. Required for version 1.1 or above.",
+            "env_variable": "RELIABLE_PORT",
             "default_value": "25001",
-            "user_viewable": true,
-            "user_editable": false,
-            "rules": "nullable|integer|min:1025|max:65535",
-            "field_type": "text"
-        },
-        {
-            "name": "Query Port",
-            "description": "",
-            "env_variable": "QUERYPORT",
-            "default_value": "25002",
             "user_viewable": true,
             "user_editable": false,
             "rules": "nullable|integer|min:1025|max:65535",
