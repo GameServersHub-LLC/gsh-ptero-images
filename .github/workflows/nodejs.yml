@@ -28,6 +28,7 @@ jobs:
       matrix:
         tag:
           - 12
+          - 12-owl
           - 14
           - 16
           - 17
