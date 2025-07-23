@@ -24,6 +24,7 @@ RUN apt update \
         libnss3 \
         jq \
         software-properties-common \
+        tini \
     && useradd -m -d /home/container container \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
