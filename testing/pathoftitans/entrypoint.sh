@@ -70,7 +70,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     sleep 1
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
-    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./
+    ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --hotfix $HOT_FIX
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
  else
     echo -e "${BLUE}---------------------------------------------------------------${NC}"
