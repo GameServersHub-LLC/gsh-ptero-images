@@ -79,6 +79,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     sleep 3
 fi
 
+
 # RCON loop with command-line arguments for address and password
 (while read cmd; do
     rcon -s -a "localhost:$RCON_PORT" -p "$RCON_PASSWORD" "$cmd"
