@@ -21,8 +21,8 @@ cd /home/container
 # Wait for the container to fully initialize
 sleep 1
 
-# Force the TZ environment variable to Eastern Standard Time
-TZ=America/New_York
+# Force the TZ environment variable to UTC
+TZ=UTC
 export TZ
 
 # Make internal Docker IP address available to processes.
