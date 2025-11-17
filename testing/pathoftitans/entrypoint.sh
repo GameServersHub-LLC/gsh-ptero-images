@@ -30,7 +30,7 @@ INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 # system informations                                                           
-echo -e "${WHITE}                  Made By         ${MAGENTA}GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
+echo -e "${WHITE}                  ${YELLOW}Made By         ${MAGENTA}GGGGGGGGGGGGG   SSSSSSSSSSSSSSS HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${MAGENTA}                               GGG${WHITE}::::::::::::${MAGENTA}G SS${WHITE}:::::::::::::::${MAGENTA}SH${WHITE}:::::::${MAGENTA}H     H${WHITE}:::::::${MAGENTA}H ${NC}"
 echo -e "${MAGENTA}                             GG${WHITE}:::::::::::::::${MAGENTA}GS${WHITE}:::::${MAGENTA}SSSSSS${WHITE}::::::${MAGENTA}SH${WHITE}:::::::${MAGENTA}H     H${WHITE}:::::::${MAGENTA}H ${NC}"
 echo -e "${MAGENTA}                            G${WHITE}:::::${MAGENTA}GGGGGGGG${WHITE}::::${MAGENTA}GS${WHITE}:::::${MAGENTA}S     SSSSSSSHH${WHITE}::::::${MAGENTA}H     H${WHITE}::::::${MAGENTA}HH ${NC}"
@@ -47,7 +47,7 @@ echo -e "${MAGENTA}                             GG${WHITE}:::::::::::::::${MAGEN
 echo -e "${MAGENTA}                               GGG${WHITE}::::::${MAGENTA}GGG${WHITE}:::${MAGENTA}GS${WHITE}:::::::::::::::${MAGENTA}SS H${WHITE}:::::::${MAGENTA}H     H${WHITE}:::::::${MAGENTA}H ${NC}"
 echo -e "${MAGENTA}                                  GGGGGG   GGGG SSSSSSSSSSSSSSS   HHHHHHHHH     HHHHHHHHH ${NC}"
 echo -e "${WHITE} _______                                                                                                            _______      ${NC}"
-echo -e "${WHITE}( _____ )  For need support, join our discord at: ${BLUE}discord.gg/gsh                                                   ${WHITE}( _____ )     ${NC}"
+echo -e "${WHITE}( _____ )  ${YELLOW}For need support, join our discord at: ${BLUE}discord.gg/gsh                                                   ${WHITE}( _____ )     ${NC}"
 echo -e "${WHITE} |     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|     |      ${NC}"
 echo -e "${WHITE} |     |${YELLOW}   ███${YELLOW}███   ▄▄▄     ▄▄▄█████${RED}▓ ${YELLOW}██${RED}░ ${YELLOW}██${RED}     ▒${YELLOW}█████    █████${RED}▒ ${YELLOW}▄▄▄█████${RED}▓${YELLOW} ▄▄  █████${RED}▓${YELLOW}▄▄▄      ███▄    █  ██████  ${WHITE}  |     |      ${NC}"
 echo -e "${WHITE} |     |${RED}   ▓${YELLOW}██${RED}░  ${YELLOW}██${RED}▒▒${YELLOW}████▄${RED}   ▓  ${YELLOW}██${RED}▒ ▓▒▓${YELLOW}██${RED}░ ${YELLOW}██${RED}▒   ▒${YELLOW}██${RED}▒  ${YELLOW}██${RED}▒▓${YELLOW}██${RED}   ▒  ▓  ${YELLOW}██${RED}▒ ▓▓${YELLOW}██${RED}▓  ${YELLOW}██${RED}▒ ▓▒${YELLOW}████▄${RED}    ${YELLOW}██ ▀█   █${RED}▒${YELLOW}██${RED}    ▒ ${WHITE}  |     |      ${NC}"
@@ -57,7 +57,7 @@ echo -e "${WHITE} |     |   ${RED}▒${YELLOW}██${RED}▒ ░  ░ ▓${YELL
 echo -e "${WHITE} |     |   ${RED}▒${YELLOW}█${RED}▒░ ░  ░ ▒▒   ▓▒${YELLOW}█${RED}░ ▒ ░░    ▒ ░░▒░▒   ░ ▒░▒░▒░  ▒ ░       ▒ ░░  ░▓   ▒ ░░   ▒▒   ▓▒${YELLOW}█${RED}░ ▒░   ▒ ▒▒ ▒▓▒ ▒ ░${WHITE}  |     |      ${NC}"
 echo -e "${WHITE} |     |${RED}   ░▒ ░       ▒   ▒▒ ░   ░     ▒ ░▒░ ░     ░ ▒ ▒░  ░           ░    ▒ ░   ░     ▒   ▒▒ ░ ░░   ░ ▒░ ░▒  ░ ░${WHITE}  |     |      ${NC}"
 echo -e "${WHITE} |_____|${WHITE}~~~${RED}░░${WHITE}~~~~~~~~~${RED}░${WHITE}~~~${RED}▒${WHITE}~~~~${RED}░${WHITE}~~~~~~~${RED}░${WHITE}~~${RED}░░${WHITE}~${RED}░${WHITE}~~~${RED}░${WHITE}~${RED}░${WHITE}~${RED}░${WHITE}~${RED}▒${WHITE}~~~~~${RED}░${WHITE}~~~~~~~${RED}░${WHITE}~~~~~~${RED}▒${WHITE}~${RED}░${WHITE}~${RED}░${WHITE}~~~~~~~${RED}░${WHITE}~~~${RED}▒${WHITE}~~~~~${RED}░${WHITE}~~~${RED}░${WHITE}~${RED}░░${WHITE}~~${RED}░${WHITE}~~${RED}░${WHITE}~~~~${WHITE}|_____|      ${NC}"
-echo -e "${WHITE}(_______)${BRIGHT_WHITE}                                   🎮  SERVER STARTING UP... 🎮                      ${WHITE}                     (_______)     ${NC}"
+echo -e "${WHITE}(_______)${YELLOW}                                   🎮  SERVER STARTING UP... 🎮                      ${WHITE}                     (_______)     ${NC}"
 echo -e "${GREEN} Timezone:${WHITE} $TZ ${GREEN} Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC}  
 UE_TRUE_SCRIPT_NAME=$(echo \"$0\" | xargs readlink -f)
 UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
