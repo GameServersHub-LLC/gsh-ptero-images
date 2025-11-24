@@ -57,7 +57,7 @@ echo -e "${WHITE} |     |   ${RED}▒${YELLOW}██${RED}▒ ░  ░ ▓${YELL
 echo -e "${WHITE} |     |   ${RED}▒${YELLOW}█${RED}▒░ ░  ░ ▒▒   ▓▒${YELLOW}█${RED}░ ▒ ░░    ▒ ░░▒░▒   ░ ▒░▒░▒░  ▒ ░       ▒ ░░  ░▓   ▒ ░░   ▒▒   ▓▒${YELLOW}█${RED}░ ▒░   ▒ ▒▒ ▒▓▒ ▒ ░${WHITE}  |     |      ${NC}"
 echo -e "${WHITE} |     |${RED}   ░▒ ░       ▒   ▒▒ ░   ░     ▒ ░▒░ ░     ░ ▒ ▒░  ░           ░    ▒ ░   ░     ▒   ▒▒ ░ ░░   ░ ▒░ ░▒  ░ ░${WHITE}  |     |      ${NC}"
 echo -e "${WHITE} |_____|${WHITE}~~~${RED}░░${WHITE}~~~~~~~~~${RED}░${WHITE}~~~${RED}▒${WHITE}~~~~${RED}░${WHITE}~~~~~~~${RED}░${WHITE}~~${RED}░░${WHITE}~${RED}░${WHITE}~~~${RED}░${WHITE}~${RED}░${WHITE}~${RED}░${WHITE}~${RED}▒${WHITE}~~~~~${RED}░${WHITE}~~~~~~~${RED}░${WHITE}~~~~~~${RED}▒${WHITE}~${RED}░${WHITE}~${RED}░${WHITE}~~~~~~~${RED}░${WHITE}~~~${RED}▒${WHITE}~~~~~${RED}░${WHITE}~~~${RED}░${WHITE}~${RED}░░${WHITE}~~${RED}░${WHITE}~~${RED}░${WHITE}~~~~${WHITE}|_____|      ${NC}"
-echo -e "${WHITE}(_______)${YELLOW}                                   🎮  SERVER STARTING UP... 🎮                         ${WHITE}                     (_______)     ${NC}"
+echo -e "${WHITE}(_______)${YELLOW}                                   🎮  SERVER STARTING UP... 🎮                         ${WHITE}                    (_______)     ${NC}"
 echo -e "${GREEN} Timezone:${WHITE} $TZ ${GREEN} Time: ${WHITE}$(date '+%A, %B %d, %Y %I:%M %p')"${NC} 
 UE_TRUE_SCRIPT_NAME=$(echo \"$0\" | xargs readlink -f)
 UE_PROJECT_ROOT=$(dirname "$UE_TRUE_SCRIPT_NAME")
