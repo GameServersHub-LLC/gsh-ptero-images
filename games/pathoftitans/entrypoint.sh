@@ -68,7 +68,7 @@ sleep 3
 if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     cd /home/container
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Checking for Server Updates. please wait...${NC}"
+    echo -e "${YELLOW}    Checking for Server Updates. please wait...${NC}"
     echo -e "${BLUE}---------------------------------------------------------------------${NC}"
     sleep 1
     export DOTNET_BUNDLE_EXTRACT_BASE_DIR=./temp/
@@ -76,7 +76,7 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
  else
     echo -e "${BLUE}-------------------------------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}Not updating game server as auto update was set to false. Starting Server${NC}"
+    echo -e "${YELLOW}    Not updating game server as auto update was set to false. Starting Server${NC}"
     echo -e "${BLUE}-------------------------------------------------------------------------------------${NC}"
     sleep 3
 fi
