@@ -75,9 +75,9 @@ if [ -z ${AUTO_UPDATE} ] || [ "${AUTO_UPDATE}" == "1" ]; then
     ./AlderonGamesCmd --game path-of-titans --server true --beta-branch $BETA_BRANCH --install-dir ./ --username $AG_SERVER_EMAIL --password $AG_SERVER_PASS
     chmod +x /home/container/PathOfTitans/Binaries/Linux/PathOfTitansServer-Linux-Shipping
  else
-    echo -e "${BLUE}---------------------------------------------------------------${NC}"
+    echo -e "${BLUE}-------------------------------------------------------------------------------------${NC}"
     echo -e "${YELLOW}Not updating game server as auto update was set to false. Starting Server${NC}"
-    echo -e "${BLUE}---------------------------------------------------------------${NC}"
+    echo -e "${BLUE}-------------------------------------------------------------------------------------${NC}"
     sleep 3
 fi
 
